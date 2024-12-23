@@ -42,6 +42,8 @@ $Global:MyOSDCloud = [ordered]@{
     SetTimeZone = [bool]$true
     ClearDiskConfirm = [bool]$False
     ShutdownSetupComplete = [bool]$false
+    SyncMSUpCatDriverUSB = [bool]$true
+    CheckSHA1 = [bool]$true    
 }
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
@@ -59,7 +61,7 @@ Write-Host -ForegroundColor Green "Starting OSDCloud"
 
 Start-OSDCloud @Params
 
-write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot" -ForegroundColor Green
+write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
@@ -176,8 +178,9 @@ $AutopilotOOBEJson = @"
                    "Assign"
                ],
     "PostAction":  "Quit",
-    "Run":  "NetworkingWireless",
-    "Title":  "Autopilot Register"
+    "Disabled": "Assign","PostAction",
+    "Run":  "WindowsSettings",
+    "Title":  "Autopilot Registration"
 }
 "@
 
@@ -186,3 +189,43 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 }
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 
+#================================================
+#  [PostOS] Do some other stuff
+#================================================
+#Copy CMTrace Local:
+Write-Host -ForegroundColor Green "Downloading and copy cmtrace file"
+if (Test-path -path "C:\Windows\System32\cmtrace.exe"){
+    Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" | Out-File -FilePath 'C:\Windows\System32\cmtrace.exe' -Force -verbose
+}
+
+#================================================
+#  [PostOS] OOBE CMD Command Line
+#================================================
+Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
+Invoke-RestMethod https://gist.github.com/sigvaris-it/ae0277848996f71db1b529e3712e5a43/raw/c609f340e37d207908f62134485048c587010f7d/Set-Language.ps1| Out-File -FilePath 'C:\Windows\Setup\scripts\keyboard.ps1' -Encoding ascii -Force
+#Invoke-RestMethod https://raw.githubusercontent.com/AkosBakos/OSDCloud/main/Install-EmbeddedProductKey.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\productkey.ps1' -Encoding ascii -Force
+#Invoke-RestMethod https://check-autopilotprereq.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotprereq.ps1' -Encoding ascii -Force
+#Invoke-RestMethod https://start-autopilotoobe.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotoobe.ps1' -Encoding ascii -Force
+
+
+$OOBECMD = @'
+@echo off
+# Execute OOBE Tasks
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\keyboard.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\productkey.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\autopilotprereq.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\autopilotoobe.ps1
+
+# Below a PS session for debug and testing in system context, # when not needed 
+# start /wait powershell.exe -NoL -ExecutionPolicy Bypass
+
+exit 
+'@
+$OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
+
+#=======================================================================
+#   Restart-Computer
+#=======================================================================
+Write-Host  -ForegroundColor Green "Restarting in 20 seconds!"
+Start-Sleep -Seconds 20
+wpeutil reboot
