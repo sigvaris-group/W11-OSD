@@ -29,6 +29,16 @@ Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
 Import-Module OSD -Force   
 
 #=======================================================================
+#   [WinPE] Start U++ (user interface)
+#=======================================================================
+$location = "C:\ProgramData\OSDeploy"
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -Destination $location
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -Destination $location
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -Destination $location
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -Destination $location
+
+
+#=======================================================================
 #   [OS] Params and Start-OSDCloud
 #=======================================================================
 #Set OSDCloud Vars
