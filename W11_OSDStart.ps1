@@ -43,6 +43,9 @@ if ($UI) {
         Wait-Process -Id $UI.Id
     } 
 }
+Write-Host "Computername: $($OSDComputerName)"
+Write-Host "Language: $($OSDLanguage)"
+Write-Host "Location: $($OSDLocation)"
 
 #=======================================================================
 #   [OS] Params and Start-OSDCloud
