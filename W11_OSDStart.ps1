@@ -29,25 +29,6 @@ Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
 Import-Module OSD -Force   
 
 #=======================================================================
-#   [WinPE] Start U++ (user interface)
-#=======================================================================
-$location = "C:\ProgramData\OSDeploy"
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -Destination $location
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -Destination $location
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -Destination $location
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -Destination $location
-$UI = Start-Process -FilePath "$location\UI++64.exe" -Wait 
-if ($UI) {
-    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
-    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
-        Wait-Process -Id $UI.Id
-    } 
-}
-Write-Host "Computername: $($OSDComputerName)"
-Write-Host "Language: $($OSDLanguage)"
-Write-Host "Location: $($OSDLocation)"
-
-#=======================================================================
 #   [OS] Params and Start-OSDCloud
 #=======================================================================
 #Set OSDCloud Vars
@@ -81,6 +62,25 @@ Write-Host -ForegroundColor Green "Starting OSDCloud"
 Start-OSDCloud @Params
 
 write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+
+#=======================================================================
+#   [PreOS] Start U++ (user interface)
+#=======================================================================
+$location = "C:\ProgramData\OSDeploy"
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -Destination $location
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -Destination $location
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -Destination $location
+Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -Destination $location
+$UI = Start-Process -FilePath "$location\UI++64.exe" -Wait 
+if ($UI) {
+    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
+    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
+        Wait-Process -Id $UI.Id
+    } 
+}
+Write-Host "Computername: $($OSDComputerName)"
+Write-Host "Language: $($OSDLanguage)"
+Write-Host "Location: $($OSDLocation)"
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
@@ -223,8 +223,8 @@ if (Test-path -path "C:\Windows\System32\cmtrace.exe"){
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 #Invoke-RestMethod https://raw.githubusercontent.com/sigvaris-group/W11-OSD/refs/heads/main/Set-Language.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\keyboard.ps1' -Encoding ascii -Force
 #Invoke-RestMethod https://raw.githubusercontent.com/AkosBakos/OSDCloud/main/Install-EmbeddedProductKey.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\productkey.ps1' -Encoding ascii -Force
-Invoke-RestMethod https://check-autopilotprereq.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotprereq.ps1' -Encoding ascii -Force
-Invoke-RestMethod https://start-autopilotoobe.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotoobe.ps1' -Encoding ascii -Force
+#Invoke-RestMethod https://check-autopilotprereq.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotprereq.ps1' -Encoding ascii -Force
+#Invoke-RestMethod https://start-autopilotoobe.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotoobe.ps1' -Encoding ascii -Force
 
 
 $OOBECMD = @'
