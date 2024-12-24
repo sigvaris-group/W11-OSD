@@ -36,7 +36,13 @@ Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/h
 Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -Destination $location
 Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -Destination $location
 Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -Destination $location
-
+$UI = Start-Process -FilePath "$location\UI++64.exe" -Wait 
+if ($UI) {
+    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
+    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
+        Wait-Process -Id $UI.Id
+    } 
+}
 
 #=======================================================================
 #   [OS] Params and Start-OSDCloud
