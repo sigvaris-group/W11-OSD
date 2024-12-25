@@ -82,6 +82,7 @@ if ($UI) {
     } 
 }
 Copy-Item "X:\Windows\Temp\ui++vars.dat" -Destination "$location\ui++vars.dat"
+$UIVars = Get-Content "$location\ui++vars.dat" | ConvertTo-Xml -NoTypeInformation
 Write-Host "Computername: $($OSDComputerName)"
 Write-Host "Language: $($OSDLanguage)"
 Write-Host "Location: $($OSDLocation)"

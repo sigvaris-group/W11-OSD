@@ -38,6 +38,10 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
     </Action>
-    <Action Type="Vars" Direction="Save" />
+    <Action Type="WMIWrite" Namespace="root\UIVars" Class="Local_Config" >
+      <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
+      <Property Name="OSDLanguage" Type="CIM_STRING" Value="%OSDLanguage%" Key="True"/>
+      <Property Name="OSDLocation" Type="CIM_STRING" Value="%OSDLocation%" Key="True"/>
+    </Action>
   </Actions>
 </UIpp>
