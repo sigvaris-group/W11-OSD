@@ -81,8 +81,9 @@ if ($UI) {
         Wait-Process -Id $UI.Id
     } 
 }
-Copy-Item "X:\Windows\Temp\ui++vars.dat" -Destination "$location\ui++vars.dat"
-$UIVars = Get-Content "$location\ui++vars.dat" | ConvertTo-Xml -NoTypeInformation
+$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
+$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
+$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
 Write-Host "Computername: $($OSDComputerName)"
 Write-Host "Language: $($OSDLanguage)"
 Write-Host "Location: $($OSDLocation)"
