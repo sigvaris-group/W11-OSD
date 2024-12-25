@@ -33,11 +33,11 @@
         <Choice Option="SIITSI - Silea" Value="SIITSI" AlternateValue="SIITSI - Silea" />
         <Choice Option="SIPLGU - Wrzesnia" Value="SIPLGU" AlternateValue="SIPLGU - Wrzesnia" />
         <Choice Option="SIAUME - Melbourne" Value="SIAUME" AlternateValue="SIAUME - Melbourne" />
-        <Choice Option="SIBRSP - Jundia" Value="SIBRSP" AlternateValue="SIBRSP - Jundia�" />
+        <Choice Option="SIBRSP - Jundia" Value="SIBRSP" AlternateValue="SIBRSP - Jundia" />
         <Choice Option="SIPTLI - Lisboa " Value="SIPTLI" AlternateValue="SIPTLI - Lisboa" />
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
     </Action>
-    <Action Type="Vars" Direction="Save" Filename="C:\ProgramData\OSDeploy\ui++vars.txt" />
+    <Action Type="Vars" Direction="Save" Filename="C:\ProgramData\OSDeploy\ui++vars.dat" />
   </Actions>
 </UIpp>
