@@ -21,6 +21,30 @@ if ((Get-MyComputerModel) -match 'Virtual') {
     Set-DisRes 1600
 }
 
+#=======================================================================
+#   [PostOS] Start U++ (user interface)
+#=======================================================================
+Write-Host -ForegroundColor Green "Start UI Client Setup"
+If (!(Test-Path "X:\OSDCloud\UI")) {
+    New-Item "X:\OSDCloud\UI" -ItemType Directory -Force | Out-Null
+}
+$location = "X:\OSDCloud\UI"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "X:\OSDCloud\UI\FTWCMLog64.dll" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "X:\OSDCloud\UI\FTWldap64.dll" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "X:\OSDCloud\UI\UI++64.exe" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "X:\OSDCloud\UI\UI++.xml" -Verbose
+$UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
+if ($UI) {
+    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
+    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
+        Wait-Process -Id $UI.Id
+    } 
+}
+Write-Host "Computername: $($OSDComputerName)"
+Write-Host "Language: $($OSDLanguage)"
+Write-Host "Location: $($OSDLocation)"
+
+
 Write-Host -ForegroundColor Green "Updating OSD PowerShell Module"
 Set-ExecutionPolicy -ExecutionPolicy ByPass 
 Install-Module OSD -SkipPublisherCheck -Force
@@ -63,24 +87,12 @@ Start-OSDCloud @Params
 
 write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
-#=======================================================================
-#   [PreOS] Start U++ (user interface)
-#=======================================================================
-$location = "C:\ProgramData\OSDeploy"
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -Destination $location
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -Destination $location
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -Destination $location
-Start-BitsTransfer -Source "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -Destination $location
-$UI = Start-Process -FilePath "$location\UI++64.exe" -Wait 
-if ($UI) {
-    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
-    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
-        Wait-Process -Id $UI.Id
-    } 
-}
-Write-Host "Computername: $($OSDComputerName)"
-Write-Host "Language: $($OSDLanguage)"
-Write-Host "Location: $($OSDLocation)"
+#================================================
+#  [PostOS] Do some custom stuff
+#================================================
+#Copy CMTrace Local:
+Write-Host -ForegroundColor Green "Downloading and copy cmtrace file"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" -OutFile "C:\Windows\System32\CMTrace.exe" -Verbose
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
@@ -209,15 +221,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 
 #================================================
-#  [PostOS] Do some other stuff
-#================================================
-#Copy CMTrace Local:
-Write-Host -ForegroundColor Green "Downloading and copy cmtrace file"
-if (Test-path -path "C:\Windows\System32\cmtrace.exe"){
-    Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" | Out-File -FilePath 'C:\Windows\System32\cmtrace.exe' -Force -verbose
-}
-
-#================================================
 #  [PostOS] OOBE CMD Command Line
 #================================================
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
@@ -247,4 +250,4 @@ $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding asci
 #=======================================================================
 Write-Host  -ForegroundColor Green "Restarting in 20 seconds!"
 start-Sleep -Seconds 20
-wpeutil reboot
+#wpeutil reboot
