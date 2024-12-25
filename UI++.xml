@@ -38,6 +38,6 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
     </Action>
-    <Action Type="Vars" Direction="Save"/>
+    <Action Type="Vars" Direction="Save"/ Filename="C:\ProgramData\OSDeploy\ui++vars.txt">
   </Actions>
 </UIpp>

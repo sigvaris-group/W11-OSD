@@ -2,8 +2,6 @@
 #
 # Script Name:     W11_OSDStart.ps1
 # Description:     Start Windows 11 OSD Deployment
-# Author:          Andreas Schilling
-# Email:           andreas.schilling@sigvaris.com
 # Created:         12/20/2024
 # Updated:
 # Version:         1.1
@@ -20,30 +18,6 @@ if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
 }
-
-#=======================================================================
-#   [PostOS] Start U++ (user interface)
-#=======================================================================
-Write-Host -ForegroundColor Green "Start UI Client Setup"
-If (!(Test-Path "X:\OSDCloud\UI")) {
-    New-Item "X:\OSDCloud\UI" -ItemType Directory -Force | Out-Null
-}
-$location = "X:\OSDCloud\UI"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "X:\OSDCloud\UI\FTWCMLog64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "X:\OSDCloud\UI\FTWldap64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "X:\OSDCloud\UI\UI++64.exe" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "X:\OSDCloud\UI\UI++.xml" -Verbose
-$UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
-if ($UI) {
-    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
-    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
-        Wait-Process -Id $UI.Id
-    } 
-}
-Write-Host "Computername: $($OSDComputerName)"
-Write-Host "Language: $($OSDLanguage)"
-Write-Host "Location: $($OSDLocation)"
-
 
 Write-Host -ForegroundColor Green "Updating OSD PowerShell Module"
 Set-ExecutionPolicy -ExecutionPolicy ByPass 
@@ -86,6 +60,31 @@ Write-Host -ForegroundColor Green "Starting OSDCloud"
 Start-OSDCloud @Params
 
 write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+
+
+#=======================================================================
+#   [PostOS] Start U++ (user interface)
+#=======================================================================
+Write-Host -ForegroundColor Green "Start UI Client Setup"
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+}
+$location = "C:\ProgramData\OSDeploy"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
+$UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
+if ($UI) {
+    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
+    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
+        Wait-Process -Id $UI.Id
+    } 
+}
+Copy-Item "X:\Windows\Temp\ui++vars.dat" -Destination "$location\ui++vars.dat"
+Write-Host "Computername: $($OSDComputerName)"
+Write-Host "Language: $($OSDLanguage)"
+Write-Host "Location: $($OSDLocation)"
 
 #================================================
 #  [PostOS] Do some custom stuff
