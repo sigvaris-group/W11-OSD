@@ -38,7 +38,6 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
     </Action>
+    <Action Type="Vars" Direction="Save"/>
   </Actions>
 </UIpp>
-
-
