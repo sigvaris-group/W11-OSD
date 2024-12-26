@@ -4,7 +4,7 @@
 # Description:     Start Windows 11 OSD Deployment
 # Created:         12/20/2024
 # Updated:
-# Version:         1.1
+# Version:         1.0
 #
 #=============================================================================================================================
 
@@ -81,12 +81,13 @@ if ($UI) {
         Wait-Process -Id $UI.Id
     } 
 }
+
 $OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
 $OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
 $OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
-Write-Host "Computername: $($OSDComputerName)"
-Write-Host "Language: $($OSDLanguage)"
-Write-Host "Location: $($OSDLocation)"
+Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
+Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
+Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
 
 #================================================
 #  [PostOS] Do some custom stuff
@@ -189,20 +190,15 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 #================================================
 #  [PostOS] AutopilotOOBE Configuration Staging
 #================================================
-Write-Host -ForegroundColor Green "Get Computername:"
-$TargetComputername = (Get-CimInstance -ClassName Win32_ComputerSystem).Name
-Write-Host -ForegroundColor Red $TargetComputername 
-Write-Host ""
-
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json"
 $AutopilotOOBEJson = @"
 {
-    "AssignedComputerName" : "$TargetComputername",
+    "AssignedComputerName" : "$OSDComputername ",
     "Assign":  {
                    "IsPresent":  true
                },
-    "GroupTag":  "SICHSG-DE",
-    "GroupTagOptions" = "SICHSG-EN","SIATVI","SIAUME","SIBRSP-PT","SIBRSP-EN","SICAMO","SIDEME","SIFRHU-FR","SIFRHU-EN","SIFRSJ-FR","SIFRSJ-EN","SIITSI","SIMXMC","SIPLGU-PL","SIPLGU-EN","SIPTLI-PT","SIPTLI-EN","SIUKAN","SIUSGA","SIUSMI"
+    "GroupTag":  "SICHSG",
+    "GroupTagOptions" = "SIATVI","SIAUME","SIBRSP","SICAMO","SIDEME","SIFRHU","SIFRSJ","SIITSI","SIMXMC","SIPLGU","SIPTLI","SIUKAN","SIUSGA","SIUSMI"
     "Hidden":  [
                    "AddToGroup",
                    "AssignedUser",
