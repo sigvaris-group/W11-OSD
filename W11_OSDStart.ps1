@@ -85,9 +85,11 @@ if ($UI) {
 $OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
 $OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
 $OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
+$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
 Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
 Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
 Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
+Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
 
 #================================================
 #  [PostOS] Do some custom stuff
@@ -197,9 +199,9 @@ $AutopilotOOBEJson = @"
     "Assign":  {
                    "IsPresent":  true
                },
-    "GroupTag":  "SICHSG",
-    "GroupTagOptions" = "SIATVI","SIAUME","SIBRSP","SICAMO","SIDEME","SIFRHU","SIFRSJ","SIITSI","SIMXMC","SIPLGU","SIPTLI","SIUKAN","SIUSGA","SIUSMI"
+    "GroupTag":  "$OSDLocation",
     "Hidden":  [
+                   "GroupTag",
                    "AddToGroup",
                    "AssignedUser",
                    "PostAction",
@@ -218,20 +220,57 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 
 #================================================
+#  [PostOS] Create Unattend XML file
+#================================================
+$UnattendXml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <Description>Start Autopilot Import & Assignment Process</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\autopilot.ps1</Path>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDKeyboard/InputLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
+            <UILanguage>$OSDLanguage</UILanguage>
+            <UserLocale>$OSDKeyboard</UserLocale>
+        </component>
+    </settings>
+</unattend>
+"@ 
+
+if (-NOT (Test-Path 'C:\Windows\Panther')) {
+    New-Item -Path 'C:\Windows\Panther'-ItemType Directory -Force -ErrorAction Stop | Out-Null
+}
+
+$Panther = 'C:\Windows\Panther'
+$UnattendPath = "$Panther\Unattend.xml"
+$UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
+
+Write-Host -ForegroundColor Green "Copying PFX file & the import script"
+Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
+
+#================================================
 #  [PostOS] OOBE CMD Command Line
 #================================================
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/check-autopilotprereq.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\check-autopilotprereq.ps1' -Encoding ascii -Force
-#Invoke-RestMethod https://start-autopilotoobe.osdcloud.ch | Out-File -FilePath 'C:\Windows\Setup\scripts\autopilotoobe.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/start-autopilotoobe.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\start-autopilotoobe.ps1' -Encoding ascii -Force
 
 
 $OOBECMD = @'
 @echo off
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\keyboard.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\productkey.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\autopilotprereq.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\autopilotoobe.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\check-autopilotprereq.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\start-autopilotoobe.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 # start /wait powershell.exe -NoL -ExecutionPolicy Bypass

@@ -6,19 +6,13 @@
     <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True">
       <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
-        <Choice Option="English (United States)" Value="en-US" AlternateValue="English (United States)" />
-        <Choice Option="English (Great Britain)" Value="en-US" AlternateValue="English (Great Britain" />
-        <Choice Option="English (Canada)" Value="en-US" AlternateValue="English (Canada)" />
-        <Choice Option="English (Australia)" Value="en-GB" AlternateValue="English (Australia)" />
-        <Choice Option="German (Germany)" Value="de-DE" AlternateValue="German (Germany)" />
-        <Choice Option="German (Switzerland)" Value="de-DE" AlternateValue="German (Switzerland)" />
-        <Choice Option="German (Austria)" Value="de-DE" AlternateValue="German (Austria)" />
-        <Choice Option="French (France)" Value="fr-FR" AlternateValue="French (France)" />
-        <Choice Option="Italian (Italy)" Value="it-IT" AlternateValue="Italian (Italy)" />
-        <Choice Option="Polish (Poland)" Value="pl-PL" AlternateValue="Polish (Poland)" />
-        <Choice Option="Portuguese (Brazil)" Value="pt-BR" AlternateValue="Portuguese (Brazil)" />
-        <Choice Option="Portuguese (Portugal)" Value="pt-PT" AlternateValue="Portuguese (Portgual)" />
-        <Choice Option="Spanish (Mexico)" Value="es-MX" AlternateValue="Spanish (Mexico)" />
+        <Choice Option="English" Value="en-US" AlternateValue="English" />
+        <Choice Option="German" Value="de-DE" AlternateValue="German" />
+        <Choice Option="French" Value="fr-FR" AlternateValue="French" />
+        <Choice Option="Italian" Value="it-IT" AlternateValue="Italian" />
+        <Choice Option="Polish" Value="pl-PL" AlternateValue="Polish" />
+        <Choice Option="Portuguese" Value="pt-PT" AlternateValue="Portuguese" />
+        <Choice Option="Spanish" Value="es-ES" AlternateValue="Spanish" />
       </ChoiceInput>
       <ChoiceInput Variable="OSDLocation" Question="Select the location" Required="True" Sort="False" Color="#000000" AlternateVariable="AVARSOSDLocation">
         <Choice Option="SIUSGA - Peachtree City" Value="SIUSGA" AlternateValue="SIUSGA - Peachtree City" />
@@ -38,10 +32,26 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
     </Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUKAN"'>"en-GB"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIFRSJ"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIFRHU"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIITSI"'>"it-IT"</Action>
+     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIPLGU"'>"pl-PL"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIAUME"'>"en-AU"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-PT"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>
     <Action Type="WMIWrite" Namespace="root\UIVars" Class="Local_Config" >
       <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
       <Property Name="OSDLanguage" Type="CIM_STRING" Value="%OSDLanguage%" Key="True"/>
       <Property Name="OSDLocation" Type="CIM_STRING" Value="%OSDLocation%" Key="True"/>
+      <Property Name="OSDKeyboard" Type="CIM_STRING" Value="%OSDKeyboard%" Key="True"/>
     </Action>
   </Actions>
 </UIpp>
