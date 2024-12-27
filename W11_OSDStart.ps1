@@ -224,7 +224,7 @@ Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
 Write-Host -ForegroundColor Green "Keyboard Locale: $($OSDKeyboardLocale)"
 Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
 Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
-Write-Host -ForegroundColor Green "Create X:\OSDCloud\Config\Scripts\UI.json"
+Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UI.json"
 $UIjson = @"
 {
     "OSDComputername" : "$OSDComputername",
@@ -236,7 +236,7 @@ $UIjson = @"
     "OSDTimeZone" : "$OSDTimeZone"
 }
 "@
-$UIjson | Out-File -FilePath "X:\OSDCloud\Config\Scripts\UIjson.json" -Encoding ascii -Force
+$UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
 
 
 #================================================
