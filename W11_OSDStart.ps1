@@ -292,8 +292,6 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
-Copy-Item "X:\OSDCloud\Config\Scripts\UIjson.json" -Destination "C:\ProgramData\OSDeploy\UIjson.json" -Recurse -Force
-
 
 #================================================
 #  [PostOS] OOBE CMD Command Line
