@@ -11,6 +11,51 @@
 Write-Host -ForegroundColor Green "Starting Windows 11 Deployment"
 Start-Sleep -Seconds 5
 
+#=======================================================================
+#   [PostOS] Start U++ (user interface)
+#=======================================================================
+Write-Host -ForegroundColor Green "Start UI Client Setup"
+$location = "X:\OSDCloud\Config\Scripts"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
+$UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
+if ($UI) {
+    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
+    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
+        Wait-Process -Id $UI.Id
+    } 
+}
+
+$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
+$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
+$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
+$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
+$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
+$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
+$OSDTimeZone= (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
+Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
+Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
+Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
+Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
+Write-Host -ForegroundColor Green "Keyboard Locale: $($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
+Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
+Write-Host -ForegroundColor Green "Create X:\OSDCloud\Config\Scripts\UI.json"
+$UIjson = @"
+{
+    "OSDComputername" : "$OSDComputername",
+    "OSDLanguage" : "$OSDLanguage",
+    "OSDLocation" : "$OSDLocation",
+    "OSDKeyboard" : "$OSDKeyboard",
+    "OSDKeyboardLocale" : "$OSDKeyboardLocale",
+    "OSDGeoID" : "$OSDGeoID",
+    "OSDTimeZone" : "$OSDTimeZone"
+}
+"@
+$UIjson | Out-File -FilePath "X:\OSDCloud\Config\Scripts\UIjson.json" -Encoding ascii -Force
+
 #================================================
 #   [PreOS] Update Module
 #================================================
@@ -61,57 +106,6 @@ Start-OSDCloud @Params
 
 write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
-
-#=======================================================================
-#   [PostOS] Start U++ (user interface)
-#=======================================================================
-Write-Host -ForegroundColor Green "Start UI Client Setup"
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
-}
-$location = "C:\ProgramData\OSDeploy"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
-$UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
-if ($UI) {
-    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
-    if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
-        Wait-Process -Id $UI.Id
-    } 
-}
-
-$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
-$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
-$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
-$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
-$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
-$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
-$OSDTimeZone= (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
-Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
-Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
-Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
-Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
-Write-Host -ForegroundColor Green "Keyboard Locale: $($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
-Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
-Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UI.json"
-$UIjson = @"
-{
-    "OSDComputername" : "$OSDComputername",
-    "OSDLanguage" : "$OSDLanguage",
-    "OSDLocation" : "$OSDLocation",
-    "OSDKeyboard" : "$OSDKeyboard",
-    "OSDKeyboardLocale" : "$OSDKeyboardLocale",
-    "OSDGeoID" : "$OSDGeoID",
-    "OSDTimeZone" : "$OSDTimeZone"
-}
-"@
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
-}
-$UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
 
 #================================================
 #  [PostOS] Do some custom stuff
@@ -265,20 +259,20 @@ $UnattendXml = @"
             </UserData>
         </component>
     </settings>
+    <settings pass="specialize">
+		<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<InputLocale>$OSDKeyboardLocale</InputLocale>
+			<SystemLocale>$OSDLanguage</SystemLocale>
+			<UILanguage>$OSDLanguage</UILanguage>
+			<UserLocale>$OSDKeyboard</UserLocale>
+		</component>
+    </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDKeyboardLocale/InputLocale>
+            <InputLocale>$OSDKeyboardLocale</InputLocale>
             <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDLanguage</UILanguage>
             <UserLocale>$OSDKeyboard</UserLocale>
-        </component>
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OOBE>
-                <ProtectYourPC>3</ProtectYourPC>
-                <HideEULAPage>true</HideEULAPage>
-                <HideWirelessSetupInOOBE>false</HideWirelessSetupInOOBE>
-                <HideOnlineAccountScreens>false</HideOnlineAccountScreens>
-            </OOBE>
         </component>
     </settings>
 </unattend>
@@ -295,6 +289,7 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\UIjson.json" -Destination "C:\ProgramData\OSDeploy\UIjson.json" -Recurse -Force
 
 
 #================================================
