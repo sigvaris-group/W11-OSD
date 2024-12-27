@@ -87,8 +87,8 @@ $OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OS
 $OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
 $OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
 $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
-$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
-$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").TimeZone
+$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OOSDGeoID
+$OSDTimeZone= (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
 Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
 Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
