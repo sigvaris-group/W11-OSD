@@ -54,7 +54,7 @@
     <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SICAMO"'>"1009:00000409"</Action>
     <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIUKAN"'>"0809:00000809"</Action>
     <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIDEME"'>"0407:00000407"</Action>
-    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SICHSG"'>"0807:00000807</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SICHSG"'>"0807:00000807"</Action>
     <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIATVI"'>"0c07:00000407"</Action>
     <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIFRSJ"'>"040c:0000040c"</Action>
     <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIFRHU"'>"040c:0000040c"</Action>
