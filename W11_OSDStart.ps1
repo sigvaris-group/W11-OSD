@@ -28,34 +28,6 @@ if ($UI) {
     } 
 }
 
-$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
-$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
-$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
-$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
-$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
-$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
-$OSDTimeZone= (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
-Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
-Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
-Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
-Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
-Write-Host -ForegroundColor Green "Keyboard Locale: $($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
-Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
-Write-Host -ForegroundColor Green "Create X:\OSDCloud\Config\Scripts\UI.json"
-$UIjson = @"
-{
-    "OSDComputername" : "$OSDComputername",
-    "OSDLanguage" : "$OSDLanguage",
-    "OSDLocation" : "$OSDLocation",
-    "OSDKeyboard" : "$OSDKeyboard",
-    "OSDKeyboardLocale" : "$OSDKeyboardLocale",
-    "OSDGeoID" : "$OSDGeoID",
-    "OSDTimeZone" : "$OSDTimeZone"
-}
-"@
-$UIjson | Out-File -FilePath "X:\OSDCloud\Config\Scripts\UIjson.json" -Encoding ascii -Force
-
 #================================================
 #   [PreOS] Update Module
 #================================================
@@ -234,6 +206,37 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
 $AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
+
+#================================================
+#  [PostOS] Create UIJson file
+#================================================
+$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
+$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
+$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
+$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
+$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
+$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
+$OSDTimeZone= (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
+Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
+Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
+Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
+Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
+Write-Host -ForegroundColor Green "Keyboard Locale: $($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
+Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
+Write-Host -ForegroundColor Green "Create X:\OSDCloud\Config\Scripts\UI.json"
+$UIjson = @"
+{
+    "OSDComputername" : "$OSDComputername",
+    "OSDLanguage" : "$OSDLanguage",
+    "OSDLocation" : "$OSDLocation",
+    "OSDKeyboard" : "$OSDKeyboard",
+    "OSDKeyboardLocale" : "$OSDKeyboardLocale",
+    "OSDGeoID" : "$OSDGeoID",
+    "OSDTimeZone" : "$OSDTimeZone"
+}
+"@
+$UIjson | Out-File -FilePath "X:\OSDCloud\Config\Scripts\UIjson.json" -Encoding ascii -Force
 
 
 #================================================
