@@ -177,35 +177,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 }
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 
-#================================================
-#  [PostOS] AutopilotOOBE Configuration Staging
-#================================================
-Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json"
-$AutopilotOOBEJson = @"
-{
-    "AssignedComputerName" : "$OSDComputername ",
-    "Assign":  {
-                   "IsPresent":  true
-               },
-    "GroupTag":  "$OSDLocation",
-    "Hidden":  [
-                   "GroupTag",
-                   "AddToGroup",
-                   "AssignedUser",
-                   "PostAction",
-                   "Assign"
-               ],
-    "PostAction":  "Quit",
-    "Disabled": "Assign","PostAction",
-    "Run":  "WindowsSettings",
-    "Title":  "Autopilot Registration"
-}
-"@
-
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
-}
-$AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.json" -Encoding ascii -Force
 
 #================================================
 #  [PostOS] Create UIJson file
@@ -217,13 +188,6 @@ $OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OS
 $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone= (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
-Write-Host -ForegroundColor Green "Computername: $($OSDComputerName)"
-Write-Host -ForegroundColor Green "Language: $($OSDLanguage)"
-Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
-Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
-Write-Host -ForegroundColor Green "Keyboard Locale: $($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
-Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UIjson.json"
 $UIjson = @"
 {
@@ -305,4 +269,4 @@ $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding asci
 #=======================================================================
 Write-Host  -ForegroundColor Green "Restarting in 20 seconds!"
 start-Sleep -Seconds 20
-#wpeutil reboot
+wpeutil reboot

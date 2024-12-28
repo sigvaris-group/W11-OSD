@@ -44,7 +44,7 @@ Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 
 Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) and change the language of the OS on different places"
-Install-Language $OSDLanguage -CopyToSettings
+Install-Language $OSDLanguage -CopyToSettingscé
 
 <#
 Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
@@ -54,14 +54,14 @@ Set-SystemPreferredUILanguage $OSDLanguage
 Write-Host -ForegroundColor Green "Configure new language $($OSDLanguage) defaults under current user (system) after which it can be copied to system"
 Set-WinUILanguageOverride -Language $OSDLanguage
 
-Write-Host -ForegroundColor Green "Set Win User Language $(OSDKeyboard) List, sets the current user language settings"
+Write-Host -ForegroundColor Green "Set Win User Language $($OSDKeyboard) List, sets the current user language settings"
 $OldList = Get-WinUserLanguageList
 $UserLanguageList = New-WinUserLanguageList -Language $OSDKeyboard
 $UserLanguageList += $OldList | Where-Object { $_.LanguageTag -ne $OSDKeyboard }
 $UserLanguageList | Select-Object LanguageTag
 Set-WinUserLanguageList -LanguageList $UserLanguageList -Force
 
-Write-Host -ForegroundColor Green "Set Culture $(OSDKeyboard), sets the user culture for the current user account"
+Write-Host -ForegroundColor Green "Set Culture $($OSDKeyboard), sets the user culture for the current user account"
 Set-Culture -CultureInfo $OSDKeyboard
 
 Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID), sets the home location setting for the current user"
@@ -69,3 +69,5 @@ Set-WinHomeLocation -GeoId $OSDGeoID
 
 Write-Host -ForegroundColor Green "Copy User Internaltional Settings from current user to System, including Welcome screen and new user"
 Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
+
+Stop-Transcript | Out-Null
