@@ -44,7 +44,7 @@ Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 
 Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) and change the language of the OS on different places"
-Install-Language $OSDLanguage -CopyToSettingscé
+Install-Language $OSDLanguage -CopyToSettings
 
 <#
 Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
