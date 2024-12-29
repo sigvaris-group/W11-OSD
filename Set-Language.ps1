@@ -35,21 +35,16 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 $OSDLanguage = $json.OSDLanguage
 $OSDKeyboard = $json.OSDKeyboard
 $OSDGeoID = $json.OSDGeoID
-$OSDTimeZone = $json.OSDTimeZone
 
 #=======================================================================
-#   [OOBE] Set Language and TimeZone
+#   [OOBE] Set Language
 #=======================================================================
-Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
 
 Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) and change the language of the OS on different places"
 Install-Language $OSDLanguage -CopyToSettings
 
-<#
 Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
 Set-SystemPreferredUILanguage $OSDLanguage
-#>
 
 Write-Host -ForegroundColor Green "Configure new language $($OSDLanguage) defaults under current user (system) after which it can be copied to system"
 Set-WinUILanguageOverride -Language $OSDLanguage
