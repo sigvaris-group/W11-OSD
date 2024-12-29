@@ -225,11 +225,11 @@ $UnattendXml = @"
         </component>
     </settings>
     <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-        <OOBE>
-            <ProtectYourPC>3</ProtectYourPC>
-            <HideEULAPage>true</HideEULAPage>
-        </OOBE>
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <SystemLocale>$OSDKeyboard</SystemLocale>
+            <UILanguage>$OSDLanguage</UILanguage>
+            <UserLocale>$OSDKeyboard/UserLocale>
         </component>
 	</settings>
 </unattend>
