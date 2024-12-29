@@ -235,6 +235,7 @@ $UnattendXml = @"
             <OOBE>
                 <SkipMachineOOBE>true</SkipMachineOOBE>
                 <SkipUserOOBE>true</SkipUserOOBE>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
                 <HideEULAPage>true</HideEULAPage>
             </OOBE>
         </component>
