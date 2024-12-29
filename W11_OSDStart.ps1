@@ -231,6 +231,13 @@ $UnattendXml = @"
             <UILanguage>$OSDLanguage</UILanguage>
             <UserLocale>$OSDKeyboard/UserLocale>
         </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <OOBE>
+                <SkipMachineOOBE>true</SkipMachineOOBE>
+                <SkipUserOOBE>true</SkipUserOOBE>
+                <HideEULAPage>true</HideEULAPage>
+            </OOBE>
+        </component>
 	</settings>
 </unattend>
 "@ 
