@@ -32,9 +32,6 @@ Write-Host -ForegroundColor Green "Load C:\ProgramData\OSDeploy\UIjson.json file
 $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFrom-Json
 
 # Access JSON properties
-$OSDLanguage = $json.OSDLanguage
-$OSDKeyboard = $json.OSDKeyboard
-$OSDGeoID = $json.OSDGeoID
 $OSDTimeZone = $json.OSDTimeZone
 
 #===================================================================================================================================================
