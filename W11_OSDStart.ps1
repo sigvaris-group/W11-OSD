@@ -253,13 +253,14 @@ Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Window
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/check-autopilotprereq.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\check-autopilotprereq.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 
 $OOBECMD = @'
 @echo off
 # Execute OOBE Tasks
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\check-autopilotprereq.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Set-Language.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass

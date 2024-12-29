@@ -49,11 +49,8 @@ Set-SystemPreferredUILanguage $OSDLanguage
 Write-Host -ForegroundColor Green "Configure new language $($OSDLanguage) defaults under current user (system) after which it can be copied to system"
 Set-WinUILanguageOverride -Language $OSDLanguage
 
-Write-Host -ForegroundColor Green "Set Win User Language $($OSDKeyboard) List, sets the current user language settings"
-$OldList = Get-WinUserLanguageList
-$UserLanguageList = New-WinUserLanguageList -Language $OSDKeyboard
-$UserLanguageList += $OldList | Where-Object { $_.LanguageTag -ne $OSDKeyboard }
-$UserLanguageList | Select-Object LanguageTag
+Write-Host -ForegroundColor Green "Set Win User Language $($OSDLanguage) List, sets the current user language settings"
+$UserLanguageList = New-WinUserLanguageList -Language $OSDLanguage
 Set-WinUserLanguageList -LanguageList $UserLanguageList -Force
 
 Write-Host -ForegroundColor Green "Set Culture $($OSDKeyboard), sets the user culture for the current user account"
