@@ -229,7 +229,7 @@ $UnattendXml = @"
             <InputLocale>$OSDKeyboardLocale</InputLocale>
             <SystemLocale>$OSDKeyboard</SystemLocale>
             <UILanguage>$OSDLanguage</UILanguage>
-            <UserLocale>$OSDKeyboard/UserLocale>
+            <UserLocale>$OSDKeyboard</UserLocale>
         </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
