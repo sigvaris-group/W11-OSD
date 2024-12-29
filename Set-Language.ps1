@@ -59,7 +59,7 @@ Set-Culture -CultureInfo $OSDKeyboard
 Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID), sets the home location setting for the current user"
 Set-WinHomeLocation -GeoId $OSDGeoID
 
-Write-Host -ForegroundColor Green "Copy User Internaltional Settings from current user to System, including Welcome screen and new user"
+Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
 Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
 
 Stop-Transcript | Out-Null
