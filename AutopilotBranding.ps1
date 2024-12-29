@@ -38,8 +38,8 @@ $OSDTimeZone = $json.OSDTimeZone
 #   Enable location services so the time zone will be set automatically (even when skipping the privacy page in OOBE) when an administrator signs in
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Enable location services to automatically set the time zone"
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Name "Value" -Type "String" -Value "Allow" -Force
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" -Name "SensorPermissionState" -Type "DWord" -Value 1 -Force
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Name "Value" -Type "String" -Value "Allow" -Force -ErrorAction SilentlyContinue
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" -Name "SensorPermissionState" -Type "DWord" -Value 1 -Force -ErrorAction SilentlyContinue
 Start-Service -Name "lfsvc" -ErrorAction SilentlyContinue
 
 Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
@@ -62,7 +62,7 @@ Get-AppxPackage -Name MicrosoftTeams -AllUsers | Remove-AppxPackage -AllUsers -E
 #===================================================================================================================================================
 #   Disable WSUS
 #===================================================================================================================================================
-$currentWU = (Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction Ignore).UseWuServer
+$currentWU = (Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction Ignore).UseWuServer -ErrorAction SilentlyContinue
 if ($currentWU -eq 1)
 {
 	Write-Host "STEP 6: Turning off WSUS"
