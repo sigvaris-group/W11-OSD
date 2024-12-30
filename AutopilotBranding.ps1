@@ -141,6 +141,13 @@ Write-Host -ForegroundColor Green "Remove C:\Windows\Setup\Scripts Items"
 Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
 #===================================================================================================================================================
+#    Copy OSDCloud logs and delete C:\OSDCloud folder
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Copy OSDCloud logs and delete C:\OSDCloud folder"
+Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Recurse
+Remove-Item C:\OSDCloud -Recurse -Force | Out-Null
+
+#===================================================================================================================================================
 #   Create registry keys to detect this was installed
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Create registry keys to detect this was installed"
