@@ -66,29 +66,22 @@ Write-Host -ForegroundColor Green "Disable network location fly-out"
 reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 
 #===================================================================================================================================================
-#   Remove XBox Gaming bar
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Remove XBox Gaming bar"
-Get-AppxPackage -AllUsers *XboxGamingOverlay* | Remove-AppxPackage
-get-appxprovisionedpackage -Online | where-object {$_.packagename -like '*xbox*'} | remove-appxprovisionedpackage online -ErrorAction SilentlyContinue 
-
-#===================================================================================================================================================
 #   Stop Start menu from opening on first logon
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Stop Start menu from opening on first logon"
-reg.exe add "HKLM\TempUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v StartShownOnUpgrade /t REG_DWORD /d 1 /f | Out-Host
+reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v StartShownOnUpgrade /t REG_DWORD /d 1 /f | Out-Host
 
 #===================================================================================================================================================
 #   Hide "Learn more about this picture" from the desktop
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Hide 'Learn more about this picture' from the desktop"
-reg.exe add "HKLM\TempUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /v "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}" /t REG_DWORD /d 1 /f | Out-Host
+reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /v "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}" /t REG_DWORD /d 1 /f | Out-Host
 
 #===================================================================================================================================================
 #   Disable Windows Spotlight as per https://github.com/mtniehaus/AutopilotBranding/issues/13#issuecomment-2449224828
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Disable Windows Spotlight"
-reg.exe add "HKLM\TempUser\Software\Policies\Microsoft\Windows\CloudContent" /v DisableSpotlightCollectionOnDesktop /t REG_DWORD /d 1 /f | Out-Host
+reg.exe add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v DisableSpotlightCollectionOnDesktop /t REG_DWORD /d 1 /f | Out-Host
 
 #===================================================================================================================================================
 #   Remediate Windows Update policy conflict for Autopatch
