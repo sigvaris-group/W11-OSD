@@ -56,13 +56,14 @@ reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "CreateDesktopShort
 #===================================================================================================================================================
 #   Remove Personal Teams
 #===================================================================================================================================================
-Write-Host "STEP 4: Remove Personal Teams"
+Write-Host -ForegroundColor Green "Remove Personal Teams"
 Get-AppxPackage -Name MicrosoftTeams -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue 
 
 #===================================================================================================================================================
 #   Disable WSUS
 #===================================================================================================================================================
-$currentWU = (Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction Ignore).UseWuServer -ErrorAction SilentlyContinue
+Write-Host -ForegroundColor Green "Disable WSUS"
+$currentWU = (Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction Ignore).UseWuServer
 if ($currentWU -eq 1)
 {
 	Write-Host "STEP 6: Turning off WSUS"
@@ -73,10 +74,81 @@ if ($currentWU -eq 1)
 #===================================================================================================================================================
 #   Disable network location fly-out
 #===================================================================================================================================================
-Write-Host "STEP 10: Turning off network location fly-out"
+Write-Host -ForegroundColor Green "Disable network location fly-out"
 reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 
-# Create registry keys to detect this was installed
+#===================================================================================================================================================
+#   Remove XBox Gaming bar
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Remove XBox Gaming bar"
+Get-AppxPackage -AllUsers *XboxGamingOverlay* | Remove-AppxPackage
+get-appxprovisionedpackage -Online | where-object {$_.packagename -like '*xbox*'} | remove-appxprovisionedpackage online -ErrorAction SilentlyContinue 
+
+#===================================================================================================================================================
+#   Stop Start menu from opening on first logon
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Stop Start menu from opening on first logon"
+reg.exe add "HKLM\TempUser\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v StartShownOnUpgrade /t REG_DWORD /d 1 /f | Out-Host
+
+#===================================================================================================================================================
+#   Hide "Learn more about this picture" from the desktop
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Hide 'Learn more about this picture' from the desktop"
+reg.exe add "HKLM\TempUser\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /v "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}" /t REG_DWORD /d 1 /f | Out-Host
+
+#===================================================================================================================================================
+#   Disable Windows Spotlight as per https://github.com/mtniehaus/AutopilotBranding/issues/13#issuecomment-2449224828
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Disable Windows Spotlight"
+reg.exe add "HKLM\TempUser\Software\Policies\Microsoft\Windows\CloudContent" /v DisableSpotlightCollectionOnDesktop /t REG_DWORD /d 1 /f | Out-Host
+
+#===================================================================================================================================================
+#   Remediate Windows Update policy conflict for Autopatch
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Remediate Windows Update policy conflict for Autopatch"
+# initialize the array
+[PsObject[]]$regkeys = @()
+# populate the array with each object
+$regkeys += [PsObject]@{ Name = "DoNotConnectToWindowsUpdateInternetLocations"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
+$regkeys += [PsObject]@{ Name = "DisableWindowsUpdateAccess"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
+$regkeys += [PsObject]@{ Name = "WUServer"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
+$regkeys += [PsObject]@{ Name = "UseWUServer"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\"}
+$regkeys += [PsObject]@{ Name = "NoAutoUpdate"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\"}
+
+foreach ($setting in $regkeys)
+{
+    write-host "checking $($setting.name)"
+    if((Get-Item $setting.path -ErrorAction Ignore).Property -contains $setting.name)
+    {
+        write-host "remediating $($setting.name)"
+        Remove-ItemProperty -Path $setting.path -Name $($setting.name)
+    }
+    else
+    {
+        write-host "$($setting.name) was not found"
+    }
+}
+
+#===================================================================================================================================================
+#   Set registered user and organization
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Set registered user and organization"
+reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner /t REG_SZ /d "Global IT" /f /reg:64 | Out-Host
+reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "SIGVARIS GROUP" /f /reg:64 | Out-Host
+
+#===================================================================================================================================================
+#   Configure OEM branding info
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Configure OEM branding info"
+reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Manufacturer /t REG_SZ /d "SIGVARIS GROUP" /f /reg:64 | Out-Host
+reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "Autopilot" /f /reg:64 | Out-Host
+reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v SupportURL /t REG_SZ /d "https://sigvarisitcustomercare.saasiteu.com/Account/Login?ProviderName=AAD" /f /reg:64 | Out-Host
+reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Logo /t REG_SZ /d "C:\Windows\sigvaris.bmp" /f /reg:64 | Out-Host
+
+#===================================================================================================================================================
+#   Create registry keys to detect this was installed
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Create registry keys to detect this was installed"
 $currentDateTime = Get-Date -Format "MM/dd/yyyy HH:mm:ss" 
 New-Item -Path 'HKLM:\SOFTWARE\' -Name 'SIGVARIS' -ErrorAction SilentlyContinue
 New-Item -Path 'HKLM:\SOFTWARE\SIGVARIS' -Name 'Autopilot' -ErrorAction SilentlyContinue

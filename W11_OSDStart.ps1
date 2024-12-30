@@ -82,9 +82,13 @@ write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Act
 #================================================
 #  [PostOS] Do some custom stuff
 #================================================
-#Copy CMTrace Local:
+# Copy CMTrace.exe local
 Write-Host -ForegroundColor Green "Downloading and copy cmtrace file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" -OutFile "C:\Windows\System32\CMTrace.exe" -Verbose
+
+# Copy sigvaris.bmp local
+Write-Host -ForegroundColor Green "Downloading and copy sigvaris.bmp file"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/sigvaris.bmp" -OutFile "C:\Windows\sigvaris.bmp" -Verbose
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
