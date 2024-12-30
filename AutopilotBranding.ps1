@@ -130,9 +130,7 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v L
 #    Install OneDrive per machine
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Install OneDrive per machine"
-$dest = "$($env:TEMP)\OneDriveSetup.exe"
-$client = new-object System.Net.WebClient
-$client.DownloadFile('https://go.microsoft.com/fwlink/?linkid=844652', $dest)
+$dest = "C:\Windows\Temp\OneDriveSetup.exe"
 $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
 $proc.WaitForExit()
 
