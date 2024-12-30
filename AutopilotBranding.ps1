@@ -146,6 +146,16 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v S
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Logo /t REG_SZ /d "C:\Windows\sigvaris.bmp" /f /reg:64 | Out-Host
 
 #===================================================================================================================================================
+#    Install OneDrive per machine
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Install OneDrive per machine"
+$dest = "$($env:TEMP)\OneDriveSetup.exe"
+$client = new-object System.Net.WebClient
+$client.DownloadFile($config.Config.OneDriveSetup, $dest)
+$proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
+$proc.WaitForExit()
+
+#===================================================================================================================================================
 #   Create registry keys to detect this was installed
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Create registry keys to detect this was installed"
