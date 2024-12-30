@@ -60,18 +60,6 @@ Write-Host -ForegroundColor Green "Remove Personal Teams"
 Get-AppxPackage -Name MicrosoftTeams -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue 
 
 #===================================================================================================================================================
-#   Disable WSUS
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Disable WSUS"
-$currentWU = (Get-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU" -ErrorAction Ignore).UseWuServer
-if ($currentWU -eq 1)
-{
-	Write-Host "STEP 6: Turning off WSUS"
-	Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate\AU"  -Name "UseWuServer" -Value 0
-	Restart-Service wuauserv
-}
-
-#===================================================================================================================================================
 #   Disable network location fly-out
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Disable network location fly-out"
