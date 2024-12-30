@@ -137,8 +137,9 @@ $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassT
 $proc.WaitForExit()
 
 #===================================================================================================================================================
-#    Remote Script Items
+#    Remove C:\Windows\Setup\Scripts\ Items
 #===================================================================================================================================================
+Write-Host -ForegroundColor Green "Remove C:\Windows\Setup\Scripts Items"
 Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
 #===================================================================================================================================================
