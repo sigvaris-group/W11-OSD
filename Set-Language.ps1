@@ -43,6 +43,9 @@ $OSDGeoID = $json.OSDGeoID
 Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) and change the language of the OS on different places"
 Install-Language $OSDLanguage -CopyToSettings
 
+Write-Host -ForegroundColor Green "Set System Locale Language $($OSDLanguage)"
+Set-WinSystemLocale $OSDLanguage
+
 Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
 Set-SystemPreferredUILanguage $OSDLanguage
 
@@ -50,16 +53,21 @@ Write-Host -ForegroundColor Green "Configure new language $($OSDLanguage) defaul
 Set-WinUILanguageOverride -Language $OSDLanguage
 
 Write-Host -ForegroundColor Green "Set Win User Language $($OSDLanguage) List, sets the current user language settings"
+$OldList = Get-WinUserLanguageList
 $UserLanguageList = New-WinUserLanguageList -Language $OSDLanguage
+$UserLanguageList += $OldList
 Set-WinUserLanguageList -LanguageList $UserLanguageList -Force
 
 Write-Host -ForegroundColor Green "Set Culture $($OSDKeyboard), sets the user culture for the current user account"
 Set-Culture -CultureInfo $OSDKeyboard
 
-Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID), sets the home location setting for the current user"
+Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID)"
 Set-WinHomeLocation -GeoId $OSDGeoID
 
 Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
 Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
+
+Write-Host -ForegroundColor Green "Restarting in 5 seconds!"
+Restart-Computer -Timeout 5
 
 Stop-Transcript | Out-Null
