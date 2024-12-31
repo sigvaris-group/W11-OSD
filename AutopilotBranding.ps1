@@ -165,3 +165,6 @@ New-ItemProperty -Path  $RegPath -Name Version -Value '1.1' -Force -ErrorAction 
 New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue
 
 Stop-Transcript | Out-Null
+
+Write-Host  -ForegroundColor Green "Restarting in 5 seconds!"
+Restart-Computer -Timeout 5

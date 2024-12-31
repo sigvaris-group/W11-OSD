@@ -8,7 +8,7 @@
 #
 #=============================================================================================================================
 
-$Title = "Set Language, Keyboard and TimeZone"
+$Title = "Set Language and Keyboard layout"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
@@ -68,6 +68,3 @@ Write-Host -ForegroundColor Green "Copy User International Settings from current
 Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
 
 Stop-Transcript | Out-Null
-
-Write-Host -ForegroundColor Green "Restart computer"
-Exit 3010
