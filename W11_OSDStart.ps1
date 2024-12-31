@@ -276,7 +276,6 @@ $OOBECMD = @'
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\check-autopilotprereq.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
-wpeutil reboot
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass
