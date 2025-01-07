@@ -94,6 +94,10 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Downloading and copy OneDriveSetup.exe file"
 Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile "C:\Windows\Temp\OneDriveSetup.exe" -Verbose
 
+# Copy WirelessConnect.exe local
+Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
+
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
@@ -223,10 +227,10 @@ $UnattendXml = @"
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
-                    <Description>Start Wireless Connect</Description>
-                    <Path>X:\WirelessConnect.exe</Path>
+                    <Description>Import WiFi Profiles</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1</Path>
                 </RunSynchronousCommand>
-            </RunSynchronous>        
+            </RunSynchronous>      
             <UserData>
                 <AcceptEula>true</AcceptEula>
             </UserData>
@@ -272,6 +276,10 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$Panther\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
+
+Write-Host -ForegroundColor Green "Export Wi-Fi profile"
+netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
+
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
@@ -283,6 +291,7 @@ Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phas
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/check-autopilotprereq.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\check-autopilotprereq.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 
 $OOBECMD = @'
 @echo off
