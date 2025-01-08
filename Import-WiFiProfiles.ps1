@@ -24,7 +24,10 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Import-WiFiProfiles.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+Write-Host -ForegroundColor Green "Load Wi-Fi profiles"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
 Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
+
+start-Sleep -Seconds 20
 
 Stop-Transcript | Out-Null
