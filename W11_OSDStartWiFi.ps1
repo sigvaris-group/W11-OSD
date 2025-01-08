@@ -230,8 +230,8 @@ $UnattendXml = @"
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
-                    <Description>Import WiFi Profiles</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1</Path>
+                    <Description>Connect to WiFi</Description>
+                    <Path>C:\Windows\WirelessConnect.exe</Path>
                 </RunSynchronousCommand>            
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
@@ -267,22 +267,6 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$Panther\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
-
-Write-Host -ForegroundColor Green "Export Wi-Fi profile"
-If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
-    New-Item "C:\ProgramData\OSDeploy\WiFi" -ItemType Directory -Force | Out-Null
-}
-netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
-
-Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
-$XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
-$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
-foreach ($profile in $profiles) {
-    [xml]$wifiProfile = Get-Content -path $profile.fullname
-    $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($profile.fullname)")
-}
-
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
@@ -294,7 +278,7 @@ Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phas
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/check-autopilotprereq.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\check-autopilotprereq.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 
 $OOBECMD = @'
 @echo off
