@@ -33,7 +33,7 @@ $profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
 foreach ($profile in $profiles) {
     [xml]$wifiProfile = Get-Content -path $profile.fullname
     $SSID = $wifiProfile.WLANProfile.SSIDConfig.SSID.name
-    $ProfileName = $profile.Name(
+    $ProfileName = $profile.Name
     netsh wlan connect ssid="$($SSID)" name="$($ProfileName)"
 }
 
