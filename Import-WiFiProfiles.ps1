@@ -34,7 +34,7 @@ foreach ($profile in $profiles) {
     [xml]$wifiProfile = Get-Content -path $profile.fullname
     $SSID = $wifiProfile.WLANProfile.SSIDConfig.SSID.name
     $ProfileName = $profile.Name(
-    netsh wlan connect ssid="$($SSID)" name="$($ProfileName)" interface=Wi-Fi
+    netsh wlan connect ssid="$($SSID)" name="$($ProfileName)"
 }
 
 start-Sleep -Seconds 20
