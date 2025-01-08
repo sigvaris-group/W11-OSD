@@ -278,6 +278,9 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 
 
 Write-Host -ForegroundColor Green "Export Wi-Fi profile"
+If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
+    New-Item "C:\ProgramData\OSDeploy\WiFi" -ItemType Directory -Force | Out-Null
+}
 netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
 
 Write-Host -ForegroundColor Green "Copying script files"
