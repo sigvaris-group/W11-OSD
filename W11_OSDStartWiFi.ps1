@@ -231,7 +231,7 @@ $UnattendXml = @"
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
                     <Description>Connect to WiFi</Description>
-                    <Path>C:\Windows\WirelessConnect.exe</Path>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath "C:\Windows\WirelessConnect.exe" -Wait</Path>
                 </RunSynchronousCommand>            
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
