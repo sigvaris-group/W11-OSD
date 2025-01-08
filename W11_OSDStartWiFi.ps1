@@ -222,20 +222,6 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="windowsPE">
-        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Description>Import WiFi Profiles</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1</Path>
-                </RunSynchronousCommand>
-            </RunSynchronous>    
-            <UserData>
-                <AcceptEula>true</AcceptEula>
-            </UserData>
-        </component>
-    </settings>
     <settings pass="specialize">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
@@ -244,6 +230,11 @@ $UnattendXml = @"
             <RunSynchronous>
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
+                    <Description>Import WiFi Profiles</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1</Path>
+                </RunSynchronousCommand>            
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1</Path>
                 </RunSynchronousCommand>
