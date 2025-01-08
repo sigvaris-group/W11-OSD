@@ -26,8 +26,15 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 
 Write-Host -ForegroundColor Green "Load Wi-Fi profiles"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
-Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
+$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
+foreach ($profile in $profiles) {
+    [xml]$wifiProfile = Get-Content -path $profile.fullname
+    $wifiProfile.WLANProfile.connectionMode = "Auto"
+    $wifiProfile.Save("$($profile.fullname)")
+}
 
+Write-Host -ForegroundColor Green "Restart Wi-Fi adapters"
+Get-NetAdapter | ForEach-Object {Restart-NetAdapter -Name $_.Name}
 start-Sleep -Seconds 20
 
 Stop-Transcript | Out-Null
