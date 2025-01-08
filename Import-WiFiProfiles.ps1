@@ -24,17 +24,18 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Import-WiFiProfiles.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
-Write-Host -ForegroundColor Green "Load Wi-Fi profiles"
+Write-Host -ForegroundColor Green "Import Wi-Fi profiles"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
+Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
+
+Write-Host -ForegroundColor Green "Start Wi-Fi connection"
 $profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
 foreach ($profile in $profiles) {
     [xml]$wifiProfile = Get-Content -path $profile.fullname
-    $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($profile.fullname)")
+    $SSID = $wifiProfile.WLANProfile.SSIDConfig.SSID.name
+    netsh wlan connect name="$($SSID)"
 }
 
-Write-Host -ForegroundColor Green "Restart Wi-Fi adapters"
-Get-NetAdapter | ForEach-Object {Restart-NetAdapter -Name $_.Name}
 start-Sleep -Seconds 20
 
 Stop-Transcript | Out-Null

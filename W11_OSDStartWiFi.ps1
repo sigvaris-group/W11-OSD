@@ -274,6 +274,15 @@ If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
 }
 netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
 
+Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
+$XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
+$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
+foreach ($profile in $profiles) {
+    [xml]$wifiProfile = Get-Content -path $profile.fullname
+    $wifiProfile.WLANProfile.connectionMode = "Auto"
+    $wifiProfile.Save("$($profile.fullname)")
+}
+
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
