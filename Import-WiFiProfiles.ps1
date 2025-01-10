@@ -28,6 +28,7 @@ Write-Host -ForegroundColor Green "Import Wi-Fi profiles"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
 Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
 
+<#
 Write-Host -ForegroundColor Green "Start Wi-Fi connection"
 $profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
 foreach ($profile in $profiles) {
@@ -36,6 +37,7 @@ foreach ($profile in $profiles) {
     $ProfileName = $profile.Name
     netsh wlan connect ssid="$($SSID)" name="$($ProfileName)"
 }
+#>
 
 start-Sleep -Seconds 20
 

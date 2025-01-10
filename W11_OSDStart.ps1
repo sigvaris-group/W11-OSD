@@ -262,6 +262,10 @@ Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 
+# Set Computername
+Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
+Rename-Computer -NewName $OSDComputername
+
 #================================================
 #  [PostOS] OOBE CMD Command Line
 #================================================

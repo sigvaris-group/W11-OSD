@@ -98,6 +98,7 @@ Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile "C:\
 Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
 
+
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
@@ -222,31 +223,19 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="windowsPE">
-        <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Display> 
-                <ColorDepth>32</ColorDepth> 
-                <HorizontalResolution>1024</HorizontalResolution> 
-                <RefreshRate>60</RefreshRate> 
-                <VerticalResolution>768</VerticalResolution> 
-            </Display> 
-            <RunSynchronous>
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Description>Connect to WiFi</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath "C:\Windows\WirelessConnect.exe" -Wait</Path>
-                </RunSynchronousCommand>            
-            </RunSynchronous>
-        </component>
-    </settings>
     <settings pass="specialize">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>         
+            <RunSynchronous>                 
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
+                    <Description>Connect to WiFi</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath "C:\Windows\WirelessConnect.exe" -Wait</Path>
+                </RunSynchronousCommand>                      
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1</Path>
                 </RunSynchronousCommand>
@@ -279,9 +268,28 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$Panther\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
+Write-Host -ForegroundColor Green "Export Wi-Fi profile"
+If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
+    New-Item "C:\ProgramData\OSDeploy\WiFi" -ItemType Directory -Force | Out-Null
+}
+netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
+
+Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
+$XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
+$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
+foreach ($profile in $profiles) {
+    [xml]$wifiProfile = Get-Content -path $profile.fullname
+    $wifiProfile.WLANProfile.connectionMode = "Auto"
+    $wifiProfile.Save("$($profile.fullname)")
+}
+
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
+
+# Set Computername
+Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
+Rename-Computer -NewName $OSDComputername
 
 #================================================
 #  [PostOS] OOBE CMD Command Line
@@ -290,7 +298,7 @@ Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phas
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/check-autopilotprereq.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\check-autopilotprereq.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
-#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 
 $OOBECMD = @'
 @echo off
@@ -298,6 +306,7 @@ $OOBECMD = @'
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\check-autopilotprereq.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass
