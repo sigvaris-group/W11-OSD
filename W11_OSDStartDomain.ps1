@@ -30,7 +30,7 @@ if ($UI) {
 
 #================================================
 #   [PreOS] Update Module
-#================================================
+#================================================SI
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
@@ -293,6 +293,7 @@ foreach ($profile in $profiles) {
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
