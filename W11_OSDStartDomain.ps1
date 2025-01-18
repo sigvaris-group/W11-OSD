@@ -19,7 +19,7 @@ $location = "X:\OSDCloud\Config\Scripts"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Domain.xml.xml" -OutFile "$location\UI++Domain.xml" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Domain.xml" -OutFile "$location\UI++Domain.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -ArgumentList "$location\config:UI++Domain.xml" -WorkingDirectory $location -Wait
 if ($UI) {
     Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
