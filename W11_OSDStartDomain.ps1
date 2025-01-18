@@ -8,7 +8,7 @@
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi Support"
+Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
 Start-Sleep -Seconds 5
 
 #=======================================================================
