@@ -246,7 +246,7 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1</Path>
-                </RunSynchronousCommand>                          
+                </RunSynchronousCommand>                                          
             </RunSynchronous>
         </component>
     </settings>
