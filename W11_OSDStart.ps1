@@ -90,10 +90,6 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Downloading and copy sigvaris.bmp file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/sigvaris.bmp" -OutFile "C:\Windows\sigvaris.bmp" -Verbose
 
-# Copy OneDriveSetup.exe local
-Write-Host -ForegroundColor Green "Downloading and copy OneDriveSetup.exe file"
-Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile "C:\Windows\Temp\OneDriveSetup.exe" -Verbose
-
 # Copy WirelessConnect.exe local
 Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
