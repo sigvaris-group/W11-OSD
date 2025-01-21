@@ -32,7 +32,7 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
       <InputInfo></InputInfo>
-      <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be on-premise Active Directory joined? (STANDARD: NO)" CheckedValue="Yes" UncheckedValue="No"/>
+      <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
       <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
     </Action>
     <!-- This Section determines the keyboard based on location-->
