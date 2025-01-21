@@ -31,6 +31,7 @@
         <Choice Option="SIPTLI - Lisboa " Value="SIPTLI" AlternateValue="SIPTLI - Lisboa" />
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
+      <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
     </Action>
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
@@ -95,7 +96,7 @@
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIAUME"'>"AUS Eastern Standard Time"</Action>
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIBRSP"'>"E. South America Standard Time"</Action>
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIPTLI"'>"GMT Standard Time"</Action>
-    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIMXMC"'>"Central Standard Time"</Action>       
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIMXMC"'>"Central Standard Time"</Action>         
     <!-- This Section write the variable into WMI-->   
     <Action Type="WMIWrite" Namespace="root\UIVars" Class="Local_Config" >
       <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
@@ -105,6 +106,7 @@
       <Property Name="OSDKeyboardLocale" Type="CIM_STRING" Value="%OSDKeyboardLocale%" Key="True"/>
       <Property Name="OSDGeoID" Type="CIM_STRING" Value="%OSDGeoID%" Key="True"/>
       <Property Name="OSDTimeZone" Type="CIM_STRING" Value="%OSDTimeZone%" Key="True"/>
+      <Property Name="OSDDomainJoin" Type="CIM_STRING" Value="%OSDDomainJoin%" Key="True"/>
     </Action>
   </Actions>
 </UIpp>

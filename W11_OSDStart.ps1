@@ -202,6 +202,16 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
+
+Write-Host "Computername: $OSDComputername "
+Write-Host "Location: $OSDLocation "
+Write-Host "Language: $OSDLanguage "
+Write-Host "Keyboard: $OSDKeyboard "
+Write-Host "KeyboardLocale: $OSDKeyboardLocale "
+Write-Host "GeoID: $OSDGeoID "
+Write-Host "TimeZone: $OSDTimeZone"
+Write-Host "DomainJoin: $OSDDomainJoin "
+
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UIjson.json"
 $UIjson = @"
 {
@@ -313,7 +323,7 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 
 exit 
 '@
