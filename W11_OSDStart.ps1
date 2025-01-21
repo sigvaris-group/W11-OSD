@@ -250,7 +250,7 @@ $UnattendXml = @"
                 <RunSynchronousCommand wcm:action="add">
                     <Order>3</Order>
                     <Description>Join Computer to on-premise domain</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Computer-DomainJoin</Path>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Computer-DomainJoin.ps1</Path>
                 </RunSynchronousCommand>                            
             </RunSynchronous>
         </component>
