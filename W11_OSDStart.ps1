@@ -1,14 +1,14 @@
 #=============================================================================================================================
 #
 # Script Name:     W11_OSDStart.ps1
-# Description:     Start Windows 11 OSD Deployment
-# Created:         12/20/2024
-# Updated:
-# Version:         1.0
+# Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
+# Created:         01/18/2025
+# Updated:         01/20/2025 Including WiFi and domain join
+# Version:         1.1
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment"
+Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
 Start-Sleep -Seconds 5
 
 #=======================================================================
@@ -19,7 +19,7 @@ $location = "X:\OSDCloud\Config\Scripts"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Domain.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
     Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
@@ -30,7 +30,7 @@ if ($UI) {
 
 #================================================
 #   [PreOS] Update Module
-#================================================
+#================================================SI
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
@@ -93,6 +93,11 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 # Copy OneDriveSetup.exe local
 Write-Host -ForegroundColor Green "Downloading and copy OneDriveSetup.exe file"
 Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile "C:\Windows\Temp\OneDriveSetup.exe" -Verbose
+
+# Copy WirelessConnect.exe local
+Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
+
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
@@ -196,6 +201,7 @@ $OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OS
 $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
+$OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UIjson.json"
 $UIjson = @"
 {
@@ -205,7 +211,8 @@ $UIjson = @"
     "OSDKeyboard" : "$OSDKeyboard",
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
     "OSDGeoID" : "$OSDGeoID",
-    "OSDTimeZone" : "$OSDTimeZone"
+    "OSDTimeZone" : "$OSDTimeZone",
+    "OSDDomainJoin" : "$OSDDomainJoin"
 }
 "@
 $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
@@ -223,12 +230,17 @@ $UnattendXml = @"
             <ComputerName>$OSDComputername</ComputerName>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>
+            <RunSynchronous>                 
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
+                    <Description>Connect to WiFi</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath "C:\Windows\WirelessConnect.exe" -Wait</Path>
+                </RunSynchronousCommand>                      
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1</Path>
-                </RunSynchronousCommand>
+                </RunSynchronousCommand>             
             </RunSynchronous>
         </component>
     </settings>
@@ -258,9 +270,25 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$Panther\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
+Write-Host -ForegroundColor Green "Export Wi-Fi profile"
+If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
+    New-Item "C:\ProgramData\OSDeploy\WiFi" -ItemType Directory -Force | Out-Null
+}
+netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
+
+Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
+$XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
+$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
+foreach ($profile in $profiles) {
+    [xml]$wifiProfile = Get-Content -path $profile.fullname
+    $wifiProfile.WLANProfile.connectionMode = "Auto"
+    $wifiProfile.Save("$($profile.fullname)")
+}
+
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
@@ -273,16 +301,19 @@ Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phas
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/check-autopilotprereq.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\check-autopilotprereq.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 
 $OOBECMD = @'
 @echo off
 # Execute OOBE Tasks
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\check-autopilotprereq.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Set-Language.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 
 exit 
 '@
