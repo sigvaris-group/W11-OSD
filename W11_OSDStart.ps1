@@ -236,22 +236,22 @@ $UnattendXml = @"
             <ComputerName>$OSDComputername</ComputerName>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>                 
+            <RunSynchronous>        
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
+                    <Description>Install Pre-required Applications</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath "C:\Windows\Install-PreApps.ps1" -Wait</Path>
+                </RunSynchronousCommand>                        
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath "C:\Windows\WirelessConnect.exe" -Wait</Path>
                 </RunSynchronousCommand>                      
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
+                    <Order>3</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1</Path>
-                </RunSynchronousCommand>    
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <Description>Join Computer into on-premise AD</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Computer-DomainJoin.ps1</Path>
-                </RunSynchronousCommand>                                                        
+                </RunSynchronousCommand>                                                         
             </RunSynchronous>
         </component>
     </settings>
@@ -298,6 +298,7 @@ foreach ($profile in $profiles) {
 
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
 
@@ -314,6 +315,12 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 
+# Download Pre-required Applications
+Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/SecureConnectorInstaller.msi" -OutFile 'C:\Windows\Setup\scripts\SecureConnectorInstaller.msi' -Verbose
+
+
+Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 $OOBECMD = @'
 @echo off
 # Execute OOBE Tasks
