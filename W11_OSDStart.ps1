@@ -246,7 +246,12 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1</Path>
-                </RunSynchronousCommand>             
+                </RunSynchronousCommand>   
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Join Computer to on-premise domain</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Computer-DomainJoin</Path>
+                </RunSynchronousCommand>                            
             </RunSynchronous>
         </component>
     </settings>
