@@ -240,7 +240,7 @@ $UnattendXml = @"
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
                     <Description>Install Pre-required Applications</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\Setup\scripts\\Install-PreApps.ps1 -Wait</Path>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\Setup\scripts\Install-PreApps.ps1 -Wait</Path>
                 </RunSynchronousCommand>                        
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>

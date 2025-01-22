@@ -146,7 +146,7 @@ $proc.WaitForExit()
 #    Remove C:\Windows\Setup\Scripts\ Items
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Remove C:\Windows\Setup\Scripts Items"
-Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
+#Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
 #===================================================================================================================================================
 #    Copy OSDCloud logs and delete C:\OSDCloud folder
