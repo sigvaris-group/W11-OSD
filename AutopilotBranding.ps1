@@ -137,23 +137,23 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v L
 # Copy OneDriveSetup.exe local
 Write-Host -ForegroundColor Green "Downloading OneDriveSetup.exe file"
 $dest = "C:\Windows\Temp\OneDriveSetup.exe"
-#Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
+Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
 Write-Host -ForegroundColor Green "Install OneDrive per machine"
-#$proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
-#$proc.WaitForExit()
+$proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
+$proc.WaitForExit()
 
 #===================================================================================================================================================
 #    Remove C:\Windows\Setup\Scripts\ Items
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Remove C:\Windows\Setup\Scripts Items"
-#Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
+Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
 #===================================================================================================================================================
 #    Copy OSDCloud logs and delete C:\OSDCloud folder
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Copy OSDCloud logs and delete C:\OSDCloud folder"
 Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Recurse -ErrorAction SilentlyContinue
-#Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
 #===================================================================================================================================================
 #   Create registry keys to detect this was installed
