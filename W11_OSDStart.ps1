@@ -236,19 +236,14 @@ $UnattendXml = @"
             <ComputerName>$OSDComputername</ComputerName>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>        
+            <RunSynchronous>                             
                 <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
-                    <Description>Install Pre-required Applications</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\Setup\scripts\Install-PreApps.ps1 -Wait</Path>
-                </RunSynchronousCommand>                        
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
                 </RunSynchronousCommand>                      
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
+                    <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                                         
@@ -317,7 +312,7 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 
 # Download Pre-required Applications
 Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/SecureConnectorInstaller.msi" -OutFile 'C:\Windows\Setup\scripts\SecureConnectorInstaller.msi' -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/SecureConnectorInstaller.msi" -OutFile 'C:\Windows\Temp\SecureConnectorInstaller.msi' -Verbose
 
 
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
@@ -325,6 +320,7 @@ $OOBECMD = @'
 @echo off
 # Execute OOBE Tasks
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\check-autopilotprereq.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
