@@ -4,7 +4,8 @@
 # Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
 # Created:         01/18/2025
 # Updated:         01/20/2025 Including WiFi and domain join
-# Version:         1.1
+#                  01/30/2025 Including script to install Windows updates
+# Version:         1.2
 #
 #=============================================================================================================================
 
