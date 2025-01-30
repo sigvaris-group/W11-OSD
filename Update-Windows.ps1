@@ -54,6 +54,6 @@ else {
 Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
 Import-Module PSWindowsUpdate -Scope Global
 Get-WindowsUpdate
-Install-WindowsUpdate -AcceptAll -IgnoreReboot
+Install-WindowsUpdate -AcceptAll -AutoReboot
 
 Stop-Transcript | Out-Null
