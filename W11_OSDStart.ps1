@@ -3,10 +3,6 @@
 # Script Name:     W11_OSDStart.ps1
 # Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
 # Created:         01/18/2025
-# Updated:         01/20/2025 Including WiFi and domain join
-#                  01/30/2025 Including script to install Windows updates
-#                  01/31/2025 Install Language pack moved to an Intune app which will be installed by ESP
-#                  01/31/2025 Install M365 Office included
 # Version:         1.2
 #
 #=============================================================================================================================
@@ -15,7 +11,7 @@ Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and 
 $UpdateNews = @(
 "01/20/2025 Including WiFi and domain join"
 "01/30/2025 Including script to install Windows updates"
-"01/31/2025 Install Language pack moved to an Intune app which will be installed by ESP"
+"01/31/2025 Install Language pack moved to Intune app which will be installed by ESP"
 "01/31/2025 Install M365 Office included"
 )
 Write-Host -ForegroundColor Green "Update news!"
@@ -43,7 +39,7 @@ if ($UI) {
 
 #================================================
 #   [PreOS] Update Module
-#================================================SI
+#================================================
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
     Set-DisRes 1600
