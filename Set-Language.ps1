@@ -42,7 +42,6 @@ $OSDGeoID = $json.OSDGeoID
 #=======================================================================
 #   [OOBE] Set Language
 #=======================================================================
-
 Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) and change the language of the OS on different places"
 Install-Language $OSDLanguage -CopyToSettings
 
