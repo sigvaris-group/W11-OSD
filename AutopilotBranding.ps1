@@ -25,6 +25,8 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "AutopilotBranding.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
+
 #===================================================================================================================================================
 #   Load UIjson.json file
 #===================================================================================================================================================

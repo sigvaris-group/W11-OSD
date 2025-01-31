@@ -95,6 +95,16 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
 
+# Download installation files for M365 Office
+Write-Host -ForegroundColor Green "Download installation files for M365 Office"
+If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
+    New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
+}
+Write-Host "Attempting to download latest Office setup executable"
+Invoke-WebRequest "https://officecdn.microsoft.com/pr/wsus/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
+Write-Host "Download configuration file for M365 Office installation"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Configuration.xml" -OutFile "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Verbose
+
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
