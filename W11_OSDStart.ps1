@@ -16,7 +16,7 @@ $UpdateNews = @(
 )
 Write-Host -ForegroundColor Green "Update news!"
 foreach ($UpdateNew in $UpdateNews) {
-    Write-Host -ForegroundColor Magenta "  $($UpdateNew)"
+    Write-Host "  $($UpdateNew)"
 }
 Start-Sleep -Seconds 10
 
