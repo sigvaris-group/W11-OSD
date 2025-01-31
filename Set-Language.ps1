@@ -69,10 +69,4 @@ Set-WinHomeLocation -GeoId $OSDGeoID
 Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
 Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
 
-#=======================================================================
-#   Restart-Computer
-#=======================================================================
-Write-Host  -ForegroundColor Green "Restarting in 5 seconds!"
-Restart-Computer -Timeout 5
-
 Stop-Transcript | Out-Null
