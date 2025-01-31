@@ -169,10 +169,4 @@ New-ItemProperty -Path  $RegPath -Name AutopilotBranding -Value 'Installed' -For
 New-ItemProperty -Path  $RegPath -Name Version -Value '1.1' -Force -ErrorAction SilentlyContinue
 New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue
 
-#=======================================================================
-#   Restart-Computer
-#=======================================================================
-Write-Host  -ForegroundColor Green "Restarting in 5 seconds!"
-Restart-Computer -Timeout 5
-
 Stop-Transcript | Out-Null
