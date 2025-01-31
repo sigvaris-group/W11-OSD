@@ -11,7 +11,7 @@ Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and 
 $UpdateNews = @(
 "01/20/2025 Including WiFi and domain join"
 "01/30/2025 Including script to install Windows updates"
-"01/31/2025 Install Language pack moved to Intune app which will be installed by ESP"
+"01/31/2025 Install Language pack moved to Intune app which will be installed by ESP, because with W11 24H2 it doesn't work anymore"
 "01/31/2025 Install M365 Office included"
 )
 Write-Host -ForegroundColor Green "Update news!"
