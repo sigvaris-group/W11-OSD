@@ -30,7 +30,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 #   Install M365 Office
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Start M365 Office Installation"
-$M365Office = Start-Process -FilePath "C:\ProgramData\OSDeploy\M365\setup.exe" -ArgumentList "/configure C:\ProgramData\OSDeploy\M365\configuration.xml" -Wait -PassThru 
+$M365Office = Start-Process -FilePath "C:\ProgramData\OSDeploy\M365\setup.exe" -ArgumentList "/configure C:\ProgramData\OSDeploy\M365\configuration.xml" -Wait
 if ($M365Office) {
     Write-Host -ForegroundColor Cyan "Waiting for M365 Office Setup to complete"
     if (Get-Process -Id $M365Office.Id -ErrorAction Ignore) {
