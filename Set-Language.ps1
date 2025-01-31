@@ -20,22 +20,9 @@ $env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
-Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
-
-if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
-
-    write-warning "Running in 32-bit Powershell, starting 64-bit..."
-    if ($myInvocation.Line) {
-        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile $myInvocation.Line
-    }else{
-        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile -file "$($myInvocation.InvocationName)" $args
-    }
-    
-    exit $lastexitcode
-}
-
-
+#=======================================================================
+#   [OOBE] Load UIjson.json file
+#=======================================================================
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Set-Language.log"
@@ -82,5 +69,11 @@ Set-WinHomeLocation -GeoId $OSDGeoID
 
 Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
 Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
+
+#=======================================================================
+#   Restart-Computer
+#=======================================================================
+Write-Host  -ForegroundColor Green "Restarting in 5 seconds!"
+Restart-Computer -Timeout 5
 
 Stop-Transcript | Out-Null
