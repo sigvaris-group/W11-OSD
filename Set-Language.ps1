@@ -129,7 +129,7 @@ Write-Host -ForegroundColor Green "Create registry keys to detect this was insta
 $currentDateTime = Get-Date -Format "MM/dd/yyyy HH:mm:ss" 
 New-Item -Path 'HKLM:\SOFTWARE\' -Name 'SIGVARIS' -ErrorAction SilentlyContinue
 New-Item -Path 'HKLM:\SOFTWARE\SIGVARIS' -Name 'Autopilot' -ErrorAction SilentlyContinue
-New-Item -Path 'HKLM:\SOFTWARE\SIGVARIS' -Name 'Language' -ErrorAction SilentlyContinue
+New-Item -Path 'HKLM:\SOFTWARE\SIGVARIS\Autopilot' -Name 'Language' -ErrorAction SilentlyContinue
 $RegPath = "HKLM:\SOFTWARE\SIGVARIS\Autopilot\Language"
 New-ItemProperty -Path  $RegPath -Name OSDLanguage -Value $OSDLanguage -Force -ErrorAction SilentlyContinue
 New-ItemProperty -Path  $RegPath -Name OSDKeyboard -Value $OSDKeyboard -Force -ErrorAction SilentlyContinue
