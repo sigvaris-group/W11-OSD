@@ -254,7 +254,7 @@ $UnattendXml = @"
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <SystemLocale>$OSDKeyboard</SystemLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDLanguage</UILanguage>
             <UserLocale>$OSDKeyboard</UserLocale>
         </component>
