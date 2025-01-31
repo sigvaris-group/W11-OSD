@@ -20,6 +20,22 @@ $env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
+Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+
+if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
+
+    write-warning "Running in 32-bit Powershell, starting 64-bit..."
+    if ($myInvocation.Line) {
+        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile $myInvocation.Line
+    }else{
+        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile -file "$($myInvocation.InvocationName)" $args
+    }
+    
+    exit $lastexitcode
+}
+
+
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Set-Language.log"
