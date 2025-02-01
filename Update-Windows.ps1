@@ -27,7 +27,7 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 
 # Install latest NuGet package provider
 Write-Host -ForegroundColor Green "Install latest NuGet package provider"
-$PackageProvider = Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
+Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
     
 # Ensure default PSGallery repository is registered
 Write-Host -ForegroundColor Green "Ensure default PSGallery repository is registered"
@@ -36,13 +36,13 @@ Register-PSRepository -Default -ErrorAction SilentlyContinue
 # Attempt to get the installed PowerShellGet module
 Write-Host -ForegroundColor Green "Attempt to get the installed PowerShellGet module"
 $PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
-if ($PowerShellGetInstalledModule -ne $null) {
+if ($PowerShellGetInstalledModule) {
         # Attempt to locate the latest available version of the PowerShellGet module from repository
         Write-Host -ForegroundColor Green "Attempt to locate the latest available version of the PowerShellGet module from repository"
         $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
-        if ($PowerShellGetLatestModule -ne $null) {
+        if ($PowerShellGetLatestModule) {
                 if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
-                        Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
+                        #Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
                 }
         }
         else {
