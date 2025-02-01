@@ -37,6 +37,23 @@ if ($UI) {
         Wait-Process -Id $UI.Id
     } 
 }
+$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
+$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
+$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
+$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
+$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
+$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
+$OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
+$OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
+
+Write-Host "Computername: $OSDComputername"
+Write-Host "Location: $OSDLocation"
+Write-Host "Language: $OSDLanguage"
+Write-Host "Keyboard: $OSDKeyboard"
+Write-Host "KeyboardLocale: $OSDKeyboardLocale"
+Write-Host "GeoID: $OSDGeoID"
+Write-Host "TimeZone: $OSDTimeZone"
+Write-Host "DomainJoin: $OSDDomainJoin"
 
 #================================================
 #   [PreOS] Update Module
@@ -210,24 +227,6 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 #================================================
 #  [PostOS] Create UIJson file
 #================================================
-$OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
-$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
-$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
-$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
-$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
-$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
-$OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
-$OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-
-Write-Host "Computername: $OSDComputername"
-Write-Host "Location: $OSDLocation"
-Write-Host "Language: $OSDLanguage"
-Write-Host "Keyboard: $OSDKeyboard"
-Write-Host "KeyboardLocale: $OSDKeyboardLocale"
-Write-Host "GeoID: $OSDGeoID"
-Write-Host "TimeZone: $OSDTimeZone"
-Write-Host "DomainJoin: $OSDDomainJoin"
-
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UIjson.json"
 $UIjson = @"
 {
