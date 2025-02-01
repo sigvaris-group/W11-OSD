@@ -7,8 +7,8 @@
       <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
         <Choice Option="English" Value="en-US" AlternateValue="English" />
-        <Choice Option="German - Switzerland" Value="de-CH" AlternateValue="SwissGerman" />
-        <Choice Option="German - Germany" Value="de-DE" AlternateValue="German" />
+        <Choice Option="German - Switzerland" Value="de-CH" AlternateValue="German-Switzerland" />
+        <Choice Option="German - Germany" Value="de-DE" AlternateValue="German-Germany" />
         <Choice Option="French" Value="fr-FR" AlternateValue="French" />
         <Choice Option="Italian" Value="it-IT" AlternateValue="Italian" />
         <Choice Option="Polish" Value="pl-PL" AlternateValue="Polish" />
