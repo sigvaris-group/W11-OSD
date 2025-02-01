@@ -46,14 +46,15 @@ $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGe
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 
-Write-Host "Computername: $OSDComputername"
-Write-Host "Location: $OSDLocation"
-Write-Host "Language: $OSDLanguage"
-Write-Host "Keyboard: $OSDKeyboard"
-Write-Host "KeyboardLocale: $OSDKeyboardLocale"
-Write-Host "GeoID: $OSDGeoID"
-Write-Host "TimeZone: $OSDTimeZone"
-Write-Host "DomainJoin: $OSDDomainJoin"
+Write-Host -ForegroundColor Green "Your Settings are:"
+Write-Host "  Computername: $OSDComputername"
+Write-Host "  Location: $OSDLocation"
+Write-Host "  Language: $OSDLanguage"
+Write-Host "  Keyboard: $OSDKeyboard"
+Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
+Write-Host "  GeoID: $OSDGeoID"
+Write-Host "  TimeZone: $OSDTimeZone"
+Write-Host "  DomainJoin: $OSDDomainJoin"
 
 #================================================
 #   [PreOS] Update Module
