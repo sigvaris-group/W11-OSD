@@ -40,6 +40,7 @@ if ($UI) {
 $OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
 $OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
 $OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
+$OSDDisplayLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDisplayLanguage
 $OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
 $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
@@ -49,7 +50,8 @@ $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
 Write-Host "  Location: $OSDLocation"
-Write-Host "  Language: $OSDLanguage"
+Write-Host "  OS Language: $OSDLanguage"
+Write-Host "  Display Language: $OSDDisplayLanguage"
 Write-Host "  Keyboard: $OSDKeyboard"
 Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"

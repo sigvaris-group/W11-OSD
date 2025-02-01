@@ -37,12 +37,21 @@
       <InputInfo Color="#992233" SIZE="-2">Please delete device first from Active Directory!</InputInfo>
     </Action>
     <!-- This Section change the display language based on location-->
-    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
-    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
-    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
-    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
-    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIUKAN'>"en-GB"</Action>
-    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIAUME'>"en-AU"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUKAN'>"en-GB"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRHU"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIITSI"'>"it-IT"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPLGU"'>"pl-PL"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIAUME'>"en-AU"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
@@ -111,6 +120,7 @@
     <Action Type="WMIWrite" Namespace="root\UIVars" Class="Local_Config" >
       <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
       <Property Name="OSDLanguage" Type="CIM_STRING" Value="%OSDLanguage%" Key="True"/>
+      <Property Name="OSDDisplayLanguage" Type="CIM_STRING" Value="%OSDLanguage%" Key="True"/>
       <Property Name="OSDLocation" Type="CIM_STRING" Value="%OSDLocation%" Key="True"/>
       <Property Name="OSDKeyboard" Type="CIM_STRING" Value="%OSDKeyboard%" Key="True"/>
       <Property Name="OSDKeyboardLocale" Type="CIM_STRING" Value="%OSDKeyboardLocale%" Key="True"/>
