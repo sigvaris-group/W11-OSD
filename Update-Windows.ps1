@@ -27,7 +27,7 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 
 # Install latest NuGet package provider
 Write-Host -ForegroundColor Green "Install latest NuGet package provider"
-$PackageProvider = Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$false
+$PackageProvider = Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
     
 # Ensure default PSGallery repository is registered
 Write-Host -ForegroundColor Green "Ensure default PSGallery repository is registered"
@@ -35,14 +35,14 @@ Register-PSRepository -Default -ErrorAction SilentlyContinue
 
 # Attempt to get the installed PowerShellGet module
 Write-Host -ForegroundColor Green "Attempt to get the installed PowerShellGet module"
-$PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$false
+$PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
 if ($PowerShellGetInstalledModule -ne $null) {
         # Attempt to locate the latest available version of the PowerShellGet module from repository
         Write-Host -ForegroundColor Green "Attempt to locate the latest available version of the PowerShellGet module from repository"
-        $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$false
+        $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
         if ($PowerShellGetLatestModule -ne $null) {
                 if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
-                        Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$false
+                        Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
                 }
         }
         else {
@@ -52,8 +52,8 @@ if ($PowerShellGetInstalledModule -ne $null) {
 else {
         # PowerShellGet module was not found, attempt to install from repository
         Write-Host -ForegroundColor Yellow "PowerShellGet module was not found, attempt to install from repository"
-        Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$false
-        Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$false
+        Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+        Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
 }
 
 Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
