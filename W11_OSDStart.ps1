@@ -12,7 +12,7 @@ $UpdateNews = @(
 "01/20/2025 Including WiFi and domain join"
 "01/30/2025 Including script to install Windows updates"
 "01/31/2025 Install Language pack moved to Intune app which will be installed by ESP, because with W11 24H2 it doesn't work anymore."
-"           Install-Language installs all features of the language by default, which includes those subfeatures that take a long time to downloa (30min)"
+"           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
 "01/31/2025 Install M365 Office included"
 )
 Write-Host -ForegroundColor Green "Update news!"
