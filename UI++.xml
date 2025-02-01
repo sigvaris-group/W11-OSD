@@ -7,8 +7,7 @@
       <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
         <Choice Option="English" Value="en-US" AlternateValue="English" />
-        <Choice Option="German - Switzerland" Value="de-CH" AlternateValue="German-Switzerland" />
-        <Choice Option="German - Germany" Value="de-DE" AlternateValue="German-Germany" />
+        <Choice Option="German" Value="de-DE" AlternateValue="German" />
         <Choice Option="French" Value="fr-FR" AlternateValue="French" />
         <Choice Option="Italian" Value="it-IT" AlternateValue="Italian" />
         <Choice Option="Polish" Value="pl-PL" AlternateValue="Polish" />
@@ -37,6 +36,13 @@
       <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
       <InputInfo Color="#992233" SIZE="-2">Please delete device first from Active Directory!</InputInfo>
     </Action>
+    <!-- This Section change the display language based on location-->
+    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
+    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
+    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
+    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIUKAN'>"en-GB"</Action>
+    <Action Type="TSVar" Name="OSDLanguage" Condition='"%OSDLocation%" = "SIAUME'>"en-AU"</Action>
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
