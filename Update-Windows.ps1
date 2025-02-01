@@ -26,15 +26,19 @@ $Global:Transcript = "Update-Windows.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 # Install latest NuGet package provider
+Write-Host -ForegroundColor Green "Install latest NuGet package provider"
 $PackageProvider = Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$false
     
 # Ensure default PSGallery repository is registered
+Write-Host -ForegroundColor Green "Ensure default PSGallery repository is registered"
 Register-PSRepository -Default -ErrorAction SilentlyContinue
 
 # Attempt to get the installed PowerShellGet module
+Write-Host -ForegroundColor Green "Attempt to get the installed PowerShellGet module"
 $PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$false
 if ($PowerShellGetInstalledModule -ne $null) {
         # Attempt to locate the latest available version of the PowerShellGet module from repository
+        Write-Host -ForegroundColor Green "Attempt to locate the latest available version of the PowerShellGet module from repository"
         $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$false
         if ($PowerShellGetLatestModule -ne $null) {
                 if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
@@ -47,13 +51,17 @@ if ($PowerShellGetInstalledModule -ne $null) {
 }
 else {
         # PowerShellGet module was not found, attempt to install from repository
+        Write-Host -ForegroundColor Yellow "PowerShellGet module was not found, attempt to install from repository"
         Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$false
         Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$false
 }
-    
+
+Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
 Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
 Import-Module PSWindowsUpdate -Scope Global
+Write-Host -ForegroundColor Green "Get Windows Updates"
 Get-WindowsUpdate
+Write-Host -ForegroundColor Green "Install Windows Updates"
 Install-WindowsUpdate -AcceptAll -IgnoreReboot
 
 Stop-Transcript | Out-Null
