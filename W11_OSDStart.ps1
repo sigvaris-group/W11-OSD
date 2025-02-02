@@ -235,6 +235,7 @@ $UIjson = @"
 {
     "OSDComputername" : "$OSDComputername",
     "OSDLanguage" : "$OSDLanguage",
+    "OSDDisplayLanguage" : "$OSDDisplayLanguage",
     "OSDLocation" : "$OSDLocation",
     "OSDKeyboard" : "$OSDKeyboard",
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
