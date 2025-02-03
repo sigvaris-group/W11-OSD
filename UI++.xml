@@ -6,13 +6,19 @@
     <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="Tall">
       <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
-        <Choice Option="English" Value="en-US" AlternateValue="English" />
-        <Choice Option="German" Value="de-DE" AlternateValue="German" />
-        <Choice Option="French" Value="fr-FR" AlternateValue="French" />
-        <Choice Option="Italian" Value="it-IT" AlternateValue="Italian" />
-        <Choice Option="Polish" Value="pl-PL" AlternateValue="Polish" />
-        <Choice Option="Portuguese" Value="pt-PT" AlternateValue="Portuguese" />
-        <Choice Option="Spanish" Value="es-ES" AlternateValue="Spanish" />
+        <Choice Option="English (United States)" Value="en-US" AlternateValue="English (United States)" />
+        <Choice Option="English (Great Britain)" Value="en-GB" AlternateValue="English (Great Britain" />
+        <Choice Option="English (Canada)" Value="en-CA" AlternateValue="English (Canada)" />
+        <Choice Option="English (Australia)" Value="en-AU" AlternateValue="English (Australia)" />
+        <Choice Option="German (Germany)" Value="de-DE" AlternateValue="German (Germany)" />
+        <Choice Option="German (Switzerland)" Value="de-CH" AlternateValue="German (Switzerland)" />
+        <Choice Option="German (Austria)" Value="de-AT" AlternateValue="German (Austria)" />
+        <Choice Option="French (France)" Value="fr-FR" AlternateValue="French (France)" />
+        <Choice Option="Italian (Italy)" Value="it-IT" AlternateValue="Italian (Italy)" />
+        <Choice Option="Polish (Poland)" Value="pl-PL" AlternateValue="Polish (Poland)" />
+        <Choice Option="Portuguese (Brazil)" Value="pt-BR" AlternateValue="Portuguese (Brazil)" />
+        <Choice Option="Portuguese (Portugal)" Value="pt-PT" AlternateValue="Portuguese (Portgual)" />
+        <Choice Option="Spanish (Mexico)" Value="es-MX" AlternateValue="Spanish (Mexico)" />  
       </ChoiceInput>
       <ChoiceInput Variable="OSDLocation" Question="Select the location" Required="True" Sort="False" Color="#000000" AlternateVariable="AVARSOSDLocation">
         <Choice Option="SIUSGA - Peachtree City" Value="SIUSGA" AlternateValue="SIUSGA - Peachtree City" />
@@ -36,22 +42,6 @@
       <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
       <InputInfo Color="#992233" SIZE="-2">Please delete device first from Active Directory!</InputInfo>
     </Action>
-    <!-- This Section change the display language based on location-->
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUKAN"'>"en-GB"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ"'>"fr-FR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRHU"'>"fr-FR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIITSI"'>"it-IT"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPLGU"'>"pl-PL"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIAUME"'>"en-AU"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-BR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
