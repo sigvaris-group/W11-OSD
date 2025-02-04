@@ -43,83 +43,93 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 Write-Host -ForegroundColor Green "Load C:\ProgramData\OSDeploy\UIjson.json file"
 $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFrom-Json
 
-# Access JSON properties
-$OSDLanguage = $json.OSDLanguage
-$OSDKeyboard = $json.OSDKeyboard
-$OSDGeoID = $json.OSDGeoID
+# Check if JSON exist
+if ($json) {
+    Write-Host -ForegroundColor Green "Language C:\ProgramData\OSDeploy\UIjson.json file exist"
 
-Write-Host -ForegroundColor Green "Language: $OSDLanguage"
-Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
-Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
+    # Access JSON properties
+    $OSDLanguage = $json.OSDLanguage
+    $OSDDisplayLanguage = $json.OSDDisplayLanguage
+    $OSDKeyboard = $json.OSDKeyboard
+    $OSDGeoID = $json.OSDGeoID
 
-# Set reboot for InTune based on the return code
-$RebootRequired = $false
+    Write-Host -ForegroundColor Green "OS Language: $OSDLanguage"
+    Write-Host -ForegroundColor Green "Display Language: $OSDDisplayLanguage"
+    Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
+    Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
 
-# Import modules
-Import-Module International
-Import-Module LanguagePackManagement
+    # Set reboot for InTune based on the return code
+    $RebootRequired = $true
 
-#=======================================================================
-#   Set Language
-#=======================================================================
+    # Import modules
+    Import-Module International
+    Import-Module LanguagePackManagement
 
-# Check if language installed
-$Languages = Get-InstalledLanguage
-$LanguagePresent = $false
-foreach ($Language in $Languages) {
-    Write-Host $Language.LanguageId
-    if ($Language.Language -eq $OSDLanguage) {
-        $LanguagePresent = $true
+    #=======================================================================
+    #   Set Language
+    #=======================================================================
+
+    # Install language pack and change the language of the OS on different places
+    # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
+    try {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose
+    } 
+    catch [System.Exception] {
+        Write-Host -ForegroundColor Red "$($OSDDisplayLanguage) install failed with error: $($_.Exception.Message)"
+        Stop-Transcript | Out-Null
+        exit 1
+    }
+
+    try {
+        # Configure new language defaults under current user (system) after which it can be copied to system
+        Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
+        Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose
+
+        # Configure new language defaults under current user (system) after which it can be copied to system
+        Write-Host -ForegroundColor Green "Set Win User Language $($OSDDisplayLanguage) List, sets the current user language settings"
+        $OldList = Get-WinUserLanguageList
+        Write-Host -ForegroundColor Green "Get-WinUserLanguageList: $($OldList)"
+        $UserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
+        Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList)"
+        $UserLanguageList += $OldList
+        Set-WinUserLanguageList -LanguageList $UserLanguageList -Force -Verbose
+        Write-Host -ForegroundColor Green "Set-WinUserLanguageList: $($UserLanguageList)"
+
+        # Set Win Home Location, sets the home location setting for the current user. This is for Region location 
+        Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID)"
+        Set-WinHomeLocation -GeoId $OSDGeoID -Verbose
+
+        # Set Culture, sets the user culture for the current user account. This is for Region format
+        Write-Host -ForegroundColor Green "Set Culture $($OSDDisplayLanguage), sets the user culture for the current user account"
+        Set-Culture -CultureInfo $OSDDisplayLanguage -Verbose
+
+        # Set the locale for the region and language
+        Write-Host -ForegroundColor Green "Set System Locale Language $($OOSDDisplayLanguage)"
+        Set-WinSystemLocale $OSDDisplayLanguage -Verbose
+
+        # Sets the provided language as the System Preferred UI Language
+        #Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
+        #Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
+
+        # Copy User International Settings from current user to System, including Welcome screen and new user
+        Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
+        Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True -Verbose
+
+        if ($RebootRequired -eq $true) {
+            Write-Host -ForegroundColor Green "Reboot required"
+        }
+    }
+    catch [System.Exception] {
+        Write-Host -ForegroundColor Red "$($OSDDisplayLanguage) install failed with error: $($_.Exception.Message)"
+        Stop-Transcript | Out-Null
+        exit 1
     }
 }
-
-if ($LanguagePresent -eq $false) {
-    Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) and change the language of the OS on different places"
-    Install-Language $OSDLanguage -CopyToSettings
-    $RebootRequired = $true
-}
-
-if ($(Get-WinSystemLocale).Name -ne $OSDLanguage) {
-    Write-Host -ForegroundColor Green "Set System Locale Language $($OSDLanguage)"
-    Set-WinSystemLocale $OSDLanguage
-    $RebootRequired = $true
-}
-
-if ($(Get-SystemPreferredUILanguage) -ne $OSDLanguage) {
-    Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
-    Set-SystemPreferredUILanguage $OSDLanguage
-    $RebootRequired = $true
-}
-
-if ($(Get-WinUserLanguageList).LanguageTag -ne $OSDLanguage) {
-    Write-Host -ForegroundColor Green "Set Win User Language $($OSDLanguage) List, sets the current user language settings"
-    $OldList = Get-WinUserLanguageList
-    $UserLanguageList = New-WinUserLanguageList -Language $OSDLanguage
-    $UserLanguageList += $OldList
-    Set-WinUserLanguageList -LanguageList $UserLanguageList -Force
-    $RebootRequired = $true
-}
-
-if ($(Get-Culture).Name -ne $OSDKeyboard) {
-    Write-Host -ForegroundColor Green "Set Culture $($OSDKeyboard), sets the user culture for the current user account"
-    Set-Culture -CultureInfo $OSDKeyboard
-    $RebootRequired = $true
-}
-
-if ($(Get-WinHomeLocation).GeoId -ne $OSDGeoID) {
-    Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID)"
-    Set-WinHomeLocation -GeoId $OSDGeoID
-    $RebootRequired = $true
-}
-
-Write-Host -ForegroundColor Green "Configure new language $($OSDLanguage) defaults under current user (system) after which it can be copied to system"
-Set-WinUILanguageOverride -Language $OSDLanguage
-
-Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
-Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
-
-if ($RebootRequired -eq $true) {
-    Write-Host -ForegroundColor Green "Reboot required"
+else {
+    Write-Host -ForegroundColor Yellow "Language C:\ProgramData\OSDeploy\UIjson.json file do not exist"
+    Write-Host -ForegroundColor Yellow "Computer was not setup with OSDCloud"
+    $RebootRequired = $false
 }
 
 #===================================================================================================================================================
@@ -132,6 +142,7 @@ New-Item -Path 'HKLM:\SOFTWARE\SIGVARIS' -Name 'Autopilot' -ErrorAction Silently
 New-Item -Path 'HKLM:\SOFTWARE\SIGVARIS\Autopilot' -Name 'Language' -ErrorAction SilentlyContinue
 $RegPath = "HKLM:\SOFTWARE\SIGVARIS\Autopilot\Language"
 New-ItemProperty -Path  $RegPath -Name OSDLanguage -Value $OSDLanguage -Force -ErrorAction SilentlyContinue
+New-ItemProperty -Path  $RegPath -Name OSDDisplayLanguage -Value $OSDDisplayLanguage -Force -ErrorAction SilentlyContinue
 New-ItemProperty -Path  $RegPath -Name OSDKeyboard -Value $OSDKeyboard -Force -ErrorAction SilentlyContinue
 New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
 New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue
