@@ -43,22 +43,22 @@
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUKAN"'>"en-GB"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG" And "%OSDLanguage%" = "en-US"'>"en-CH"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG" And "%OSDLanguage%" = "de-CH"'>"de-CH"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ" And "%OSDLanguage%" = "en-US"'>"en-FR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ" And "%OSDLanguage%" = "fr-FR"'>"fr-FR"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRHU" And "%OSDLanguage%" = "en-US"'>"en-FR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRHU"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRHU" And "%OSDLanguage%" = "fr-FR"'>"fr-FR"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIITSI"'>"it-IT"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPLGU" And "%OSDLanguage%" = "en-US"'>"en-PL"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPLGU"'>"pl-PL"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPLGU" And "%OSDLanguage%" = "pl-PL"'>"pl-PL"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIAUME"'>"en-AU"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP" And "%OSDLanguage%" = "en-US"'>"en-BR"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP" And "%OSDLanguage%" = "pt-BR"'>"pt-BR"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI" And "%OSDLanguage%" = "en-US"'>"en-PT"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-PT"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI" And "%OSDLanguage%" = "pt-PT"'>"pt-PT"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC" And "%OSDLanguage%" = "en-US"'>"en-MX"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>    
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC" And "%OSDLanguage%" = "es-MX"'>"es-MX"</Action>    
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
