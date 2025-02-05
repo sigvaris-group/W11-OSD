@@ -68,6 +68,11 @@ Import-Module LanguagePackManagement
 # Install language pack and change the language of the OS on different places
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {
+    $CurrentLPs = Get-Language
+    foreach ($CurrentLP in $CurrentLPs) {
+        Write-Host -ForegroundColor Green "Language installed: $($CurrentLP.Language)"
+    }
+
     Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
     Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose
 } 
