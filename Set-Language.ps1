@@ -68,11 +68,6 @@ Import-Module LanguagePackManagement
 # Install language pack and change the language of the OS on different places
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {
-    $CurrentLPs = Get-Language
-    foreach ($CurrentLP in $CurrentLPs) {
-        Write-Host -ForegroundColor Green "Language installed: $($CurrentLP.Language)"
-    }
-
     Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
     Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose
 } 
@@ -83,6 +78,9 @@ catch [System.Exception] {
 }
 
 try {
+    # Sets the provided language as the System Preferred UI Language
+    Set-SystemPreferredUILanguage -language $OSDDisplayLanguage
+
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose
@@ -90,12 +88,13 @@ try {
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Set Win User Language $($OSDDisplayLanguage) List, sets the current user language settings"
     $OldList = Get-WinUserLanguageList
-    Write-Host -ForegroundColor Green "Get-WinUserLanguageList: $($OldList)"
+    Write-Host -ForegroundColor Green "Old WinUserLanguageList: $($OldList.LanguageTag)"
     $UserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
-    Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList)"
+    Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList.LanguageTag)"
     $UserLanguageList += $OldList
     Set-WinUserLanguageList -LanguageList $UserLanguageList -Force -Verbose
-    Write-Host -ForegroundColor Green "Set-WinUserLanguageList: $($UserLanguageList)"
+    $NewUserLanguageList = Get-WinUserLanguageList
+    Write-Host -ForegroundColor Green "New WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
 
     # Set Win Home Location, sets the home location setting for the current user. This is for Region location 
     Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID)"

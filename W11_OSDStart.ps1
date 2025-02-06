@@ -276,10 +276,10 @@ $UnattendXml = @"
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <SystemLocale>$OSDLanguage</SystemLocale>
-            <UILanguage>$OSDLanguage</UILanguage>
-            <UserLocale>$OSDKeyboard</UserLocale>
+            <InputLocale>$OSDDisplayLanguage</InputLocale>
+            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
@@ -334,7 +334,7 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
-#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1'" | Out-File -FilePath 'C:\ProgramData\OSDeploy\Set-Language.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1'" | Out-File -FilePath 'C:\ProgramData\OSDeploy\Set-Language.ps1' -Encoding ascii -Force
 
 # Download Pre-required Applications
 Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
