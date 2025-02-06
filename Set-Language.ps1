@@ -78,9 +78,6 @@ catch [System.Exception] {
 }
 
 try {
-    # Sets the provided language as the System Preferred UI Language
-    Set-SystemPreferredUILanguage -language $OSDDisplayLanguage
-
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose
