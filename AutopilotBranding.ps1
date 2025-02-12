@@ -145,6 +145,16 @@ $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassT
 $proc.WaitForExit()
 
 #===================================================================================================================================================
+#    Enable .NET Framework 3.5 for US, CA
+#===================================================================================================================================================
+$DeviceName = $env:COMPUTERNAME.Substring(0,6)
+Switch ($DeviceName) {
+    'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
+    'SIUSGA' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
+    'SIUSMI' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
+}
+
+#===================================================================================================================================================
 #    Remove C:\Windows\Setup\Scripts\ Items
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Remove C:\Windows\Setup\Scripts Items"
