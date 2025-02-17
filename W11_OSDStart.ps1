@@ -251,7 +251,7 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 #  [PostOS] Create Unattend XML file
 #================================================
-if ($OSDDomainJoin -eq "No") {
+if ($OSDDomainJoin -ne "Yes") {
 Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
