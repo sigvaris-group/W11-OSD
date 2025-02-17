@@ -34,7 +34,7 @@
       <InputInfo></InputInfo>
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
       <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
-      <InputInfo Color="#992233">Please delete device first from Active Directory,Intune,Autopilot,ConfigMgr and EntraID!</InputInfo>
+      <InputInfo Color="#992233" SIZE="-2">Ddelete device first from Active Directory,Intune,Autopilot,ConfigMgr and EntraID!</InputInfo>
     </Action>
     <!-- This Section change the display language based on location-->
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
