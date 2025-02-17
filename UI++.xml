@@ -35,7 +35,7 @@
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
     </Action>
     <!-- This Section is an Information for domain joined devices-->
-    <Action Type="Preflight" Title="Preflight checks" ShowCancel="True"> 
+    <Action Type="Preflight" Title="Preflight checks" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'> 
       <Check Text="WIRE connected" CheckCondition='"%XWLANDisconnected%" = "True"' />
       <Check Text="Not on battery" CheckCondition='"%XOnBattery%" = "False"' />
       <Check Text="CPU Supports Windows 11" CheckCondition='%XCPUPAE% AND %XCPUNX% AND %XCPUSSE2% = True' />
