@@ -378,7 +378,7 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Download Install-M365Office.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1'" | Out-File -FilePath 'C:\ProgramData\OSDeploy\Set-Language.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\ProgramData\OSDeploy\Set-Language.ps1' -Encoding ascii -Force
 
 # Download Pre-required Applications
 Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
