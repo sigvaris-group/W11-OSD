@@ -35,6 +35,12 @@
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
     </Action>
     <!-- This Section is an Information for domain joined devices-->
+    <Action Type="Preflight" Title="Preflight checks" ShowCancel="True"> 
+      <Check Text="WIRE connected " CheckCondition='"%XWLANDisconnected%" = "True"' />
+      <Check Text="Not on battery" CheckCondition='"%XOnBattery%" = "False"' />
+      <Check Text="CPU Supports Windows 11" CheckCondition='%XCPUPAE% AND %XCPUNX% AND %XCPUSSE2% = True' />
+    	<Check Text="UEFI Enabled" WarnCondition='"%XSystemUEFI%" = "True"' WarnDescription="For security purposes, UEFI should be enabled."/>
+	  </Action>
     <Action Type="Input" Name="AD" Title="Windows Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
       <InputInfo></InputInfo>   
       <InputInfo Color="#992233">Delete device first from AD,ConfigMgr,Autopilot,Intune and EntraID!                                                                             </InputInfo>
