@@ -38,8 +38,6 @@
     <Action Type="Preflight" Title="Preflight checks" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'> 
       <Check Text="WIRE connected" CheckCondition='"%XWLANDisconnected%" = "True"' />
       <Check Text="Not on battery" CheckCondition='"%XOnBattery%" = "False"' />
-      <Check Text="CPU Supports Windows 11" CheckCondition='%XCPUPAE% AND %XCPUNX% AND %XCPUSSE2% = True' />
-    	<Check Text="UEFI Enabled" WarnCondition='"%XSystemUEFI%" = "True"' WarnDescription="For security purposes, UEFI should be enabled."/>
 	  </Action>
     <Action Type="Input" Name="AD" Title="Windows Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
       <InputInfo></InputInfo>   
