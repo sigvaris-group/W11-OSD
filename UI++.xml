@@ -3,7 +3,7 @@
 	<Actions>
     <!-- This Section determines the build type-->
     <Action Type="WMIRead" Namespace="root\cimv2" Class="Win32_ComputerSystem" Property="Name" Variable="OSDComputerName" />
-    <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="ExtraTall">
+    <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="Tall">
       <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
         <Choice Option="English" Value="en-US" AlternateValue="English" />
@@ -33,8 +33,13 @@
       </ChoiceInput>
       <InputInfo></InputInfo>
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
+    </Action>
+    <!-- This Section is an Information for domain joined devices-->
+    <Action Type="Input" Name="AD" Title="Windows Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
+      <InputInfo></InputInfo>   
+      <InputInfo Color="#992233">Delete device first from AD,ConfigMgr,Autopilot,Intune and EntraID!                                                                             </InputInfo>
+      <InputInfo></InputInfo>      
       <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
-      <InputInfo Color="#992233">Ddelete device first from Active Directory,Intune,Autopilot,ConfigMgr and EntraID!</InputInfo>
     </Action>
     <!-- This Section change the display language based on location-->
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
