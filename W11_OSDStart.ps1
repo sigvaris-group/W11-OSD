@@ -15,6 +15,7 @@ $UpdateNews = @(
 "           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
 "01/31/2025 Newest version of M365 Office is included"
 "02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
+"02/20/2025 To reduce the installation time you can unselect 'Install Windows Updates?'"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -47,6 +48,7 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
+$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
 
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
@@ -57,7 +59,8 @@ Write-Host "  Keyboard: $OSDKeyboard"
 Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"
 Write-Host "  TimeZone: $OSDTimeZone"
-Write-Host "  DomainJoin: $OSDDomainJoin"
+Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
+Write-Host "  Windows Updates: $OSDWindowsUpdate"
 
 #================================================
 #   [PreOS] Update Module
@@ -243,6 +246,7 @@ $UIjson = @"
     "OSDGeoID" : "$OSDGeoID",
     "OSDTimeZone" : "$OSDTimeZone",
     "OSDDomainJoin" : "$OSDDomainJoin"
+    "OSDWindowsUpdate" : "$OSDWindowsUpdate"
 }
 "@
 $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force

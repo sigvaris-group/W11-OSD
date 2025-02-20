@@ -33,12 +33,12 @@
       </ChoiceInput>
       <InputInfo></InputInfo>
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
+      <InputCheckbox Variable="OSDWindowsUpdate" Question="Install Windows Updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes"/>
     </Action>
     <!-- This Section is an Information for domain joined devices-->
-    <Action Type="Input" Name="AD" Title="Windows Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
+    <Action Type="Input" Name="AD" Title="Active Directory Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
       <InputInfo></InputInfo>   
-      <InputInfo Color="#992233">Delete device first from AD,ConfigMgr,Autopilot,Intune and EntraID!                                                                             </InputInfo>
-      <InputInfo></InputInfo>      
+      <InputInfo Color="#992233">Delete device first from AD,ConfigMgr,Autopilot,Intune and EntraID!                                                                             </InputInfo>   
       <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
     </Action>
     <!-- This Section change the display language based on location-->
@@ -139,6 +139,7 @@
       <Property Name="OSDGeoID" Type="CIM_STRING" Value="%OSDGeoID%" Key="True"/>
       <Property Name="OSDTimeZone" Type="CIM_STRING" Value="%OSDTimeZone%" Key="True"/>
       <Property Name="OSDDomainJoin" Type="CIM_STRING" Value="%OSDDomainJoin%" Key="True"/>
+      <Property Name="OSDWindowsUpdate" Type="CIM_STRING" Value="%OSDWindowsUpdate%" Key="True"/>
     </Action>
   </Actions>
 </UIpp>
