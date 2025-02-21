@@ -245,7 +245,7 @@ $UIjson = @"
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
     "OSDGeoID" : "$OSDGeoID",
     "OSDTimeZone" : "$OSDTimeZone",
-    "OSDDomainJoin" : "$OSDDomainJoin"
+    "OSDDomainJoin" : "$OSDDomainJoin",
     "OSDWindowsUpdate" : "$OSDWindowsUpdate"
 }
 "@
