@@ -382,8 +382,8 @@ Write-Host -ForegroundColor Green "Download Install-M365Office.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
 #Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Enroll-DeviceIntune.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Enroll-DeviceIntune.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Enroll-DeviceIntune.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Enroll-DeviceIntune.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Enroll-DeviceIntune.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Enroll-DeviceIntune.ps1' -Encoding ascii -Force
 
 # Download Pre-required Applications
 Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
@@ -401,7 +401,7 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-M365Office.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Enroll-DeviceIntune.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Enroll-DeviceIntune.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
