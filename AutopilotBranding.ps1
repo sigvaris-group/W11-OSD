@@ -155,6 +155,19 @@ Switch ($DeviceName) {
 }
 
 #===================================================================================================================================================
+#    Remove OSDCloudRegistration Certificate
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Delete certificate from local machine store"
+$subjectName = "OSDCloudRegistration"
+$cert = (Get-ChildItem -Path "Cert:\LocalMachine\My" | Where-Object { $_.Subject -Match "$subjectName" }).Thumbprint
+Remove-Item -Path Cert:\LocalMachine\My\$cert -Force
+
+Write-Host -ForegroundColor Green "Remove Import-Certificagte.ps1 script"
+if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
+	Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force
+}
+
+#===================================================================================================================================================
 #    Remove C:\Windows\Setup\Scripts\ Items
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Remove C:\Windows\Setup\Scripts Items"
