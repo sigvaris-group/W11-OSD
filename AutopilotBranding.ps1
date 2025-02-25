@@ -154,7 +154,6 @@ Switch ($DeviceName) {
     'SIUSMI' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
 }
 
-<#
 #===================================================================================================================================================
 #    Remove OSDCloudRegistration Certificate
 #===================================================================================================================================================
@@ -167,7 +166,6 @@ Write-Host -ForegroundColor Green "Remove Import-Certificagte.ps1 script"
 if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
 	Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force
 }
-#>
 
 #===================================================================================================================================================
 #    Remove C:\Windows\Setup\Scripts\ Items
