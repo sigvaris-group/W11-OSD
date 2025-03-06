@@ -13,7 +13,6 @@ $UpdateNews = @(
 "01/30/2025 Including script to install Windows updates"
 "01/31/2025 Install Language pack moved to Intune app which will be installed by ESP, because with W11 24H2 it doesn't work anymore."
 "           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
-"01/31/2025 Newest version of M365 Office is included"
 "02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
 "02/20/2025 To reduce the installation time you can unselect 'Install Windows Updates?'"
 )
@@ -339,8 +338,8 @@ Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Install-M365Office.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Install-M365Office.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
 #Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 #Write-Host -ForegroundColor Green "Download Enroll-DeviceIntune.ps1"
@@ -359,7 +358,7 @@ $OOBECMD = @'
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-M365Office.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-M365Office.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Enroll-DeviceIntune.ps1
