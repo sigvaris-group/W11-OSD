@@ -56,12 +56,40 @@ If ($json) {
     Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
     Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
 
-    # Set reboot for InTune based on the return code
-    $RebootRequired = $true
-
     # Import modules
     Import-Module International
     Import-Module LanguagePackManagement
+
+    # Stop the Windows Update service
+    Write-Host -ForegroundColor Green "Stop the Windows Update service"
+    Stop-Service -Name wuauserv -ErrorAction SilentlyContinue
+
+    #===================================================================================================================================================
+    #   Remediate Windows Update policy conflict for Autopatch
+    #===================================================================================================================================================
+    Write-Host -ForegroundColor Green "Remediate Windows Update policy conflict for Autopatch"
+    # initialize the array
+    [PsObject[]]$regkeys = @()
+    # populate the array with each object
+    $regkeys += [PsObject]@{ Name = "DoNotConnectToWindowsUpdateInternetLocations"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
+    $regkeys += [PsObject]@{ Name = "DisableWindowsUpdateAccess"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
+    $regkeys += [PsObject]@{ Name = "WUServer"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
+    $regkeys += [PsObject]@{ Name = "UseWUServer"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\"}
+    $regkeys += [PsObject]@{ Name = "NoAutoUpdate"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\"}
+
+    foreach ($setting in $regkeys)
+    {
+        write-host "checking $($setting.name)"
+        if((Get-Item $setting.path -ErrorAction Ignore).Property -contains $setting.name)
+        {
+            write-host "remediating $($setting.name)"
+            Remove-ItemProperty -Path $setting.path -Name $($setting.name)
+        }
+        else
+        {
+            write-host "$($setting.name) was not found"
+        }
+    }
 
     #=======================================================================
     #   Set Language
@@ -70,16 +98,13 @@ If ($json) {
     # Install language pack and change the language of the OS on different places
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
     try {
+        
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
         Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose
-    } 
-    catch [System.Exception] {
-        Write-Host -ForegroundColor Red "$($OSDDisplayLanguage) install failed with error: $($_.Exception.Message)"
-        Stop-Transcript | Out-Null
-        exit 1
-    }
 
-    try {
+        # Set reboot for InTune based on the return code
+        $RebootRequired = $true
+                
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
         Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose
@@ -132,8 +157,8 @@ If ($json) {
         New-ItemProperty -Path  $RegPath -Name OSDDisplayLanguage -Value $OSDDisplayLanguage -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path  $RegPath -Name OSDKeyboard -Value $OSDKeyboard -Force -ErrorAction SilentlyContinue
         New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
-        New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue        
-    }
+        New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue           
+    } 
     catch [System.Exception] {
         Write-Host -ForegroundColor Red "$($OSDDisplayLanguage) install failed with error: $($_.Exception.Message)"
         Stop-Transcript | Out-Null
@@ -156,7 +181,6 @@ If ($json) {
     New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
     New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue     
 } 
-
 
 Stop-Transcript | Out-Null
 
