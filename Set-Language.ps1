@@ -60,23 +60,6 @@ If ($json) {
     Import-Module International
     Import-Module LanguagePackManagement
 
-    # Stop the Windows Update service
-    Write-Host -ForegroundColor Green "Stop the Windows Update service"
-    Stop-Service -Name wuauserv -ErrorAction SilentlyContinue
-
-    #===================================================================================================================================================
-    #   Remediate Windows Update policy conflict for Autopatch
-    #===================================================================================================================================================
-    Write-Host -ForegroundColor Green "Remediate Windows Update policy conflict for Autopatch"
-    # initialize the array
-    [PsObject[]]$regkeys = @()
-    # populate the array with each object
-    $regkeys += [PsObject]@{ Name = "DoNotConnectToWindowsUpdateInternetLocations"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
-    $regkeys += [PsObject]@{ Name = "DisableWindowsUpdateAccess"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
-    $regkeys += [PsObject]@{ Name = "WUServer"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\"}
-    $regkeys += [PsObject]@{ Name = "UseWUServer"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\"}
-    $regkeys += [PsObject]@{ Name = "NoAutoUpdate"; path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU\"}
-
     foreach ($setting in $regkeys)
     {
         write-host "checking $($setting.name)"
