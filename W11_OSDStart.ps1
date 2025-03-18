@@ -14,7 +14,7 @@ $UpdateNews = @(
 "01/31/2025 Install Language pack moved to Intune app which will be installed by ESP, because with W11 24H2 it doesn't work anymore."
 "           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
 "02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
-"02/20/2025 To reduce the installation time you can unselect 'Install Windows Updates?'"
+"02/20/2025 REMOVED - To reduce the installation time you can unselect 'Install Windows Updates?'"
 "03/17/2025 M365 Office Installation package added"
 "03/18/2025 Windows Updates will be always installed"
 )
