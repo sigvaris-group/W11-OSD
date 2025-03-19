@@ -308,7 +308,12 @@ $UnattendXml = @"
                     <Order>3</Order>
                     <Description>Disable Telemetry</Description>
                     <Path>reg add HKCU\Software\Policies\Microsoft\Office\Common\ClientTelemetry /v DisableTelemetry /t REG_DWORD /d 1 /f</Path>
-                </RunSynchronousCommand>                                                                  
+                </RunSynchronousCommand>    
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <Description>Install M365 Office</Description>
+                    <Path>C:\ProgramData\OSDeploy\M365\setup.exe /configure C:\ProgramData\OSDeploy\M365\Configuration.xml</Path>
+                </RunSynchronousCommand>                                                                               
             </RunSynchronous>
         </component>
     </settings>
@@ -397,7 +402,7 @@ $OOBECMD = @'
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-M365Office.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-M365Office.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Enroll-DeviceIntune.ps1
