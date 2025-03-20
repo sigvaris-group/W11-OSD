@@ -196,4 +196,4 @@ Stop-Transcript | Out-Null
 
 Write-Host  -ForegroundColor Green "Restarting in 5 seconds!"
 start-Sleep -Seconds 5
-wpeutil reboot
+Restart-Computer -Force
