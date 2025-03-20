@@ -181,6 +181,12 @@ Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Rec
 Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
 #===================================================================================================================================================
+#    Enable .NET Framework 3.5
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Enable .NET Framework 3.5"
+Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart
+
+#===================================================================================================================================================
 #   Create registry keys to detect this was installed
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Create registry keys to detect this was installed"
