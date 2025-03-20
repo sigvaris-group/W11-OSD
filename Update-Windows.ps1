@@ -33,15 +33,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDWindowsUpdate = $json.OSDWindowsUpdate
-$OSDDisplayLanguage = $json.OSDDisplayLanguage
-
-#===================================================================================================================================================
-#    Install Language Pack in advance without copy settings
-#===================================================================================================================================================
-Import-Module International
-Import-Module LanguagePackManagement
-Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
 
 Write-Host -ForegroundColor Green "Windows Updates $OSDWindowsUpdate"
 
