@@ -35,6 +35,7 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDTimeZone = $json.OSDTimeZone
+$OSDDisplayLanguage = $json.OSDDisplayLanguage
 
 <#
 #===================================================================================================================================================
@@ -179,6 +180,14 @@ Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 Write-Host -ForegroundColor Green "Copy OSDCloud logs and delete C:\OSDCloud folder"
 Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Recurse -ErrorAction SilentlyContinue
 Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+
+#===================================================================================================================================================
+#    Install Language Pack in advance without copy settings
+#===================================================================================================================================================
+Import-Module International
+Import-Module LanguagePackManagement
+Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
 
 #===================================================================================================================================================
 #   Create registry keys to detect this was installed

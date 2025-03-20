@@ -15,7 +15,7 @@ $UpdateNews = @(
 "           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
 "02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
 "02/20/2025 REMOVED - To reduce the installation time you can unselect 'Install Windows Updates?'"
-"03/17/2025 REMOVE - M365 Office Installation package added"
+"03/17/2025 REMOVED - M365 Office Installation package added"
 "03/18/2025 Windows Updates will be always installed"
 "03/20/2025 M365 Office Installation moved to ESP"
 )
@@ -132,15 +132,16 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 <#
 # Download installation files for M365 Office
 Write-Host -ForegroundColor Green "Download installation files for M365 Office"
-If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
-    New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
-}
 Write-Host "Attempting to download Setup from Office Deployment Tool"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
 #Invoke-WebRequest "https://officecdn.microsoft.com/pr/wsus/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
 #Write-Host "Download configuration file for M365 Office installation"
 #Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Configuration.xml" -OutFile "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Verbose
-Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\M365\Configuration.xml"
+#>
+If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
+    New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
+}
+Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\M365\configuration.xml"
 $OfficeXml = @"
 <Configuration ID="44ad4a5b-8ca2-4b1d-9120-4ccb79ab01bc">
   <Info Description="M365 Enterprise without Access" />
@@ -169,8 +170,8 @@ $OfficeXml = @"
   <Display Level="None" AcceptEULA="TRUE" />
 </Configuration>
 "@ 
-$OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Encoding utf8 -Width 2000 -Force
-#>
+$OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\configuration.xml" -Encoding utf8 -Width 2000 -Force
+
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration

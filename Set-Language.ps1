@@ -60,20 +60,6 @@ If ($json) {
     Import-Module International
     Import-Module LanguagePackManagement
 
-    foreach ($setting in $regkeys)
-    {
-        write-host "checking $($setting.name)"
-        if((Get-Item $setting.path -ErrorAction Ignore).Property -contains $setting.name)
-        {
-            write-host "remediating $($setting.name)"
-            Remove-ItemProperty -Path $setting.path -Name $($setting.name)
-        }
-        else
-        {
-            write-host "$($setting.name) was not found"
-        }
-    }
-
     #=======================================================================
     #   Set Language
     #=======================================================================
@@ -83,7 +69,7 @@ If ($json) {
     try {
         
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose
+        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
 
         # Set reboot for InTune based on the return code
         $RebootRequired = $true
