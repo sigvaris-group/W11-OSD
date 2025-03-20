@@ -214,6 +214,7 @@ $OOBEDeployJson = @'
                     "Microsoft.549981C3F5F10",
                     "Microsoft.BingWeather",
                     "Microsoft.BingNews",
+                    "Microsoft.Copilot",
                     "Microsoft.GamingApp",
                     "Microsoft.GetHelp",
                     "Microsoft.Getstarted",
