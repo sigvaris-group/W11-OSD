@@ -15,8 +15,9 @@ $UpdateNews = @(
 "           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
 "02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
 "02/20/2025 REMOVED - To reduce the installation time you can unselect 'Install Windows Updates?'"
-"03/17/2025 M365 Office Installation package added"
+"03/17/2025 REMOVE - M365 Office Installation package added"
 "03/18/2025 Windows Updates will be always installed"
+"03/20/2025 M365 Office Installation moved to ESP"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -128,6 +129,7 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
 
+<#
 # Download installation files for M365 Office
 Write-Host -ForegroundColor Green "Download installation files for M365 Office"
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
@@ -168,6 +170,7 @@ $OfficeXml = @"
 </Configuration>
 "@ 
 $OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Encoding utf8 -Width 2000 -Force
+#>
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
@@ -303,17 +306,7 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>        
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <Description>Disable Telemetry</Description>
-                    <Path>reg add HKCU\Software\Policies\Microsoft\Office\Common\ClientTelemetry /v DisableTelemetry /t REG_DWORD /d 1 /f</Path>
-                </RunSynchronousCommand>    
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <Description>Install M365 Office</Description>
-                    <Path>C:\ProgramData\OSDeploy\M365\setup.exe /configure C:\ProgramData\OSDeploy\M365\Configuration.xml</Path>
-                </RunSynchronousCommand>                                                                               
+                </RunSynchronousCommand>                                                                                    
             </RunSynchronous>
         </component>
     </settings>
@@ -379,8 +372,8 @@ Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Install-M365Office.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Install-M365Office.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-M365Office.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-M365Office.ps1' -Encoding ascii -Force
 #Write-Host -ForegroundColor Green "Download Remove-WSUS.ps1"
 #Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Remove-WSUS.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Remove-WSUS.ps1' -Encoding ascii -Force
 #Write-Host -ForegroundColor Green "Download Set-Language.ps1"
