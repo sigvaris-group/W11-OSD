@@ -36,7 +36,7 @@ $OSDWindowsUpdate = $json.OSDWindowsUpdate
 $OSDDisplayLanguage = $json.OSDDisplayLanguage
  
 #===================================================================================================================================================
-#    Install Language Pack in advance without copy settings
+#    Install Language Pack in advance
 #===================================================================================================================================================
 Import-Module International
 Import-Module LanguagePackManagement
