@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Update-Windows.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Update-Windows.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\AutopilotBranding.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AutopilotBranding.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\W11_OSDStart.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:W11_OSDStart.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}"
     }
@@ -14,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,15 +42,41 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AutopilotBranding.ps1",
+              "DocumentMoniker": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\AutopilotBranding.ps1",
+              "RelativeDocumentMoniker": "AutopilotBranding.ps1",
+              "ToolTip": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\AutopilotBranding.ps1",
+              "RelativeToolTip": "AutopilotBranding.ps1",
+              "ViewState": "AgIAAJcAAAAAAAAAAAAUwJ8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-04-28T18:31:10.004Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Update-Windows.ps1",
+              "DocumentMoniker": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Update-Windows.ps1",
+              "RelativeDocumentMoniker": "Update-Windows.ps1",
+              "ToolTip": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Update-Windows.ps1",
+              "RelativeToolTip": "Update-Windows.ps1",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAUwFAAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-04-28T18:09:46.003Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "W11_OSDStart.ps1",
               "DocumentMoniker": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\W11_OSDStart.ps1",
               "RelativeDocumentMoniker": "W11_OSDStart.ps1",
               "ToolTip": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\W11_OSDStart.ps1",
               "RelativeToolTip": "W11_OSDStart.ps1",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIMBAAAAAAAAAAAUwBMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-04-07T14:47:50.339Z",
+              "WhenOpened": "2025-04-28T18:09:32.322Z",
               "EditorCaption": ""
             }
           ]
