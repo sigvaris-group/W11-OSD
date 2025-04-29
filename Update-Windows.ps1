@@ -78,7 +78,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
         Import-Module PSWindowsUpdate -Scope Global
         Write-Host -ForegroundColor Green "Get Windows Updates"
-        Get-WindowsUpdate
+        Get-WindowsUpdate  -Category "Updates"
         Write-Host -ForegroundColor Green "Install Windows Updates"
         Install-WindowsUpdate -AcceptAll -IgnoreReboot
 
