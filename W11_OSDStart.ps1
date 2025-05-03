@@ -18,6 +18,7 @@ $UpdateNews = @(
 "03/17/2025 REMOVED - M365 Office Installation package added"
 "03/18/2025 Windows Updates will be always installed"
 "03/20/2025 M365 Office Installation moved to ESP"
+"05/03/2025 AutopilotBranding script adjusted"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -180,7 +181,7 @@ Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBED
 $OOBEDeployJson = @'
 {
     "AddNetFX3":  {
-                      "IsPresent":  true
+                      "IsPresent":  false
                   },
     "Autopilot":  {
                       "IsPresent":  false

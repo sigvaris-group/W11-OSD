@@ -9,14 +9,6 @@
 #
 #=============================================================================================================================
 
-# If we are running as a 32-bit process on an x64 system, re-launch as a 64-bit process
-if ("$env:PROCESSOR_ARCHITEW6432" -ne "ARM64") {
-	if (Test-Path "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe") {
-		& "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe" -ExecutionPolicy bypass -NoProfile -File "$PSCommandPath"
-		Exit $lastexitcode
-	}
-}
-
 $Title = "Configure Windows Autopilot Branding"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -28,28 +20,6 @@ $Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scrip
 $env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
-
-function Check-NuGetProvider {
-	[CmdletBinding()]
-	param (
-		[version]$MinimumVersion = [version]'2.8.5.201'
-	)
-	$provider = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue |
-	Sort-Object Version -Descending |
-	Select-Object -First 1
-
-	if (-not $provider) {
-		Log 'NuGet Provider Package not detected, installing...'
-		Install-PackageProvider -Name NuGet -Force | Out-Null
-	} elseif ($provider.Version -lt $MinimumVersion) {
-		Log "NuGet provider v$($provider.Version) is less than required v$MinimumVersion; updating."
-		Install-PackageProvider -Name NuGet -Force | Out-Null
-        
-	} else {
-		Log "NuGet provider meets min requirements (v:$($provider.Version))."
-	}
-    
-}
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
@@ -233,18 +203,6 @@ Write-Host -ForegroundColor Yellow "  Changing OneDriveSetup value to point to t
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
 
 #===================================================================================================================================================
-#    WinGet installs
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "WinGet installs"
-# Ensure NuGet provider before installing modules
-Check-NuGetProvider 
-
-Write-Host -ForegroundColor Yellow '  Installing WinGet.Client module'
-Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
-Write-Host -ForegroundColor Yellow '  Installing Lastest Winget package and dependencies'
-Repair-WinGetPackageManager -AllUsers -Force -Latest | Out-
-
-#===================================================================================================================================================
 #    Disable extra APv2 pages (too late to do anything about the EULA), see https://call4cloud.nl/autopilot-device-preparation-hide-privacy-settings/
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Disable extra APv2 pages (too late to do anything about the EULA)"
@@ -262,6 +220,7 @@ $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 New-ItemProperty -Path $registryPath -Name "EnableFirstLogonAnimation" -Value 0 -PropertyType DWord -Force | Out-Null
 New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -PropertyType DWord -Force | Out-Null
 
+<# doesn't work with Windows 11 24H2
 #===================================================================================================================================================
 #    Enable .NET Framework 3.5 for US, CA
 #===================================================================================================================================================
@@ -272,6 +231,7 @@ Switch ($DeviceName) {
     'SIUSGA' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSMI' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
 }
+#>
 
 #===================================================================================================================================================
 #    Remove OSDCloudRegistration Certificate
