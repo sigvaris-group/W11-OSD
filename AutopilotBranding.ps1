@@ -169,22 +169,6 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v S
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Logo /t REG_SZ /d "C:\Windows\sigvaris.bmp" /f /reg:64 | Out-Host
 
 #===================================================================================================================================================
-#   Remove the registry keys for Dev Home and Outlook New
-#   This is a workaround for the issue where the Dev Home and Outlook New apps are installed by default
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Disabling Windows 11 Dev Home and Outlook New"
-$DevHome = "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\DevHomeUpdate"
-$OutlookNew = "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate"
-if (Test-Path -Path $DevHome) {
-	Write-Host -ForegroundColor Yellow "  Removing DevHome key"
-	Remove-Item -Path $DevHome -Force
-}
-if (Test-Path -Path $OutlookNew) {
-	Write-Host -ForegroundColor Yellow "  Removing Outlook for Windows key"
-	Remove-Item -Path $OutlookNew -Force
-}
-
-#===================================================================================================================================================
 #    Install OneDrive per machine
 #===================================================================================================================================================
 # Copy OneDriveSetup.exe local
