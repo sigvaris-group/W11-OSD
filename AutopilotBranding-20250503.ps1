@@ -3,19 +3,10 @@
 # Script Name:     AutopilotBranding.ps1
 # Description:     Configure Windows Autopilot Branding
 # Created:         12/29/2024
-# Updated:         05/03/2025 Andreas Schilling
-#                  New tweaks added
+# Updated:
 # Version:         1.0
 #
 #=============================================================================================================================
-
-# If we are running as a 32-bit process on an x64 system, re-launch as a 64-bit process
-if ("$env:PROCESSOR_ARCHITEW6432" -ne "ARM64") {
-	if (Test-Path "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe") {
-		& "$($env:WINDIR)\SysNative\WindowsPowerShell\v1.0\powershell.exe" -ExecutionPolicy bypass -NoProfile -File "$PSCommandPath"
-		Exit $lastexitcode
-	}
-}
 
 $Title = "Configure Windows Autopilot Branding"
 $host.UI.RawUI.WindowTitle = $Title
@@ -29,37 +20,12 @@ $env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-function Check-NuGetProvider {
-	[CmdletBinding()]
-	param (
-		[version]$MinimumVersion = [version]'2.8.5.201'
-	)
-	$provider = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue |
-	Sort-Object Version -Descending |
-	Select-Object -First 1
-
-	if (-not $provider) {
-		Log 'NuGet Provider Package not detected, installing...'
-		Install-PackageProvider -Name NuGet -Force | Out-Null
-	} elseif ($provider.Version -lt $MinimumVersion) {
-		Log "NuGet provider v$($provider.Version) is less than required v$MinimumVersion; updating."
-		Install-PackageProvider -Name NuGet -Force | Out-Null
-        
-	} else {
-		Log "NuGet provider meets min requirements (v:$($provider.Version))."
-	}
-    
-}
-
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "AutopilotBranding.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
-
-# Get Computerinfo (used for some tasks)
-$ci = Get-ComputerInfo
 
 #===================================================================================================================================================
 #   Load UIjson.json file
@@ -86,37 +52,6 @@ Start-Service -Name "lfsvc" -ErrorAction SilentlyContinue
 Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)"
-
-#===================================================================================================================================================
-#  Hide the widgets
-#  This will fail on Windows 11 24H2 due to UCPD, see https://kolbi.cz/blog/2024/04/03/userchoice-protection-driver-ucpd-sys/
-#  New Work Around tested with 24H2 to disable widgets as a preference
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Hide the widgets"
-if ($ci.OsBuildNumber -ge 26100) {
-	Write-Host -ForegroundColor Yellow "  Attempting Widget Hiding workaround (TaskbarDa)"
-	$regExePath = (Get-Command reg.exe).Source
-	$tempRegExe = "$($env:TEMP)\reg1.exe"
-	Copy-Item -Path $regExePath -Destination $tempRegExe -Force -ErrorAction Stop
-	& $tempRegExe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa /t REG_DWORD /d 0 /f /reg:64 2>&1 | Out-Host
-	Remove-Item $tempRegExe -Force -ErrorAction SilentlyContinue
-	Write-Host -ForegroundColor Green "Widget Workaround Completed"
-} else {
-	Write-Host -ForegroundColor Green "Hiding widgets"	
-	& reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa /t REG_DWORD /d 0 /f /reg:64 2>&1 | Out-Host
-}
-
-#===================================================================================================================================================
-#  Disable Widgets (Grey out Settings Toggle)
-#  GPO settings below will completely disable Widgets, see:https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-newsandinterests#allownewsandinterests
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Disable Widgets (Grey out Settings Toggle)"
-if (-not (Test-Path "HKLM:\Software\Policies\Microsoft\Dsh")) {
-	New-Item -Path "HKLM:\Software\Policies\Microsoft\Dsh" | Out-Null
-}
-Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Dsh"  -Name "DisableWidgetsOnLockScreen" -Value 1
-Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Dsh"  -Name "DisableWidgetsBoard" -Value 1
-Set-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Dsh"  -Name "AllowNewsAndInterests" -Value 0
 
 #===================================================================================================================================================
 #   Don't let Edge create a desktop shortcut (roams to OneDrive, creates mess)
@@ -199,22 +134,6 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v S
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Logo /t REG_SZ /d "C:\Windows\sigvaris.bmp" /f /reg:64 | Out-Host
 
 #===================================================================================================================================================
-#   Remove the registry keys for Dev Home and Outlook New
-#   This is a workaround for the issue where the Dev Home and Outlook New apps are installed by default
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Disabling Windows 11 Dev Home and Outlook New"
-$DevHome = "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\DevHomeUpdate"
-$OutlookNew = "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate"
-if (Test-Path -Path $DevHome) {
-	Write-Host -ForegroundColor Yellow "  Removing DevHome key"
-	Remove-Item -Path $DevHome -Force
-}
-if (Test-Path -Path $OutlookNew) {
-	Write-Host -ForegroundColor Yellow "  Removing Outlook for Windows key"
-	Remove-Item -Path $OutlookNew -Force
-}
-
-#===================================================================================================================================================
 #    Install OneDrive per machine
 #===================================================================================================================================================
 # Copy OneDriveSetup.exe local
@@ -224,48 +143,10 @@ Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $des
 Write-Host -ForegroundColor Green "Install OneDrive per machine"
 $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
 $proc.WaitForExit()
-Write-Host -ForegroundColor Yellow "  OneDriveSetup exit code: $($proc.ExitCode)"
-Write-Host -ForegroundColor Yellow "  Making sure the Run key exists"
-& reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
-& reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null
-Write-Host -ForegroundColor Yellow "  Changing OneDriveSetup value to point to the machine wide EXE"
-# Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
-Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
-
-#===================================================================================================================================================
-#    WinGet installs
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "WinGet installs"
-# Ensure NuGet provider before installing modules
-Check-NuGetProvider 
-
-Write-Host -ForegroundColor Yellow '  Installing WinGet.Client module'
-Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
-Write-Host -ForegroundColor Yellow '  Installing Lastest Winget package and dependencies'
-Repair-WinGetPackageManager -AllUsers -Force -Latest | Out-
-
-#===================================================================================================================================================
-#    Disable extra APv2 pages (too late to do anything about the EULA), see https://call4cloud.nl/autopilot-device-preparation-hide-privacy-settings/
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Disable extra APv2 pages (too late to do anything about the EULA)"
-$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE"
-New-ItemProperty -Path $registryPath -Name "DisablePrivacyExperience" -Value 1 -PropertyType DWord -Force | Out-Null
-New-ItemProperty -Path $registryPath -Name "DisableVoice" -Value 1 -PropertyType DWord -Force | Out-Null
-New-ItemProperty -Path $registryPath -Name "PrivacyConsentStatus" -Value 1 -PropertyType DWord -Force | Out-Null
-New-ItemProperty -Path $registryPath -Name "ProtectYourPC" -Value 3 -PropertyType DWord -Force | Out-Null
-
-#===================================================================================================================================================
-#    Skip FSIA and turn off delayed desktop switch
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green 'Skip FSIA and turn off delayed desktop switch'
-$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-New-ItemProperty -Path $registryPath -Name "EnableFirstLogonAnimation" -Value 0 -PropertyType DWord -Force | Out-Null
-New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -PropertyType DWord -Force | Out-Null
 
 #===================================================================================================================================================
 #    Enable .NET Framework 3.5 for US, CA
 #===================================================================================================================================================
-Write-Host -ForegroundColor Green 'Enable .NET Framework 3.5 for US, CA'
 $DeviceName = $env:COMPUTERNAME.Substring(0,6)
 Switch ($DeviceName) {
     'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
@@ -293,6 +174,12 @@ Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 Write-Host -ForegroundColor Green "Copy OSDCloud logs and delete C:\OSDCloud folder"
 Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Recurse -ErrorAction SilentlyContinue
 Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+
+#===================================================================================================================================================
+#    Enable .NET Framework 3.5
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Enable .NET Framework 3.5"
+Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart
 
 #===================================================================================================================================================
 #   Create registry keys to detect this was installed
