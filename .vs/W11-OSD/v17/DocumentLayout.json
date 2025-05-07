@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Update-Windows.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Update-Windows.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Set-Language.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Set-Language.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\W11_OSDStart.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:W11_OSDStart.ps1||{53EE1FC9-2478-4DD6-9FE2-6B4E499EF22B}"
     }
@@ -35,14 +43,40 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Update-Windows.ps1",
+              "DocumentMoniker": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Update-Windows.ps1",
+              "RelativeDocumentMoniker": "Update-Windows.ps1",
+              "ToolTip": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Update-Windows.ps1",
+              "RelativeToolTip": "Update-Windows.ps1",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAAAFkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-05-07T12:17:14.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Set-Language.ps1",
+              "DocumentMoniker": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Set-Language.ps1",
+              "RelativeDocumentMoniker": "Set-Language.ps1",
+              "ToolTip": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\Set-Language.ps1",
+              "RelativeToolTip": "Set-Language.ps1",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-05-07T12:17:11.8Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "W11_OSDStart.ps1",
               "DocumentMoniker": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\W11_OSDStart.ps1",
               "RelativeDocumentMoniker": "W11_OSDStart.ps1",
               "ToolTip": "C:\\Users\\sigscan1\\OneDrive - SIGVARIS GROUP\\Documents\\GitHub\\W11-OSD\\W11_OSDStart.ps1",
               "RelativeToolTip": "W11_OSDStart.ps1",
-              "ViewState": "AgIAAI4BAAAAAAAAAAAkwJkBAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAUwF4AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-04-29T16:35:35.768Z",
+              "WhenOpened": "2025-05-07T12:17:07.254Z",
               "EditorCaption": ""
             }
           ]
