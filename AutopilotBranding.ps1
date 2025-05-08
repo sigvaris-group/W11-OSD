@@ -40,6 +40,26 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 # Access JSON properties
 $OSDTimeZone = $json.OSDTimeZone
 
+#===================================================================================================================================================
+#    Install OneDrive per machine
+#===================================================================================================================================================
+# Copy OneDriveSetup.exe local
+Write-Host -ForegroundColor Green "Downloading OneDriveSetup.exe file"
+$dest = "C:\Windows\Temp\OneDriveSetup.exe"
+Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
+Write-Host -ForegroundColor Green "Install OneDrive per machine"
+#$proc = Start-Process $dest -ArgumentList "/allusers /silent" -WindowStyle Hidden -PassThru
+#$proc.WaitForExit()
+#Write-Host -ForegroundColor Yellow "  OneDriveSetup exit code: $($proc.ExitCode)"
+Start-Process $dest -ArgumentList "/allusers /silent"
+Write-Host -ForegroundColor Yellow "  Making sure the Run key exists"
+& reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
+& reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null
+Write-Host -ForegroundColor Yellow "  Changing OneDriveSetup value to point to the machine wide EXE"
+# Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
+
+
 <#
 #===================================================================================================================================================
 #   Enable location services so the time zone will be set automatically (even when skipping the privacy page in OOBE) when an administrator signs in
@@ -167,24 +187,6 @@ reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v M
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "Autopilot" /f /reg:64 | Out-Host
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v SupportURL /t REG_SZ /d "https://sigvarisitcustomercare.saasiteu.com/Account/Login?ProviderName=AAD" /f /reg:64 | Out-Host
 reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Logo /t REG_SZ /d "C:\Windows\sigvaris.bmp" /f /reg:64 | Out-Host
-
-#===================================================================================================================================================
-#    Install OneDrive per machine
-#===================================================================================================================================================
-# Copy OneDriveSetup.exe local
-Write-Host -ForegroundColor Green "Downloading OneDriveSetup.exe file"
-$dest = "C:\Windows\Temp\OneDriveSetup.exe"
-Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
-Write-Host -ForegroundColor Green "Install OneDrive per machine"
-$proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
-$proc.WaitForExit()
-Write-Host -ForegroundColor Yellow "  OneDriveSetup exit code: $($proc.ExitCode)"
-Write-Host -ForegroundColor Yellow "  Making sure the Run key exists"
-& reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
-& reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null
-Write-Host -ForegroundColor Yellow "  Changing OneDriveSetup value to point to the machine wide EXE"
-# Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
-Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
 
 #===================================================================================================================================================
 #    Disable extra APv2 pages (too late to do anything about the EULA), see https://call4cloud.nl/autopilot-device-preparation-hide-privacy-settings/
