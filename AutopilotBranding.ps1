@@ -205,7 +205,6 @@ $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 New-ItemProperty -Path $registryPath -Name "EnableFirstLogonAnimation" -Value 0 -PropertyType DWord -Force | Out-Null
 New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -PropertyType DWord -Force | Out-Null
 
-<# doesn't work with Windows 11 24H2
 #===================================================================================================================================================
 #    Enable .NET Framework 3.5 for US, CA
 #===================================================================================================================================================
@@ -216,7 +215,6 @@ Switch ($DeviceName) {
     'SIUSGA' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSMI' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
 }
-#>
 
 #===================================================================================================================================================
 #    Remove OSDCloudRegistration Certificate
