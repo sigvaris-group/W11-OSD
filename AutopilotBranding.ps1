@@ -59,7 +59,6 @@ Write-Host -ForegroundColor Yellow "  Changing OneDriveSetup value to point to t
 # Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
 
-
 <#
 #===================================================================================================================================================
 #   Enable location services so the time zone will be set automatically (even when skipping the privacy page in OOBE) when an administrator signs in
