@@ -40,8 +40,8 @@ $OSDDisplayLanguage = $json.OSDDisplayLanguage
 #===================================================================================================================================================
 Import-Module International
 Import-Module LanguagePackManagement
-Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
+#Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+#Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
 
 Write-Host -ForegroundColor Green "Windows Updates $OSDWindowsUpdate"
 

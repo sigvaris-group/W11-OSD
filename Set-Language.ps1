@@ -3,35 +3,22 @@
 # Script Name:     Set-Language.ps1
 # Description:     Set Language, Keyboard and TimeZone
 # Created:         12/20/2024
-# Updated:         01/31/2024 Moved to an Intune app which is used by the ESP
 # Version:         1.0
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
-Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+$Title = "Install Windows Updates"
+$host.UI.RawUI.WindowTitle = $Title
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
 
-if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
-    $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
-    Start-Transcript -Path $TranscriptPath -Force -IncludeInvocationHeader
-
-    write-warning "Running in 32-bit Powershell, starting 64-bit..."
-    if ($myInvocation.Line) {
-        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile $myInvocation.Line
-    }else{
-        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile -file "$($myInvocation.InvocationName)" $args
-    }
-    
-    Stop-Transcript
-    
-    exit $lastexitcode
-}
+$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
+$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
+$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
+$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-#=======================================================================
-#   Create logfile
-#=======================================================================
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Set-Language.log"
