@@ -51,7 +51,8 @@ Write-Host -ForegroundColor Green "Install OneDrive per machine"
 #$proc = Start-Process $dest -ArgumentList "/allusers /silent" -WindowStyle Hidden -PassThru
 #$proc.WaitForExit()
 #Write-Host -ForegroundColor Yellow "  OneDriveSetup exit code: $($proc.ExitCode)"
-Start-Process $dest -ArgumentList "/allusers /silent"
+$proc = Start-Process $dest -ArgumentList "/allusers /silent"
+$proc.WaitForExit()
 Write-Host -ForegroundColor Yellow "  Making sure the Run key exists"
 & reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
 & reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null

@@ -18,6 +18,26 @@ $env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
 $Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
 $env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
+# Check if running in x64bit environment
+Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+
+if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
+    $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
+    Start-Transcript -Path $TranscriptPath -Force -IncludeInvocationHeader
+
+    write-warning "Running in 32-bit Powershell, starting 64-bit..."
+    if ($myInvocation.Line) {
+        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile $myInvocation.Line
+    }else{
+        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile -file "$($myInvocation.InvocationName)" $args
+    }
+    
+    Stop-Transcript
+    
+    exit $lastexitcode
+}
+
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
@@ -33,17 +53,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDWindowsUpdate = $json.OSDWindowsUpdate
-$OSDDisplayLanguage = $json.OSDDisplayLanguage
- 
-#===================================================================================================================================================
-#    Install Language Pack in advance
-#===================================================================================================================================================
-Import-Module International
-Import-Module LanguagePackManagement
-#Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-#Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
-
-Write-Host -ForegroundColor Green "Windows Updates $OSDWindowsUpdate"
 
 If ($OSDWindowsUpdate -eq "Yes") {
         # Install latest NuGet package provider
