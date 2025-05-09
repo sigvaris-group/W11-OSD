@@ -312,16 +312,6 @@ $UnattendXml = @"
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>    
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <Description>Install Language</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
-                </RunSynchronousCommand>   
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>5</Order>
-                    <Description>Install Windows Updates</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Update-Windows.ps1 -Wait</Path>
-                </RunSynchronousCommand>                   
             </RunSynchronous>
         </component>
     </settings>
