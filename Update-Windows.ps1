@@ -90,7 +90,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #Write-Host -ForegroundColor Green "Get Windows Updates"
         #Get-WindowsUpdate
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
+        Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -NoReboot
 
 }
 else {
