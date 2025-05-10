@@ -9,6 +9,28 @@
 #
 #=============================================================================================================================
 
+# Check if running in x64bit environment
+Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+
+if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
+    $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
+    Start-Transcript -Path $TranscriptPath -Force -IncludeInvocationHeader
+
+    write-warning "Running in 32-bit Powershell, starting 64-bit..."
+    if ($myInvocation.Line) {
+        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile $myInvocation.Line
+    }else{
+        &"$env:WINDIR\sysnative\windowspowershell\v1.0\powershell.exe" -NonInteractive -NoProfile -file "$($myInvocation.InvocationName)" $args
+    }
+    
+    Stop-Transcript
+    
+    exit $lastexitcode
+}
+
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
+
 $Title = "Configure Windows Autopilot Branding"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -19,17 +41,10 @@ $env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
 $Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
 $env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
-
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "AutopilotBranding.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
-
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
-
-# Get Computerinfo (used for some tasks)
-$ci = Get-ComputerInfo
 
 #===================================================================================================================================================
 #   Load UIjson.json file
@@ -83,6 +98,7 @@ tzutil.exe /s "$($OSDTimeZone)"
 #  New Work Around tested with 24H2 to disable widgets as a preference
 #===================================================================================================================================================
 Write-Host -ForegroundColor Green "Hide the widgets"
+$ci = Get-ComputerInfo
 if ($ci.OsBuildNumber -ge 26100) {
 	Write-Host -ForegroundColor Yellow "  Attempting Widget Hiding workaround (TaskbarDa)"
 	$regExePath = (Get-Command reg.exe).Source

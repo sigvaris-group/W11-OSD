@@ -7,16 +7,6 @@
 #
 #=============================================================================================================================
 
-$Title = "Install Language Packs"
-$host.UI.RawUI.WindowTitle = $Title
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
-$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
-$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
-$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
-
 # Check if running in x64bit environment
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
@@ -38,6 +28,16 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 }
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
+
+$Title = "Install Language Packs"
+$host.UI.RawUI.WindowTitle = $Title
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+
+$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
+$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
+$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
+$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
@@ -73,12 +73,10 @@ If ($json) {
 
     # Install language pack and change the language of the OS on different places
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
-    try {
-        
+    try {        
 
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
-        $proc.WaitForExit()
+        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
 
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
@@ -114,10 +112,6 @@ If ($json) {
         # Copy User International Settings from current user to System, including Welcome screen and new user
         Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
         Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True -Verbose
-
-        if ($RebootRequired -eq $true) {
-            Write-Host -ForegroundColor Green "Reboot required"
-        }
 
         #===================================================================================================================================================
         #   Create registry keys to detect this was installed
@@ -158,3 +152,8 @@ If ($json) {
 } 
 
 Stop-Transcript | Out-Null
+
+# reboot computer
+Write-Host -ForegroundColor Yellow "Reboot Computer"
+$OOBESoftReboot = "$env:WINDIR\System32\Sysprep\sysprep.exe"
+Start-Process $OOBESoftReboot -ArgumentList "/oobe /reboot"
