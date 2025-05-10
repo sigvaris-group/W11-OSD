@@ -19,6 +19,7 @@ $UpdateNews = @(
 "03/18/2025 Windows Updates will be always installed"
 "03/20/2025 M365 Office Installation moved to ESP"
 "05/03/2025 AutopilotBranding script adjusted"
+"05/10/2025 New USB with OS and adjust the installation process"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -31,9 +32,9 @@ Start-Sleep -Seconds 10
 #=======================================================================
 Write-Host -ForegroundColor Green "Start UI Client Setup"
 $location = "X:\OSDCloud\Config\Scripts"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
+#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
+#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
+#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
@@ -107,6 +108,7 @@ $Params = @{
     OSLicense = "Volume"
     ZTI = $true
     Firmware = $false
+    FindImageFile = $true
 }
 #Launch OSDCloud
 Write-Host -ForegroundColor Green "Starting OSDCloud"
@@ -265,7 +267,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
-
 
 #================================================
 #  [PostOS] Create UIJson file
