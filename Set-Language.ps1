@@ -152,8 +152,3 @@ If ($json) {
 } 
 
 Stop-Transcript | Out-Null
-
-# reboot computer
-Write-Host -ForegroundColor Yellow "Reboot Computer"
-$OOBESoftReboot = "$env:WINDIR\System32\Sysprep\sysprep.exe"
-Start-Process $OOBESoftReboot -ArgumentList "/oobe /reboot"
