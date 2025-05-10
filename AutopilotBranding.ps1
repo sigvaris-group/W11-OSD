@@ -9,6 +9,16 @@
 #
 #=============================================================================================================================
 
+$Title = "Configure Windows Autopilot Branding"
+$host.UI.RawUI.WindowTitle = $Title
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+
+$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
+$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
+$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
+$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
+
 # Check if running in x64bit environment
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
@@ -30,16 +40,6 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 }
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
-
-$Title = "Configure Windows Autopilot Branding"
-$host.UI.RawUI.WindowTitle = $Title
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
-$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
-$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
-$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
@@ -63,11 +63,9 @@ Write-Host -ForegroundColor Green "Downloading OneDriveSetup.exe file"
 $dest = "C:\Windows\Temp\OneDriveSetup.exe"
 Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
 Write-Host -ForegroundColor Green "Install OneDrive per machine"
-#$proc = Start-Process $dest -ArgumentList "/allusers /silent" -WindowStyle Hidden -PassThru
-#$proc.WaitForExit()
-#Write-Host -ForegroundColor Yellow "  OneDriveSetup exit code: $($proc.ExitCode)"
-$proc = Start-Process $dest -ArgumentList "/allusers /silent"
+$proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
 $proc.WaitForExit()
+Write-Host -ForegroundColor Yellow "  OneDriveSetup exit code: $($proc.ExitCode)"
 Write-Host -ForegroundColor Yellow "  Making sure the Run key exists"
 & reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
 & reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null

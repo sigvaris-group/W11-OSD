@@ -7,6 +7,16 @@
 #
 #=============================================================================================================================
 
+$Title = "Install Language Packs"
+$host.UI.RawUI.WindowTitle = $Title
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+
+$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
+$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
+$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
+$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
+
 # Check if running in x64bit environment
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
@@ -28,16 +38,6 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 }
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
-
-$Title = "Install Language Packs"
-$host.UI.RawUI.WindowTitle = $Title
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
-$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
-$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
-$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
