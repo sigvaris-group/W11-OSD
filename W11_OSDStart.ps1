@@ -392,9 +392,10 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
+Start /Wait PowerShell -NoL -C Restart-Computer -Force
 
 # Below a PS session for debug and testing in system context, # when not needed 
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 
 exit 
 '@
