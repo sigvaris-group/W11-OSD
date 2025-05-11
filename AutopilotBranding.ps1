@@ -73,6 +73,21 @@ Write-Host -ForegroundColor Yellow "  Changing OneDriveSetup value to point to t
 # Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
 
+#===================================================================================================================================================
+#    Install Teams per machine
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Downloading Msix file"
+$Msixx64Url = 'https://go.microsoft.com/fwlink/?linkid=2196106'
+$MsixDest = "C:\Windows\Temp\MSTeams-x64.msix"
+Invoke-WebRequest $Msixx64Url -OutFile $MsixDest -Verbose
+Write-Host -ForegroundColor Green "Downloading teamsbootstrapper file"
+$Teamsx64Url = 'https://go.microsoft.com/fwlink/?linkid=2243204'
+$TeamsDest = "C:\Windows\Temp\teamsbootstrapper.exe"
+Invoke-WebRequest $Teamsx64Url -OutFile $TeamsDest -Verbose
+Write-Host -ForegroundColor Green "Install Teams per machine"
+$proc = Start-Process $TeamsDest -ArgumentList "-p -o $MsixDest" -WindowStyle Hidden -PassThru
+$proc.WaitForExit()
+
 <#
 #===================================================================================================================================================
 #   Enable location services so the time zone will be set automatically (even when skipping the privacy page in OOBE) when an administrator signs in
