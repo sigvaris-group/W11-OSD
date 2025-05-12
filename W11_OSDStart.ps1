@@ -297,6 +297,12 @@ $UnattendXml = @"
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
         </component>
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDDisplayLanguage</InputLocale>
+            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <RunSynchronous>                             
                 <RunSynchronousCommand wcm:action="add">               
@@ -304,8 +310,18 @@ $UnattendXml = @"
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
                 </RunSynchronousCommand> 
-                <RunSynchronousCommand wcm:action="add">
+                <RunSynchronousCommand wcm:action="add">               
                     <Order>2</Order>
+                    <Description>Install Language</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
+                </RunSynchronousCommand> 
+                <RunSynchronousCommand wcm:action="add">               
+                    <Order>3</Order>
+                    <Description>Autopilot Branding</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\Setup\Scripts\AutopilotBranding.ps1 -Wait</Path>
+                </RunSynchronousCommand> 
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>                      
@@ -313,6 +329,12 @@ $UnattendXml = @"
         </component>
     </settings>
     <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDDisplayLanguage</InputLocale>
+            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
@@ -382,9 +404,9 @@ $OOBECMD = @'
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass

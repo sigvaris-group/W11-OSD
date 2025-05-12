@@ -134,7 +134,7 @@ If ($json) {
         exit 1
     }
 } else {
-    Write-Host -ForegroundColor Green "No OSDCLOUD Windows 11 Instalaltion"
+    Write-Host -ForegroundColor Green "No OSDCLOUD Windows 11 Installation"
     #===================================================================================================================================================
     #   Create registry keys to detect this was installed
     #===================================================================================================================================================
@@ -152,3 +152,6 @@ If ($json) {
 } 
 
 Stop-Transcript | Out-Null
+
+# Restart Computer
+Restart-Computer -Wait 5
