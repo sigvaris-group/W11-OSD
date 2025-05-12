@@ -152,6 +152,3 @@ If ($json) {
 } 
 
 Stop-Transcript | Out-Null
-
-# Restart Computer
-Restart-Computer -Wait 5
