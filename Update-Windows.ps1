@@ -108,8 +108,6 @@ else {
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
         Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
         Stop-Transcript | Out-Null
-        # restart device
-        Restart-Computer -Wait 5
 }
 
 Stop-Transcript | Out-Null
