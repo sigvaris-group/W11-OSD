@@ -313,7 +313,7 @@ $UnattendXml = @"
                 <RunSynchronousCommand wcm:action="add">               
                     <Order>2</Order>
                     <Description>Install Language</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
                 </RunSynchronousCommand> 
                 <RunSynchronousCommand wcm:action="add">
                     <Order>4</Order>
