@@ -105,7 +105,7 @@ if ($installedLanguage -like $OSDDisplayLanguage){
 }
 else {
         Write-Host "Failure! Language $OSDDisplayLanguage NOT installed"
-        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
         Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
         Stop-Transcript | Out-Null
         # restart device
