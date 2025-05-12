@@ -316,7 +316,7 @@ $UnattendXml = @"
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
                 </RunSynchronousCommand> 
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>4</Order>
+                    <Order>3</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>                      
