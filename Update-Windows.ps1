@@ -98,3 +98,6 @@ else {
 }
 
 Stop-Transcript | Out-Null
+
+# restart device
+Restart-Computer -Wait 5
