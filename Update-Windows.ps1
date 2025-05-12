@@ -54,6 +54,7 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDWindowsUpdate = $json.OSDWindowsUpdate
+$OSDDisplayLanguage = $json.OSDDisplayLanguage
 
 If ($OSDWindowsUpdate -eq "Yes") {
         # Install latest NuGet package provider
@@ -97,7 +98,18 @@ else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
 }
 
-Stop-Transcript | Out-Null
+# Check status of the installed language pack
+$installedLanguage = (Get-InstalledLanguage).LanguageId
+if ($installedLanguage -like $OSDDisplayLanguage){
+	Write-Host "Language $OSDDisplayLanguage installed"
+}
+else {
+        Write-Host "Failure! Language $OSDDisplayLanguage NOT installed"
+        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
+        Stop-Transcript | Out-Null
+        # restart device
+        Restart-Computer -Wait 5
+}
 
-# restart device
-Restart-Computer -Wait 5
+Stop-Transcript | Out-Null
