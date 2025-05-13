@@ -63,7 +63,31 @@ If ($json) {
     Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
     Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
 
-    # Import modules
+    # Install Language Modules
+    # Check if module "LanguagePackManagement" is installed
+    try {
+        $module = Get-Module -ListAvailable LanguagePackManagement
+        # If module not installed, install it
+        if (-not $module) {
+        Write-Host -ForegroundColor Yellow "The module 'LanguagePackManagement' will be installed."
+        Install-Module -Name LanguagePackManagement -Scope AllUsers -Force -ErrorAction Stop
+    } 
+    else {
+        Write-Host -ForegroundColor Green "The module 'LanguagePackManagement' is already installed."
+    }
+
+    # Check if module "International" is installed
+    try {
+        $module = Get-Module -ListAvailable International
+        # If module not installed, install it
+        if (-not $module) {
+        Write-Host -ForegroundColor Yellow "The module 'International' will be installed."
+        Install-Module -Name International -Scope AllUsers -Force -ErrorAction Stop
+    } 
+    else {
+        Write-Host -ForegroundColor Green "The module 'International' is already installed."
+    }
+
     Import-Module International
     Import-Module LanguagePackManagement
 
@@ -106,8 +130,8 @@ If ($json) {
         Set-WinSystemLocale $OSDDisplayLanguage -Verbose
 
         # Sets the provided language as the System Preferred UI Language
-        #Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
-        #Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
+        Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
+        Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
 
         # Copy User International Settings from current user to System, including Welcome screen and new user
         Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
