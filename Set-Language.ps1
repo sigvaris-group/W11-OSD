@@ -70,8 +70,7 @@ If ($json) {
     if (-not $module) {
         Write-Host -ForegroundColor Yellow "The module 'LanguagePackManagement' will be installed."
         Install-Module -Name LanguagePackManagement -Scope AllUsers -Force -ErrorAction Stop
-    } 
-    else {
+    }     else {
         Write-Host -ForegroundColor Green "The module 'LanguagePackManagement' is already installed."
     }
     # Check if module "International" is installed
@@ -80,8 +79,7 @@ If ($json) {
     if (-not $module) {
         Write-Host -ForegroundColor Yellow "The module 'International' will be installed."
         Install-Module -Name International -Scope AllUsers -Force -ErrorAction Stop
-    } 
-    else {
+    }     else {
         Write-Host -ForegroundColor Green "The module 'International' is already installed."
     }
     Import-Module International
@@ -96,7 +94,8 @@ If ($json) {
     try {        
 
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
+        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose 
+        $proc.WaitForExit()
 
         # Sets the provided language as the System Preferred UI Language
         Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
@@ -170,5 +169,5 @@ If ($json) {
     New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
     New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue     
 } 
-Start-Process powershell -Wait
+#Start-Process powershell -Wait
 Stop-Transcript | Out-Null
