@@ -101,7 +101,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
-        Remove-WindowsUpdate -KBArticleID KB5050009 -AutoReboot
+        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
 }
 else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
