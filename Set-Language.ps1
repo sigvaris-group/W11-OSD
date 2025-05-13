@@ -39,6 +39,19 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
+# Uninstall blocking language Update
+# icrosoft Community notes that after installing KB5050009, 
+# users might experience situations where the new display language 
+# isn't fully applied, leaving some elements of the UI, 
+# such as the Settings side panel or desktop icon labels, 
+#in English or a different language. This is particularly noticeable 
+# if additional languages were previously installed
+Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
+Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
+Import-Module PSWindowsUpdate -Scope Global
+Write-Host -ForegroundColor Green "Unistall KB5050009"
+Remove-WindowsUpdate -KBArticleID KB5050009 -NoRestart
+
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Set-Language.log"
