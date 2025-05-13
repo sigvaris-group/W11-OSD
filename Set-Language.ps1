@@ -170,5 +170,5 @@ If ($json) {
     New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
     New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue     
 } 
-
+Start-Process powershell -Wait
 Stop-Transcript | Out-Null
