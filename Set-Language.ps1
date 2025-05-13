@@ -39,6 +39,7 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
+<#
 # Uninstall blocking language Update
 # icrosoft Community notes that after installing KB5050009, 
 # users might experience situations where the new display language 
@@ -51,6 +52,7 @@ Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
 Import-Module PSWindowsUpdate -Scope Global
 Write-Host -ForegroundColor Green "Uninstall KB5050009"
 Remove-WindowsUpdate -KBArticleID KB5050009 -NoRestart
+#>
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
