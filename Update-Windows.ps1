@@ -107,16 +107,4 @@ else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
 }
 
-# Check status of the installed language pack
-$installedLanguage = (Get-InstalledLanguage).LanguageId
-if ($installedLanguage -like $OSDDisplayLanguage){
-	Write-Host "Language $OSDDisplayLanguage installed"
-}
-else {
-        Write-Host "Failure! Language $OSDDisplayLanguage NOT installed"
-        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
-        Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue 
-        Stop-Transcript | Out-Null
-}
-
 Stop-Transcript | Out-Null
