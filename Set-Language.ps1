@@ -49,7 +49,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
 Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
 Import-Module PSWindowsUpdate -Scope Global
-Write-Host -ForegroundColor Green "Unistall KB5050009"
+Write-Host -ForegroundColor Green "Uninstall KB5050009"
 Remove-WindowsUpdate -KBArticleID KB5050009 -NoRestart
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
