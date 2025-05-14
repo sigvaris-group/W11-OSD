@@ -112,15 +112,11 @@ If ($json) {
         $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose 
         $proc.WaitForExit()
 
-        # Sets the provided language as the System Preferred UI Language
-        Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
-        Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
-
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
         Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose
 
-        # Configure new language defaults under current user (system) after which it can be copied to system
+         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Set Win User Language $($OSDDisplayLanguage) List, sets the current user language settings"
         $OldList = Get-WinUserLanguageList
         Write-Host -ForegroundColor Green "Old WinUserLanguageList: $($OldList.LanguageTag)"
@@ -139,13 +135,19 @@ If ($json) {
         Write-Host -ForegroundColor Green "Set Culture $($OSDDisplayLanguage), sets the user culture for the current user account"
         Set-Culture -CultureInfo $OSDDisplayLanguage -Verbose
 
-        # Set the locale for the region and language
-        Write-Host -ForegroundColor Green "Set System Locale Language $($OOSDDisplayLanguage)"
-        Set-WinSystemLocale $OSDDisplayLanguage -Verbose
-
         # Copy User International Settings from current user to System, including Welcome screen and new user
         Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
         Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True -Verbose
+ 
+        <#
+        # Sets the provided language as the System Preferred UI Language
+        Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
+        Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
+
+        # Set the locale for the region and language
+        Write-Host -ForegroundColor Green "Set System Locale Language $($OOSDDisplayLanguage)"
+        Set-WinSystemLocale $OSDDisplayLanguage -Verbose
+        #>
 
         #===================================================================================================================================================
         #   Create registry keys to detect this was installed
