@@ -1,9 +1,9 @@
 #=============================================================================================================================
 #
-# Script Name:     W11_OSDStart.ps1
-# Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
-# Created:         01/18/2025
-# Version:         1.2
+# Script Name:     W11_OSDStartDEV.ps1
+# Description:     Start Windows 11 OSD Deployment (Development)
+# Created:         05/14/2025
+# Version:         2.0
 #
 #=============================================================================================================================
 
@@ -19,6 +19,7 @@ $UpdateNews = @(
 "03/18/2025 Windows Updates will be always installed"
 "03/20/2025 M365 Office Installation moved to ESP"
 "05/03/2025 AutopilotBranding script adjusted"
+"05/14/2025 Language packs and some Windows updates from May 2025 added to USB"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -348,10 +349,10 @@ foreach ($profile in $profiles) {
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
-Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
-Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
-Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
-Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
+Copy-Item X:\OSDCloud\ C:\OSDCloud\ -Recurse -Force
+Copy-Item "C:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
+Copy-Item "C:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
+Copy-Item "C:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
