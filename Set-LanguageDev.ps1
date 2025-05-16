@@ -94,7 +94,7 @@ If ($json) {
     try {        
 
         Write-Host -ForegroundColor Green "Add language packs $($OSDDisplayLanguage) from USB"
-        Get-ChildItem "C:\OSDCloud\Media\LPS\$($OSDDisplayLanguage)" -Filter *.cab | ForEach-Object {
+        Get-ChildItem "C:\OSDCloud\Config\Custom\LPS\$($OSDDisplayLanguage)" -Filter *.cab | ForEach-Object {
             Write-Host -ForegroundColor Yellow "  Adding language packs: $($_.FullName)"
             Add-WindowsPackage -Online -NoRestart -PackagePath $_.FullName
         }

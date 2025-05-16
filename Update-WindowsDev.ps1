@@ -84,7 +84,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         }
 
         Write-Host -ForegroundColor Green "Add local Windows Updates"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Media\WindowsUpdates"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Custom\WindowsUpdates"
 
         Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
         Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
