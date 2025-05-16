@@ -42,7 +42,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
-$Global:Transcript = "Update-Windows.log"
+$Global:Transcript = "Update-WindowsDev.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 #=======================================================================
