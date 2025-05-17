@@ -104,7 +104,7 @@ If ($json) {
             Write-Host "  Adding feature pack: $($_.FullName)"
             Add-WindowsPackage -Online -NoRestart -PackagePath $_.FullName
         }
-Start-Process powershell -Wait
+
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
         $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose 
         $proc.WaitForExit()
