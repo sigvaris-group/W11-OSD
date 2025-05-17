@@ -83,9 +83,6 @@ If ($OSDWindowsUpdate -eq "Yes") {
                 Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
         }
 
-        Write-Host -ForegroundColor Green "Add local Windows Updates"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Custom\WindowsUpdates"
-
         Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
         Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
         Import-Module PSWindowsUpdate -Scope Global
