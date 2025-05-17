@@ -93,9 +93,15 @@ If ($json) {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
     try {        
 
-        Write-Host -ForegroundColor Green "Add language packs $($OSDDisplayLanguage) from USB"
-        Get-ChildItem "C:\OSDCloud\Config\Custom\LPS\$($OSDDisplayLanguage)" -Filter *.cab | ForEach-Object {
-            Write-Host -ForegroundColor Yellow "  Adding language packs: $($_.FullName)"
+        Write-Host -ForegroundColor Green "Add language packs from USB"
+        $LanguagePath = "C:\OSDCloud\Config\OfflineLanguages\LP\$($OSDDisplayLanguage)"
+        $FeaturePath = "C:\OSDCloud\Config\OfflineLanguages\Features\$($OSDDisplayLanguage)"
+        Get-ChildItem $LanguagePath -Filter *.cab | ForEach-Object {
+            Write-Host "  Adding language pack: $($_.FullName)"
+            Add-WindowsPackage -Online -NoRestart -PackagePath $_.FullName
+        }
+        Get-ChildItem $FeaturePath -Filter *.cab | ForEach-Object {
+            Write-Host "  Adding feature pack: $($_.FullName)"
             Add-WindowsPackage -Online -NoRestart -PackagePath $_.FullName
         }
 
