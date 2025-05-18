@@ -280,7 +280,7 @@ New-ItemProperty -Path  $RegPath -Name Version -Value '1.1' -Force -ErrorAction 
 New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue
 
 # Create End OSD Deployment file
-$EndTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
-New-Item -Path "C:\ProgramData\OSDeploy\END-$($EndTime ).txt" -ItemType File
+$EndTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
+New-Item -Path "C:\ProgramData\OSDeploy\END-$EndTime.txt" -ItemType File
 
 Stop-Transcript | Out-Null
