@@ -28,9 +28,6 @@ foreach ($UpdateNew in $UpdateNews) {
 Start-Sleep -Seconds 10
 
 # Create Start OSD Deployment file
-If (!(Test-Path "X:\OSDCloud")) {
-    New-Item "X:\OSDCloud" -ItemType Directory -Force | Out-Null
-}
 $StartTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
 New-Item -Path "X:\OSDCloud\START-$($StartTime).txt" -ItemType File
 
@@ -406,6 +403,9 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 exit 
 '@
 $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
+
+# Copy START file
+Copy-Item "X:\OSDCloud\START*.txt" -Destination "C:\ProgramData\OSDeploy" -Recurse -Force
 
 #=======================================================================
 #   Restart-Computer

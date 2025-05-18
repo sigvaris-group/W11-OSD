@@ -282,6 +282,5 @@ New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -
 # Create End OSD Deployment file
 $EndTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
 New-Item -Path "C:\ProgramData\OSDeploy\END-$($EndTime ).txt" -ItemType File
-Copy-Item "X:\OSDCloud\*.txt" -Destination "C:\ProgramData\OSDeploy" -Recurse -Force
 
 Stop-Transcript | Out-Null
