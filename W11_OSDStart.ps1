@@ -28,11 +28,11 @@ foreach ($UpdateNew in $UpdateNews) {
 Start-Sleep -Seconds 10
 
 # Create Start OSD Deployment file
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+If (!(Test-Path "X:\OSDCloud")) {
+    New-Item "X:\OSDCloud" -ItemType Directory -Force | Out-Null
 }
 $StartTime = Get-Date -Format "yyyy-MM-dd-HH:mm:ss"
-New-Item -Path "C:\ProgramData\OSDeploy\START-$($StartTime).txt" -ItemType File
+New-Item -Path "X:\OSDCloud\START-$($StartTime).txt" -ItemType File
 
 #=======================================================================
 #   [PostOS] Start U++ (user interface)
