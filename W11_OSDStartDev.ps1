@@ -349,7 +349,7 @@ foreach ($profile in $profiles) {
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
-#Copy-Item "X:\OSDCloud\*" "C:\OSDCloud" -Recurse -Force
+Copy-Item "X:\OSDCloud\*" "C:\OSDCloud" -Recurse -Force
 Copy-Item "C:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
 Copy-Item "C:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 Copy-Item "C:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
