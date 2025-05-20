@@ -19,7 +19,6 @@ $UpdateNews = @(
 "03/18/2025 Windows Updates will be always installed"
 "03/20/2025 M365 Office Installation moved to ESP"
 "05/03/2025 AutopilotBranding script adjusted"
-"05/14/2025 Language packs and some Windows updates from May 2025 added to USB"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
