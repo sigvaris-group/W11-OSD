@@ -114,7 +114,7 @@
     <!-- This Section determines the TimeZone based on location-->
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIUSGA"'>"Eastern Standard Time"</Action>
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIUSMI"'>"Eastern Standard Time"</Action>
-    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SICAMO"'>"Eastern Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SICAMO"'>"Eastern Daylight Time"</Action>
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIUKAN"'>"GMT Standard Time"</Action>
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIDEME"'>"W. Europe Standard Time"</Action>
     <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SICHSG"'>"W. Europe Standard Time"</Action>
