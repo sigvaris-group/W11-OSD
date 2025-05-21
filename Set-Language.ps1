@@ -109,7 +109,7 @@ If ($json) {
     try {        
 
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose 
+        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
         $proc.WaitForExit()
 
         # Configure new language defaults under current user (system) after which it can be copied to system
