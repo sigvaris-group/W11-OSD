@@ -72,11 +72,13 @@ If ($json) {
     $OSDDisplayLanguage = $json.OSDDisplayLanguage
     $OSDKeyboard = $json.OSDKeyboard
     $OSDGeoID = $json.OSDGeoID
+    $OSDTimeZone = $json.OSDTimeZone
 
     Write-Host -ForegroundColor Green "OS Language: $OSDLanguage"
     Write-Host -ForegroundColor Green "Display Language: $OSDDisplayLanguage"
     Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
     Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
+    Write-Host -ForegroundColor Green "TimeZone: $OSDTimeZone"
 
     # Install Language Modules
     # Check if module "LanguagePackManagement" is installed
@@ -186,5 +188,13 @@ If ($json) {
     New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
     New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue     
 } 
+
+#===================================================================================================================================================
+#  Set TimeZone
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
+Set-TimeZone -Id $OSDTimeZone
+tzutil.exe /s "$($OSDTimeZone)"
+
 #Start-Process powershell -Wait
 Stop-Transcript | Out-Null
