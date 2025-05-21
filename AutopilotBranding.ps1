@@ -55,16 +55,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 # Access JSON properties
 $OSDTimeZone = $json.OSDTimeZone
 
-ipconfig /all
-
-nslookup.exe go.microsoft.com
-
-Start-Sleep 60
-
-ipconfig /all
-
-nslookup.exe go.microsoft.com
-
 #===================================================================================================================================================
 #    Install OneDrive per machine
 #===================================================================================================================================================
