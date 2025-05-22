@@ -64,10 +64,25 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Write-Host -ForegroundColor Green "Ensure default PSGallery repository is registered"
         Register-PSRepository -Default -ErrorAction SilentlyContinue
 
-        # Install PackageManagement and PowerShellGet module        
-        Write-Host -ForegroundColor Yellow "Install PowerShellGet module"
-        Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
-        Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+        # Attempt to get the installed PowerShellGet module
+        Write-Host -ForegroundColor Green "Attempt to get the installed PowerShellGet module"
+        $PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
+        if ($PowerShellGetInstalledModule) {
+                # Attempt to locate the latest available version of the PowerShellGet module from repository
+                Write-Host -ForegroundColor Green "Attempt to locate the latest available version of the PowerShellGet module from repository"
+                $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
+                if ($PowerShellGetLatestModule) {
+                        if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
+                                Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
+                        }
+                }
+        }
+        else {
+                # PowerShellGet module was not found, attempt to install from repository
+                Write-Host -ForegroundColor Yellow "PowerShellGet module was not found, attempt to install from repository"
+                Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+                Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+        }
 
         Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
         Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
@@ -86,7 +101,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
-        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot 
+        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
 }
 else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
