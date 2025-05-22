@@ -290,3 +290,7 @@ $EndTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
 New-Item -Path "C:\ProgramData\OSDeploy\END-$EndTime.txt" -ItemType File
 
 Stop-Transcript | Out-Null
+
+# Reboot computer
+Write-Host  -ForegroundColor Green "Restarting in 10 seconds!"
+Restart-Computer -Wait 10
