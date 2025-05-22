@@ -88,10 +88,10 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
         Import-Module PSWindowsUpdate -Scope Global
 
-        Write-Host -ForegroundColor Green "Get and install all available Windows Updates"
-        Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot 
-        #Write-Host -ForegroundColor Green "Install Windows Updates"
-        #Install-WindowsUpdate -AcceptAll -IgnoreReboot 
+        #Write-Host -ForegroundColor Green "Get and install all available Windows Updates"
+        #Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot 
+        Write-Host -ForegroundColor Green "Install Windows Updates"
+        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
 
         # Uninstall blocking language Update
         # icrosoft Community notes that after installing KB5050009, 
