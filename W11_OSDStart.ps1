@@ -71,6 +71,11 @@ Write-Host "  TimeZone: $OSDTimeZone"
 Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
 
+If (-not $OSDComputername) {
+    Write-Host -ForegroundColor Red "NO INTERNET CONNECTION. DEVICE WILL BE REBOOTED!!!!!!"
+    Restart-Computer -Wait 600
+}
+
 #================================================
 #   [PreOS] Update Module
 #================================================
