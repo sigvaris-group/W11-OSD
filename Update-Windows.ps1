@@ -93,7 +93,3 @@ else {
 }
 
 Stop-Transcript | Out-Null
-
-# Reboot computer
-Write-Host  -ForegroundColor Green "Restarting in 10 seconds!"
-Restart-Computer -Wait 10
