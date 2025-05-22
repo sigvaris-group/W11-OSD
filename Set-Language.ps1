@@ -197,4 +197,9 @@ Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)"
 
 #Start-Process powershell -Wait
+
 Stop-Transcript | Out-Null
+
+# Reboot computer
+Write-Host  -ForegroundColor Green "Restarting in 10 seconds!"
+Restart-Computer -Wait 10
