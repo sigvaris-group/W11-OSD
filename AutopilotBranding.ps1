@@ -56,11 +56,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 $OSDTimeZone = $json.OSDTimeZone
 $OSDDisplayLanguage = $json.OSDDisplayLanguage
 
-# Install language if doesn't work in the set-language.ps1 script
-Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-$proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
-$proc.WaitForExit()
-
 #===================================================================================================================================================
 #    Install OneDrive per machine
 #===================================================================================================================================================
