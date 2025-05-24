@@ -1,8 +1,8 @@
 #=============================================================================================================================
 #
-# Script Name:     Set-LanguageDEV.ps1
+# Script Name:     Set-LanguageDev.ps1
 # Description:     Set Language, Keyboard and TimeZone
-# Created:         05/14/2025
+# Created:         05/24/2025
 # Version:         2.0
 #
 #=============================================================================================================================
@@ -57,11 +57,13 @@ If ($json) {
     $OSDDisplayLanguage = $json.OSDDisplayLanguage
     $OSDKeyboard = $json.OSDKeyboard
     $OSDGeoID = $json.OSDGeoID
+    $OSDTimeZone = $json.OSDTimeZone
 
     Write-Host -ForegroundColor Green "OS Language: $OSDLanguage"
     Write-Host -ForegroundColor Green "Display Language: $OSDDisplayLanguage"
     Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
     Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
+    Write-Host -ForegroundColor Green "TimeZone: $OSDTimeZone"
 
     # Install Language Modules
     # Check if module "LanguagePackManagement" is installed
@@ -93,9 +95,9 @@ If ($json) {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
     try {        
 
-        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose 
-        $proc.WaitForExit()
+        #Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+        #$proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
+        #$proc.WaitForExit()
 
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
@@ -171,5 +173,14 @@ If ($json) {
     New-ItemProperty -Path  $RegPath -Name OSDGeoID -Value $OSDGeoID -Force -ErrorAction SilentlyContinue
     New-ItemProperty -Path  $RegPath -Name InstallDateTime -Value $currentDateTime -Force -ErrorAction SilentlyContinue     
 } 
+
+#===================================================================================================================================================
+#  Set TimeZone
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
+Set-TimeZone -Id $OSDTimeZone
+tzutil.exe /s "$($OSDTimeZone)"
+
 #Start-Process powershell -Wait
+
 Stop-Transcript | Out-Null

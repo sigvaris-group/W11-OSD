@@ -1,30 +1,25 @@
 #=============================================================================================================================
 #
-# Script Name:     W11_OSDStartDEV.ps1
-# Description:     Start Windows 11 OSD Deployment (Development)
-# Created:         05/14/2025
+# Script Name:     W11_OSDStartDev.ps1
+# Description:     Start Windows 11 OSD Offline Deployment
+# Created:         05/24/2025
 # Version:         2.0
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
+Write-Host -ForegroundColor Green "Starting Windows 11 Offline Deployment"
 $UpdateNews = @(
-"01/20/2025 Including WiFi and domain join"
-"01/30/2025 REMOVED - Including script to install Windows updates"
-"01/31/2025 Install Language pack moved to Intune app which will be installed by ESP, because with W11 24H2 it doesn't work anymore."
-"           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
-"02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
-"02/20/2025 REMOVED - To reduce the installation time you can unselect 'Install Windows Updates?'"
-"03/17/2025 REMOVED - M365 Office Installation package added"
-"03/18/2025 Windows Updates will be always installed"
-"03/20/2025 M365 Office Installation moved to ESP"
-"05/03/2025 AutopilotBranding script adjusted"
+"05/23/2025 Windows 11 Ofline deployment"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
     Write-Host "  $($UpdateNew)"
 }
 Start-Sleep -Seconds 10
+
+# Create Start OSD Deployment file
+$StartTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
+New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
 
 #=======================================================================
 #   [PostOS] Start U++ (user interface)
@@ -65,6 +60,11 @@ Write-Host "  TimeZone: $OSDTimeZone"
 Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
 
+If (-not $OSDComputername) {
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.MessageBox]::Show('PLEASE CHECK INTERNET CONNECTION AND REBOOT')
+}
+
 #================================================
 #   [PreOS] Update Module
 #================================================
@@ -88,9 +88,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$false
-    WindowsUpdateDrivers = [bool]$false
-    WindowsDefenderUpdate = [bool]$false
+    WindowsUpdate = [bool]$true
+    WindowsUpdateDrivers = [bool]$true
+    WindowsDefenderUpdate = [bool]$true
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -100,13 +100,10 @@ $Global:MyOSDCloud = [ordered]@{
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
-    OSVersion = "Windows 11"
-    OSBuild = "24H2"
-    OSEdition = "Enterprise"
-    OSLanguage = "en-us"
-    OSLicense = "Volume"
     ZTI = $true
     Firmware = $false
+    FindImageFile = $true
+    OSImageIndex = 1
 }
 #Launch OSDCloud
 Write-Host -ForegroundColor Green "Starting OSDCloud"
@@ -289,6 +286,44 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 #  [PostOS] Create Unattend XML file
 #================================================
+if ($OSDDomainJoin -eq 'Yes') {
+Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
+$UnattendXml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <ComputerName>$OSDComputername</ComputerName>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>                             
+                <RunSynchronousCommand wcm:action="add">               
+                    <Order>1</Order>
+                    <Description>Connect to WiFi</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
+                </RunSynchronousCommand>                    
+            </RunSynchronous>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDDisplayLanguage</InputLocale>
+            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <OOBE>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideEULAPage>true</HideEULAPage>
+                <ProtectYourPC>3</ProtectYourPC>
+            </OOBE>
+        </component>
+    </settings>
+</unattend>
+"@     
+}
+else {
 Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -303,16 +338,22 @@ $UnattendXml = @"
                     <Order>1</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand>                      
+                </RunSynchronousCommand> 
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand> 
+                </RunSynchronousCommand>                      
             </RunSynchronous>
         </component>
     </settings>
     <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDDisplayLanguage</InputLocale>
+            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
@@ -323,6 +364,7 @@ $UnattendXml = @"
     </settings>
 </unattend>
 "@ 
+}
 
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
@@ -348,12 +390,11 @@ foreach ($profile in $profiles) {
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
-Copy-Item "X:\OSDCloud\*" "C:\OSDCloud" -Recurse -Force
-Copy-Item "C:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
-Copy-Item "C:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
-Copy-Item "C:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
+Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
 
-#Start-Process powershell -Wait
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
 Rename-Computer -NewName $OSDComputername
@@ -366,9 +407,9 @@ Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Set-LanguageDev.ps1"
+Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageDev.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Update-WindowsDev.ps1"
+Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-WindowsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-WindowsDev.ps1' -Encoding ascii -Force
 
 # Download Pre-required Applications
@@ -393,6 +434,9 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 exit 
 '@
 $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
+
+# Copy START file
+Copy-Item "X:\OSDCloud\START*.txt" -Destination "C:\ProgramData\OSDeploy" -Recurse -Force
 
 #=======================================================================
 #   Restart-Computer

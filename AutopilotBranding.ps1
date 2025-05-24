@@ -54,7 +54,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDTimeZone = $json.OSDTimeZone
-$OSDDisplayLanguage = $json.OSDDisplayLanguage
 
 #===================================================================================================================================================
 #    Install OneDrive per machine

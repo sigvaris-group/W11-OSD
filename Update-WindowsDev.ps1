@@ -1,8 +1,8 @@
 #=============================================================================================================================
 #
-# Script Name:     Update-WindowsDEV.ps1
+# Script Name:     Update-WindowsDev.ps1
 # Description:     Install Windows Updates
-# Created:         05/14/2025
+# Created:         05/24/2025
 # Version:         2.0
 #
 #=============================================================================================================================
@@ -86,11 +86,11 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
         Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
         Import-Module PSWindowsUpdate -Scope Global
-        
-        Write-Host -ForegroundColor Green "Get and install all available Windows Updates"
-        Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot 
+
+        #Write-Host -ForegroundColor Green "Get and install all available Windows Updates"
+        #Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot 
         #Write-Host -ForegroundColor Green "Install Windows Updates"
-        #Install-WindowsUpdate -AcceptAll -IgnoreReboot 
+        #Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
 
         # Uninstall blocking language Update
         # icrosoft Community notes that after installing KB5050009, 
@@ -100,7 +100,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
-        Remove-WindowsUpdate -KBArticleID KB5050009 -AutoReboot 
+        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
 }
 else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
