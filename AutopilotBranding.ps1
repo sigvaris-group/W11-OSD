@@ -59,9 +59,9 @@ $OSDTimeZone = $json.OSDTimeZone
 #    Install OneDrive per machine
 #===================================================================================================================================================
 # Copy OneDriveSetup.exe local
-Write-Host -ForegroundColor Green "Downloading OneDriveSetup.exe file"
+#Write-Host -ForegroundColor Green "Downloading OneDriveSetup.exe file"
 $dest = "C:\Windows\Temp\OneDriveSetup.exe"
-Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
+#Invoke-WebRequest "https://go.microsoft.com/fwlink/?linkid=844652" -OutFile $dest -Verbose
 Write-Host -ForegroundColor Green "Install OneDrive per machine"
 $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
 $proc.WaitForExit()
@@ -76,14 +76,14 @@ Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Na
 #===================================================================================================================================================
 #    Install Teams per machine
 #===================================================================================================================================================
-Write-Host -ForegroundColor Green "Downloading Msix file"
-$Msixx64Url = 'https://go.microsoft.com/fwlink/?linkid=2196106'
+#Write-Host -ForegroundColor Green "Downloading Msix file"
+#$Msixx64Url = 'https://go.microsoft.com/fwlink/?linkid=2196106'
 $MsixDest = "C:\Windows\Temp\MSTeams-x64.msix"
-Invoke-WebRequest $Msixx64Url -OutFile $MsixDest -Verbose
-Write-Host -ForegroundColor Green "Downloading teamsbootstrapper file"
-$Teamsx64Url = 'https://go.microsoft.com/fwlink/?linkid=2243204'
+#Invoke-WebRequest $Msixx64Url -OutFile $MsixDest -Verbose
+#Write-Host -ForegroundColor Green "Downloading teamsbootstrapper file"
+#$Teamsx64Url = 'https://go.microsoft.com/fwlink/?linkid=2243204'
 $TeamsDest = "C:\Windows\Temp\teamsbootstrapper.exe"
-Invoke-WebRequest $Teamsx64Url -OutFile $TeamsDest -Verbose
+#Invoke-WebRequest $Teamsx64Url -OutFile $TeamsDest -Verbose
 Write-Host -ForegroundColor Green "Install Teams per machine"
 $proc = Start-Process $TeamsDest -ArgumentList "-p -o $MsixDest" -WindowStyle Hidden -PassThru
 $proc.WaitForExit()

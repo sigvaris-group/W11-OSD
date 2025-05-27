@@ -2,24 +2,20 @@
 #
 # Script Name:     W11_OSDStartDev.ps1
 # Description:     Start Windows 11 OSD Offline Deployment
-# Created:         05/24/2025
+# Created:         05/25/2025
 # Version:         2.0
 #
 #=============================================================================================================================
 
 Write-Host -ForegroundColor Green "Starting Windows 11 Offline Deployment"
 $UpdateNews = @(
-"05/23/2025 Windows 11 Ofline deployment"
+"05/25/2025 Windows 11 Ofline deployment"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
     Write-Host "  $($UpdateNew)"
 }
 Start-Sleep -Seconds 10
-
-# Create Start OSD Deployment file
-$StartTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
-New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
 
 #=======================================================================
 #   [PostOS] Start U++ (user interface)
@@ -65,6 +61,14 @@ If (-not $OSDComputername) {
     [System.Windows.Forms.MessageBox]::Show('PLEASE CHECK INTERNET CONNECTION AND REBOOT')
 }
 
+# Set TimeZone
+Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
+Set-TimeZone -Id $OSDTimeZone
+
+# Create Start OSD Deployment file
+$StartTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
+New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
+
 #================================================
 #   [PreOS] Update Module
 #================================================
@@ -79,6 +83,18 @@ Install-Module OSD -SkipPublisherCheck -Force
 
 Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
 Import-Module OSD -Force   
+
+#=======================================================================
+#   LOCAL DRIVE LETTERS
+#=======================================================================
+function Get-OSDCloudDrive {
+    $OSDCloudDrive = (Get-WmiObject Win32_LogicalDisk | Where-Object { $_.VolumeName -eq 'OSDCloud' }).DeviceID
+    return $OSDCloudDrive
+}
+$OSDCloudDrive = Get-OSDCloudDrive
+Write-Host -ForegroundColor Green "Current OSDCLOUD Drive is: $OSDCloudDrive"
+
+#Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\install.wim" -Destination "C:\OSDCloud\OS\install.wim" -Force
 
 #=======================================================================
 #   [OS] Params and Start-OSDCloud
@@ -103,8 +119,12 @@ $Params = @{
     ZTI = $true
     Firmware = $false
     FindImageFile = $true
-    OSImageIndex = 1
+    ImageIndex = 1
 }
+
+#=======================================================================
+#   Write OSDCloud VARS to Console
+#=======================================================================
 #Launch OSDCloud
 Write-Host -ForegroundColor Green "Starting OSDCloud"
 
@@ -136,6 +156,9 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 #Write-Host "Download configuration file for M365 Office installation"
 #Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Configuration.xml" -OutFile "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Verbose
 #>
+# Copy setup from USB
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
+
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
     New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
 }
@@ -394,6 +417,9 @@ Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"

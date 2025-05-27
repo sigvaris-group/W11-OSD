@@ -93,7 +93,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
 
         # Uninstall blocking language Update
-        # icrosoft Community notes that after installing KB5050009, 
+        # Microsoft Community notes that after installing KB5050009, 
         # users might experience situations where the new display language 
         # isn't fully applied, leaving some elements of the UI, 
         # such as the Settings side panel or desktop icon labels, 
