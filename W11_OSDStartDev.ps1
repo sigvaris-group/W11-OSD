@@ -417,9 +417,9 @@ Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\OS\OSDCloud\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
