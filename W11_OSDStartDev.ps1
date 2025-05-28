@@ -156,8 +156,6 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 #Write-Host "Download configuration file for M365 Office installation"
 #Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Configuration.xml" -OutFile "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Verbose
 #>
-# Copy setup from USB
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
 
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
     New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
@@ -420,6 +418,9 @@ Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\
 Copy-Item -Path "$OSDCloudDrive\OSDCloud\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
 Copy-Item -Path "$OSDCloudDrive\OSDCloud\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
 Copy-Item -Path "$OSDCloudDrive\OSDCloud\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
+# M365 Office
+(New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
