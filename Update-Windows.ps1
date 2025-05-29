@@ -91,16 +91,16 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #Write-Host -ForegroundColor Green "Get and install all available Windows Updates"
         #Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot 
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        #Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
+        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
         #$WindowsUpdates = Get-WindowsUpdate
         #$WindowsUpdates | Where-Object { $_.Title -like "*Cumulative Update for Windows*" }' | Select-Object -First 1 | Install-WindowsUpdate -AcceptAll -IgnoreReboot
        
         # Uninstall blocking language Update
-        # icrosoft Community notes that after installing KB5050009, 
+        # Microsoft Community notes that after installing KB5050009, 
         # users might experience situations where the new display language 
         # isn't fully applied, leaving some elements of the UI, 
         # such as the Settings side panel or desktop icon labels, 
-        #in English or a different language. This is particularly noticeable 
+        # in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
         Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
