@@ -57,6 +57,7 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
+#$OSDKiosk = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKiosk
 $OSDWindowsUpdate = 'Yes'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
@@ -69,6 +70,8 @@ Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"
 Write-Host "  TimeZone: $OSDTimeZone"
 Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
+#Write-Host "  Kiosk Device: $OSDKiosk"
+#if ($OSDKiosk -eq 'Yes') {$OSDLocation -eq 'KIOSK'}
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
 
 #================================================

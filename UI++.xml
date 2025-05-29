@@ -33,6 +33,7 @@
       </ChoiceInput>
       <InputInfo></InputInfo>
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No"/>
+      <!-- <InputCheckbox Variable="OSDKiosk" Question="Kiosk device?" CheckedValue="Yes" UncheckedValue="No"/> -->
     </Action>
     <!-- This Section is an Information for domain joined devices-->
     <Action Type="Input" Name="AD" Title="Active Directory Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
@@ -138,6 +139,7 @@
       <Property Name="OSDGeoID" Type="CIM_STRING" Value="%OSDGeoID%" Key="True"/>
       <Property Name="OSDTimeZone" Type="CIM_STRING" Value="%OSDTimeZone%" Key="True"/>
       <Property Name="OSDDomainJoin" Type="CIM_STRING" Value="%OSDDomainJoin%" Key="True"/>
+      <Property Name="OSDKiosk" Type="CIM_STRING" Value="%OSDKiosk%" Key="True"/>
     </Action>
   </Actions>
 </UIpp>
