@@ -48,7 +48,7 @@
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUKAN"'>"en-GB"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG" And "%OSDLanguage%" = "en-US"'>"en-US"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG" And "%OSDLanguage%" = "de-DE"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG" And "%OSDLanguage%" = "de-DE"'>"de-DE"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ" And "%OSDLanguage%" = "en-US"'>"en-US"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ" And "%OSDLanguage%" = "fr-FR"'>"fr-FR"</Action>
