@@ -7,9 +7,10 @@
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Offline Deployment"
+Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
-"05/25/2025 Windows 11 Ofline deployment"
+"05/25/2025 Windows 11 Ofline Image deployment"
+"06/05/2025 SecureConnect moved to USB"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -414,13 +415,16 @@ foreach ($profile in $profiles) {
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
-Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
+#Copy-Item X:\OSDCloud\Config C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
-Copy-Item -Path "$OSDCloudDrive\OSDCloud\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
+Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
+Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
+Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
+Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
+
+
 # M365 Office
 (New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
 Copy-Item -Path "$OSDCloudDrive\OSDCloud\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
@@ -441,10 +445,6 @@ Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageDev.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-WindowsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-WindowsDev.ps1' -Encoding ascii -Force
-
-# Download Pre-required Applications
-Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/SecureConnectorInstaller.msi" -OutFile 'C:\Windows\Temp\SecureConnectorInstaller.msi' -Verbose
 
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 $OOBECMD = @'

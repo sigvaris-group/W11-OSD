@@ -21,6 +21,7 @@ $UpdateNews = @(
 "05/03/2025 AutopilotBranding script adjusted"
 "05/16/2025 Uninstall KB5050009 from Windows Updates which blocking language installation"
 "05/21/2025 Removed domain joined devices from registering in Autopilot which generates some issues"
+"06/05/2025 SecureConnect moved to USB"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -36,10 +37,10 @@ New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
 #   [PostOS] Start U++ (user interface)
 #=======================================================================
 Write-Host -ForegroundColor Green "Start UI Client Setup"
-$location = "X:\OSDCloud\Config\Scripts"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
+$location = "X:\OSDCloud\Config\UI"
+#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
+#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
+#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
@@ -402,10 +403,14 @@ foreach ($profile in $profiles) {
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
-Copy-Item X:\OSDCloud\Config\Scripts C:\OSDCloud\ -Recurse -Force
+#Copy-Item X:\OSDCloud\Config C:\OSDCloud\ -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Recurse -Force
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Recurse -Force
+Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
+Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
+Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
+Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
@@ -423,10 +428,6 @@ Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
-
-# Download Pre-required Applications
-Write-Host -ForegroundColor Green "Download Forescout Secure Connector"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/SecureConnectorInstaller.msi" -OutFile 'C:\Windows\Temp\SecureConnectorInstaller.msi' -Verbose
 
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 $OOBECMD = @'
