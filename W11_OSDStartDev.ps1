@@ -3,7 +3,7 @@
 # Script Name:     W11_OSDStartDev.ps1
 # Description:     Start Windows 11 OSD Offline Deployment
 # Created:         05/25/2025
-# Version:         2.0
+# Version:         2.1
 #
 #=============================================================================================================================
 
