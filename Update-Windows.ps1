@@ -105,7 +105,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         }
         else {
                 Write-Host -ForegroundColor Green "  Install all updates"
-                Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
+                Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot -Verbose 
         }        
        
         # Uninstall blocking language Update

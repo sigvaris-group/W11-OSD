@@ -305,17 +305,7 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Install pre-required apps</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
-                </RunSynchronousCommand> 
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <Description>Install Windows Upates</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Update-Windows.ps1 -Wait</Path>
-                </RunSynchronousCommand>                          
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <Description>Install and set Language</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                          
+                </RunSynchronousCommand>                                        
             </RunSynchronous>
         </component>
     </settings>
@@ -362,16 +352,6 @@ $UnattendXml = @"
                     <Order>3</Order>
                     <Description>Install pre-required apps</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
-                </RunSynchronousCommand> 
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <Description>Install Windows Upates</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Update-Windows.ps1 -Wait</Path>
-                </RunSynchronousCommand>                          
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>5</Order>
-                    <Description>Install and set Language</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                   
             </RunSynchronous>
         </component>
@@ -455,8 +435,8 @@ $OOBECMD = @'
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
