@@ -53,7 +53,7 @@ $MSIArguments = @(
     ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
     "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
 )
-Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments
+Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
 
 #################### End Install Forescout #####################
 
