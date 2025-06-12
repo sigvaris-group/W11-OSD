@@ -51,7 +51,7 @@ Write-Host -ForegroundColor Green "Install Forescout Secure Connector"
 $MSIArguments = @(
     "/i"
     ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
-    "MODE=ChYDDycTa28pbuDU_zIqeqrpl+duduiJZHB4pzUDhN3PSbqlXiQEAAFjdymE /qn"
+    "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
 )
 Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments
 
