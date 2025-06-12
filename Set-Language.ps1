@@ -159,3 +159,6 @@ tzutil.exe /s "$($OSDTimeZone)"
 #Start-Process powershell -Wait
 
 Stop-Transcript | Out-Null
+
+# Exit code Soft Reboot
+Exit 3010

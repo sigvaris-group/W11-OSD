@@ -123,3 +123,6 @@ else {
 }
 
 Stop-Transcript | Out-Null
+
+# Exit code Soft Reboot
+Exit 3010

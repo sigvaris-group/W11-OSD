@@ -284,3 +284,6 @@ $EndTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
 New-Item -Path "C:\ProgramData\OSDeploy\END-$EndTime.txt" -ItemType File
 
 Stop-Transcript | Out-Null
+
+# Exit code Soft Reboot
+Exit 3010
