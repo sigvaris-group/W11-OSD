@@ -39,21 +39,6 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-<#
-# Uninstall blocking language Update
-# Microsoft Community notes that after installing KB5050009, 
-# users might experience situations where the new display language 
-# isn't fully applied, leaving some elements of the UI, 
-# such as the Settings side panel or desktop icon labels, 
-#in English or a different language. This is particularly noticeable 
-# if additional languages were previously installed
-Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
-Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
-Import-Module PSWindowsUpdate -Scope Global
-Write-Host -ForegroundColor Green "Uninstall KB5050009"
-Remove-WindowsUpdate -KBArticleID KB5050009 -NoRestart
-#>
-
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Set-Language.log"
@@ -110,6 +95,7 @@ If ($json) {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
     try {        
 
+        <#
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
         if ($OSDDisplayLanguage -eq 'de-CH') {
             $proc = Install-Language de-DE -CopyToSettings -Verbose -ErrorAction SilentlyContinue
@@ -119,6 +105,9 @@ If ($json) {
             $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
             $proc.WaitForExit()
         }
+        #>
+        Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage
 
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
