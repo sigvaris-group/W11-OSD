@@ -446,6 +446,8 @@ Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageDev.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-WindowsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-WindowsDev.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 $OOBECMD = @'
