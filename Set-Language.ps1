@@ -111,7 +111,7 @@ try {
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose
 
-        # Configure new language defaults under current user (system) after which it can be copied to system
+    # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Set Win User Language $($OSDDisplayLanguage) List, sets the current user language settings"
     $OldList = Get-WinUserLanguageList
     Write-Host -ForegroundColor Green "Old WinUserLanguageList: $($OldList.LanguageTag)"
