@@ -300,7 +300,22 @@ $UnattendXml = @"
                     <Order>1</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand>                    
+                </RunSynchronousCommand>      
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Install pre-required apps</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
+                </RunSynchronousCommand> 
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Install Windows Upates</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Update-Windows.ps1 -Wait</Path>
+                </RunSynchronousCommand>                          
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <Description>Install and set Language</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                          
             </RunSynchronous>
         </component>
     </settings>
@@ -342,7 +357,22 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>                      
+                </RunSynchronousCommand>    
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Install pre-required apps</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
+                </RunSynchronousCommand> 
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <Description>Install Windows Upates</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Update-Windows.ps1 -Wait</Path>
+                </RunSynchronousCommand>                          
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>5</Order>
+                    <Description>Install and set Language</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                   
             </RunSynchronous>
         </component>
     </settings>
@@ -410,12 +440,12 @@ Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Set-Language.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
 $OOBECMD = @'
@@ -423,10 +453,10 @@ $OOBECMD = @'
 
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
