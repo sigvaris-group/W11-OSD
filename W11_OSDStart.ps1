@@ -56,7 +56,6 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-#$OSDKiosk = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKiosk
 $OSDWindowsUpdate = 'Yes'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
@@ -69,8 +68,6 @@ Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"
 Write-Host "  TimeZone: $OSDTimeZone"
 Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
-#Write-Host "  Kiosk Device: $OSDKiosk"
-#if ($OSDKiosk -eq 'Yes') {$OSDLocation -eq 'KIOSK'}
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
 
 #================================================
@@ -138,15 +135,6 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
 
-<#
-# Download installation files for M365 Office
-Write-Host -ForegroundColor Green "Download installation files for M365 Office"
-Write-Host "Attempting to download Setup from Office Deployment Tool"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
-#Invoke-WebRequest "https://officecdn.microsoft.com/pr/wsus/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
-#Write-Host "Download configuration file for M365 Office installation"
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Configuration.xml" -OutFile "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Verbose
-#>
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
     New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
 }
