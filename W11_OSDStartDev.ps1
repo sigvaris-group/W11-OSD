@@ -417,7 +417,6 @@ foreach ($profile in $profiles) {
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Scripts\OSDCloudRegistration.pfx" -Destination "C:\OSDCloud\Scripts\OSDCloudRegistration.pfx" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Scripts\Install-PreApps.ps1" -Destination "C:\Windows\Setup\Scripts\Install-PreApps.ps1" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force -Verbose
