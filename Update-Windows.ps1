@@ -92,7 +92,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         #Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
 
         # Get a list of available updates
-        $updates = Get-WindowsUpdate -Verbose
+        $updates = Get-WindowsUpdate -WindowsUpdate -Verbose
         Write-Host -ForegroundColor Green "  Updates available: $($updates.count)"
 
         # Filter for a specific title
