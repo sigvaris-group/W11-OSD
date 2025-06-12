@@ -118,8 +118,8 @@ If ($json) {
         $OldList = Get-WinUserLanguageList
         Write-Host -ForegroundColor Green "Old WinUserLanguageList: $($OldList.LanguageTag)"
         $UserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
-        Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList.LanguageTag)"
-        $UserLanguageList += $OldList
+        #Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList.LanguageTag)"
+        #$UserLanguageList += $OldList
         Set-WinUserLanguageList -LanguageList $UserLanguageList -Force -Verbose
         $NewUserLanguageList = Get-WinUserLanguageList
         Write-Host -ForegroundColor Green "New WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
