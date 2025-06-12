@@ -107,7 +107,7 @@ If ($json) {
         }
         #>
         Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage
+        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
 
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
