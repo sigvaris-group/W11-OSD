@@ -101,7 +101,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         # Install the update (replace with the correct update object)
         if ($update) {
                 Write-Host -ForegroundColor Green "  Install update: $($update.Title)"
-                $update | Install-WindowsUpdate -KBArticleID $($update.KB) -AcceptAll -IgnoreReboot -Verbose
+                $update | Install-WindowsUpdate -KBArticleID $($update.KB) -ForceInstall -AcceptAll -IgnoreReboot -Verbose
         }
         else {
                 Write-Host -ForegroundColor Green "  Install all updates"
