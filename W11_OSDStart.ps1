@@ -2,8 +2,8 @@
 #
 # Script Name:     W11_OSDStart.ps1
 # Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
-# Created:         05/18/2025
-# Version:         1.4
+# Created:         06/12/2025
+# Version:         3.0
 #
 #=============================================================================================================================
 
@@ -22,6 +22,7 @@ $UpdateNews = @(
 "05/16/2025 Uninstall KB5050009 from Windows Updates which blocking language installation"
 "05/21/2025 Removed domain joined devices from registering in Autopilot which generates some issues"
 "06/05/2025 SecureConnect moved to USB"
+"06/12/2025 SecureConnect fixed and language packs added to USB"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -38,9 +39,6 @@ New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
 #=======================================================================
 Write-Host -ForegroundColor Green "Start UI Client Setup"
 $location = "X:\OSDCloud\Config\UI"
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
