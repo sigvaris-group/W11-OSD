@@ -138,10 +138,10 @@ If ($json) {
 
         # Sets the provided language as the System Preferred UI Language
         Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
-        Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
+        Set-SystemPreferredUILanguage $OSDLanguage -Verbose
 
         # Set the locale for the region and language
-        Write-Host -ForegroundColor Green "Set System Locale Language $($OOSDDisplayLanguage)"
+        Write-Host -ForegroundColor Green "Set System Locale Language $($OSDDisplayLanguage)"
         Set-WinSystemLocale $OSDDisplayLanguage -Verbose
 
 
