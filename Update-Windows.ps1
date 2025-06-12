@@ -89,7 +89,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Import-Module PSWindowsUpdate -Scope Global
 
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        Install-WindowsUpdate -Category Updates -ForceInstall -AcceptAll -IgnoreReboot 
+        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
        
         # Uninstall blocking language Update
         # Microsoft Community notes that after installing KB5050009, 
