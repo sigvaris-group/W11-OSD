@@ -111,8 +111,14 @@ If ($json) {
     try {        
 
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
-        $proc.WaitForExit()
+        if ($OSDDisplayLanguage -eq 'de-CH') {
+            $proc = Install-Language de-DE -CopyToSettings -Verbose -ErrorAction SilentlyContinue
+            $proc.WaitForExit()
+        }
+        else {
+            $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
+            $proc.WaitForExit()
+        }
 
         # Configure new language defaults under current user (system) after which it can be copied to system
         Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
