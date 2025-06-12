@@ -96,7 +96,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Write-Host -ForegroundColor Green "  Updates available: $($updates.count)"
 
         # Filter for a specific title
-        $update = $updates | Where-Object {$_.Title -like '*Cumulative Update for Windows 11 Version 24H2 for x64-based Systems*'}
+        $update = $updates | Where-Object {$_.Title -like '*Cumulative Update for Windows*'}
 
         # Install the update (replace with the correct update object)
         if ($update) {
