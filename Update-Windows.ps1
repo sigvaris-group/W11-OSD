@@ -89,24 +89,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Import-Module PSWindowsUpdate -Scope Global
 
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        #Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot 
-
-        # Get a list of available updates
-        $updates = Get-WindowsUpdate -WindowsUpdate -Verbose
-        Write-Host -ForegroundColor Green "  Updates available: $($updates.count)"
-
-        # Filter for a specific title
-        $update = $updates | Where-Object {$_.Title -like '*Cumulative Update for Windows*'}
-
-        # Install the update (replace with the correct update object)
-        if ($update) {
-                Write-Host -ForegroundColor Green "  Install update: $($update.Title)"
-                $update | Install-WindowsUpdate -KBArticleID $($update.KB) -ForceInstall -AcceptAll -IgnoreReboot -Verbose
-        }
-        else {
-                Write-Host -ForegroundColor Green "  Install all updates"
-                Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot -Verbose 
-        }        
+        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot     
        
         # Uninstall blocking language Update
         # Microsoft Community notes that after installing KB5050009, 
