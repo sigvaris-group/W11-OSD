@@ -126,8 +126,8 @@ try {
 
 
     # Sets the provided language as the System Preferred UI Language
-    Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
-    Set-SystemPreferredUILanguage $OSDLanguage -Verbose
+    #Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
+    #Set-SystemPreferredUILanguage $OSDLanguage -Verbose
 
     # Set the locale for the region and language
     Write-Host -ForegroundColor Green "Set System Locale Language $($OSDDisplayLanguage)"
