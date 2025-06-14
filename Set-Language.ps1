@@ -93,25 +93,9 @@ Import-Module LanguagePackManagement
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {        
     
-    if ($OSDDisplayLanguage -eq 'de-CH') {
-        Write-Host -ForegroundColor Green "Add language pack de-DE"
-        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\de-DE /norestart
-        Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage)"
-        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
-        Write-Host -ForegroundColor Green "Install language pack de-DE and change the language of the OS on different places"
-        $proc = Install-Language de-DE -Verbose -ErrorAction SilentlyContinue
-        $proc.WaitForExit()
-        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
-        $proc.WaitForExit()
-    }
-    else {
-        Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage)"
-        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
-        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
-        $proc.WaitForExit()
-    }
+    # Add Language Pack from USB
+    Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
+    Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
 
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
