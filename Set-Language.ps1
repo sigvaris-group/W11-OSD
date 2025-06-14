@@ -124,15 +124,15 @@ try {
     Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
     Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True -Verbose
 
-    <#
+
     # Sets the provided language as the System Preferred UI Language
-    Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
-    Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
+    Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDLanguage)"
+    Set-SystemPreferredUILanguage $OSDLanguage -Verbose
 
     # Set the locale for the region and language
     Write-Host -ForegroundColor Green "Set System Locale Language $($OSDDisplayLanguage)"
     Set-WinSystemLocale $OSDDisplayLanguage -Verbose
-    #>    
+
 
     #===================================================================================================================================================
     #  Set TimeZone
