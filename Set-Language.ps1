@@ -99,13 +99,16 @@ try {
         Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage)"
         Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
         Write-Host -ForegroundColor Green "Install language pack de-DE and change the language of the OS on different places"
-        $proc = Install-Language de-DE -CopyToSettings -Verbose -ErrorAction SilentlyContinue
+        $proc = Install-Language de-DE -Verbose -ErrorAction SilentlyContinue
         $proc.WaitForExit()
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
         $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
         $proc.WaitForExit()
     }
     else {
+        Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage)"
+        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
+        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
         $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
         $proc.WaitForExit()
     }
