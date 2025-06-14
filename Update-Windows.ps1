@@ -90,7 +90,7 @@ try {
         Import-Module PSWindowsUpdate -Scope Global
 
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot  
+        Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot 
 
         # Uninstall blocking language Update
         # Microsoft Community notes that after installing KB5050009, 
@@ -99,8 +99,8 @@ try {
         # such as the Settings side panel or desktop icon labels, 
         # in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
-        Write-Host -ForegroundColor Green "Uninstall KB5050009"
-        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
+        #Write-Host -ForegroundColor Green "Uninstall KB5050009"
+        #Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
     }
     else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
