@@ -2,8 +2,8 @@
 #
 # Script Name:     Set-Language.ps1
 # Description:     Set Language, Keyboard and TimeZone
-# Created:         12/20/2024
-# Version:         1.0
+# Created:         06/14/2025
+# Version:         3.0
 #
 #=============================================================================================================================
 
@@ -92,20 +92,23 @@ Import-Module LanguagePackManagement
 # Install language pack and change the language of the OS on different places
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {        
-
-    <#
-    Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+    
     if ($OSDDisplayLanguage -eq 'de-CH') {
+        Write-Host -ForegroundColor Green "Add language pack de-DE"
+        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\de-DE /norestart
+        Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage)"
+        Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
+        Write-Host -ForegroundColor Green "Install language pack de-DE and change the language of the OS on different places"
         $proc = Install-Language de-DE -CopyToSettings -Verbose -ErrorAction SilentlyContinue
+        $proc.WaitForExit()
+        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
+        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
         $proc.WaitForExit()
     }
     else {
         $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
         $proc.WaitForExit()
     }
-    #>
-    Write-Host -ForegroundColor Green "Add language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\Languages\$OSDDisplayLanguage /norestart
 
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
@@ -116,8 +119,8 @@ try {
     $OldList = Get-WinUserLanguageList
     Write-Host -ForegroundColor Green "Old WinUserLanguageList: $($OldList.LanguageTag)"
     $UserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
-    #Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList.LanguageTag)"
-    #$UserLanguageList += $OldList
+    Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList.LanguageTag)"
+    $UserLanguageList += $OldList
     Set-WinUserLanguageList -LanguageList $UserLanguageList -Force -Verbose
     $NewUserLanguageList = Get-WinUserLanguageList
     Write-Host -ForegroundColor Green "New WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
@@ -134,31 +137,30 @@ try {
     Write-Host -ForegroundColor Green "Copy User International Settings from current user to System, including Welcome screen and new user"
     Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True -Verbose
 
+    <#
     # Sets the provided language as the System Preferred UI Language
     Write-Host -ForegroundColor Green "Set System Preferred UI Language $($OSDDisplayLanguage)"
-    Set-SystemPreferredUILanguage $OSDLanguage -Verbose
+    Set-SystemPreferredUILanguage $OSDDisplayLanguage -Verbose
 
     # Set the locale for the region and language
     Write-Host -ForegroundColor Green "Set System Locale Language $($OSDDisplayLanguage)"
     Set-WinSystemLocale $OSDDisplayLanguage -Verbose
-        
+    #>    
+
+    #===================================================================================================================================================
+    #  Set TimeZone
+    #===================================================================================================================================================
+    Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
+    Set-TimeZone -Id $OSDTimeZone
+    tzutil.exe /s "$($OSDTimeZone)"    
+
+    Stop-Transcript | Out-Null
+
+    # Exit code Soft Reboot
+    Exit 3010
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "$($OSDDisplayLanguage) install failed with error: $($_.Exception.Message)"
     Stop-Transcript | Out-Null
     exit 1
 }
-
-#===================================================================================================================================================
-#  Set TimeZone
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
-tzutil.exe /s "$($OSDTimeZone)"
-
-#Start-Process powershell -Wait
-
-Stop-Transcript | Out-Null
-
-# Exit code Soft Reboot
-Exit 3010

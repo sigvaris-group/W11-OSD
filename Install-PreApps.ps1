@@ -2,7 +2,7 @@
 #
 # Script Name:     Install-PreApps.ps1
 # Description:     Install pre-requisite applications
-# Created:         06/13/2025
+# Created:         06/14/2025
 # Version:         3.0
 #
 #=============================================================================================================================
@@ -44,17 +44,23 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Install-PreApps.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+try {
 
-#################### Install Forescout #####################
+    Write-Host -ForegroundColor Green "Install Forescout Secure Connector"
+    $MSIArguments = @(
+        "/i"
+        ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
+        "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
+    )
+    Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
 
-Write-Host -ForegroundColor Green "Install Forescout Secure Connector"
-$MSIArguments = @(
-    "/i"
-    ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
-    "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
-)
-Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
+    Stop-Transcript | Out-Null
 
-#################### End Install Forescout #####################
-
-Stop-Transcript | Out-Null
+    # Exit code Soft Reboot
+    Exit 3010
+} 
+catch [System.Exception] {
+    Write-Host -ForegroundColor Red "Install PreApps failed with error: $($_.Exception.Message)"
+    Stop-Transcript | Out-Null
+    exit 1
+}

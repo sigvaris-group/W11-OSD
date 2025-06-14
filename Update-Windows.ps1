@@ -2,9 +2,8 @@
 #
 # Script Name:     Update-Windows.ps1
 # Description:     Install Windows Updates
-# Created:         01/30/2025
-# Updated:         02/20/2025 Query if Windows Updates selected
-# Version:         1.1
+# Created:         06/14/2025
+# Version:         3.0
 #
 #=============================================================================================================================
 
@@ -40,7 +39,6 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Update-Windows.log"
@@ -55,11 +53,14 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 # Access JSON properties
 $OSDWindowsUpdate = $json.OSDWindowsUpdate
 
-If ($OSDWindowsUpdate -eq "Yes") {
+try {
+
+    If ($OSDWindowsUpdate -eq "Yes") {                
+
         # Install latest NuGet package provider
         Write-Host -ForegroundColor Green "Install latest NuGet package provider"
         Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
-        
+
         # Ensure default PSGallery repository is registered
         Write-Host -ForegroundColor Green "Ensure default PSGallery repository is registered"
         Register-PSRepository -Default -ErrorAction SilentlyContinue
@@ -68,20 +69,20 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Write-Host -ForegroundColor Green "Attempt to get the installed PowerShellGet module"
         $PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
         if ($PowerShellGetInstalledModule) {
-                # Attempt to locate the latest available version of the PowerShellGet module from repository
-                Write-Host -ForegroundColor Green "Attempt to locate the latest available version of the PowerShellGet module from repository"
-                $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
-                if ($PowerShellGetLatestModule) {
-                        if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
-                                Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
-                        }
+            # Attempt to locate the latest available version of the PowerShellGet module from repository
+            Write-Host -ForegroundColor Green "Attempt to locate the latest available version of the PowerShellGet module from repository"
+            $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
+            if ($PowerShellGetLatestModule) {
+                if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
+                    Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
                 }
+            }
         }
         else {
-                # PowerShellGet module was not found, attempt to install from repository
-                Write-Host -ForegroundColor Yellow "PowerShellGet module was not found, attempt to install from repository"
-                Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
-                Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+            # PowerShellGet module was not found, attempt to install from repository
+            Write-Host -ForegroundColor Yellow "PowerShellGet module was not found, attempt to install from repository"
+            Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+            Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
         }
 
         Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
@@ -89,8 +90,9 @@ If ($OSDWindowsUpdate -eq "Yes") {
         Import-Module PSWindowsUpdate -Scope Global
 
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot     
-       
+        Install-WindowsUpdate -KBArticleID KB5052093 -MicrosoftUpdate -ForceInstall -AcceptAll -IgnoreReboot     
+        Install-WindowsUpdate -MicrosoftUpdate -ForceInstall -AcceptAll -IgnoreReboot  
+
         # Uninstall blocking language Update
         # Microsoft Community notes that after installing KB5050009, 
         # users might experience situations where the new display language 
@@ -100,12 +102,18 @@ If ($OSDWindowsUpdate -eq "Yes") {
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
         Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
-}
-else {
+    }
+    else {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
+    }
+
+    Stop-Transcript | Out-Null
+
+    # Exit code Soft Reboot
+    Exit 3010
+} 
+catch [System.Exception] {
+    Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"
+    Stop-Transcript | Out-Null
+    exit 1
 }
-
-Stop-Transcript | Out-Null
-
-# Exit code Soft Reboot
-Exit 3010

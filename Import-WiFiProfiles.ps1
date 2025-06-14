@@ -2,9 +2,8 @@
 #
 # Script Name:     Import-WiFiProfiles.ps1
 # Description:     Import WiFi Profiles
-# Created:         12/29/2024
-# Updated:
-# Version:         1.0
+# Created:         06/14/2025
+# Version:         3.0
 #
 #=============================================================================================================================
 $Title = "Import WiFi Profiles"
