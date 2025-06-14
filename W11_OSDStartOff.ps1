@@ -1,27 +1,18 @@
 #=============================================================================================================================
 #
 # Script Name:     W11_OSDStartOff.ps1
-# Description:     Windows 11 OSD Offline Deployment
-# Created:         06/12/2025
+# Description:     Start Windows 11 OSD Offline Deployment
+# Created:         06/14/2025
 # Version:         3.0
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
+Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
-"01/20/2025 Including WiFi and domain join"
-"01/30/2025 REMOVED - Including script to install Windows updates"
-"01/31/2025 Install Language pack moved to Intune app which will be installed by ESP, because with W11 24H2 it doesn't work anymore."
-"           It installs all features of the language by default, which includes those subfeatures that take a long time to download (30min)"
-"02/04/2025 English language pack for SICHSG,SIFRSJ,SIFRHU,SIPLGU,SIBRSP,SIPTLI,SIMXMC can be choosen"
-"02/20/2025 REMOVED - To reduce the installation time you can unselect 'Install Windows Updates?'"
-"03/17/2025 REMOVED - M365 Office Installation package added"
-"03/18/2025 Windows Updates will be always installed"
-"03/20/2025 M365 Office Installation moved to ESP"
-"05/03/2025 AutopilotBranding script adjusted"
-"05/16/2025 Uninstall KB5050009 from Windows Updates which blocking language installation"
-"05/21/2025 Removed domain joined devices from registering in Autopilot which generates some issues"
+"05/25/2025 Windows 11 Ofline Image deployment"
 "06/05/2025 SecureConnect moved to USB"
+"06/12/2025 SecureConnect fixed and language packs added to USB"
+"06/14/2025 2025-06 Cummulative Update Included"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -29,18 +20,11 @@ foreach ($UpdateNew in $UpdateNews) {
 }
 Start-Sleep -Seconds 10
 
-# Create Start OSD Deployment file
-$StartTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
-New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
-
 #=======================================================================
 #   [PostOS] Start U++ (user interface)
 #=======================================================================
 Write-Host -ForegroundColor Green "Start UI Client Setup"
 $location = "X:\OSDCloud\Config\UI"
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWCMLog64.dll" -OutFile "$location\FTWCMLog64.dll" -Verbose
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/FTWldap64.dll" -OutFile "$location\FTWldap64.dll" -Verbose
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++64.exe" -OutFile "$location\UI++64.exe" -Verbose
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
@@ -58,7 +42,6 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-#$OSDKiosk = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKiosk
 $OSDWindowsUpdate = 'Yes'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
@@ -71,9 +54,16 @@ Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"
 Write-Host "  TimeZone: $OSDTimeZone"
 Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
-#Write-Host "  Kiosk Device: $OSDKiosk"
-#if ($OSDKiosk -eq 'Yes') {$OSDLocation -eq 'KIOSK'}
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
+
+If (-not $OSDComputername) {
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.MessageBox]::Show('PLEASE CHECK INTERNET CONNECTION AND REBOOT')
+}
+
+# Set TimeZone
+Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
+Set-TimeZone -Id $OSDTimeZone
 
 #================================================
 #   [PreOS] Update Module
@@ -91,6 +81,16 @@ Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
 Import-Module OSD -Force   
 
 #=======================================================================
+#   LOCAL DRIVE LETTERS
+#=======================================================================
+function Get-OSDCloudDrive {
+    $OSDCloudDrive = (Get-WmiObject Win32_LogicalDisk | Where-Object { $_.VolumeName -eq 'OSDCloud' }).DeviceID
+    return $OSDCloudDrive
+}
+$OSDCloudDrive = Get-OSDCloudDrive
+Write-Host -ForegroundColor Green "Current OSDCLOUD Drive is: $OSDCloudDrive"
+
+#=======================================================================
 #   [OS] Params and Start-OSDCloud
 #=======================================================================
 #Set OSDCloud Vars
@@ -98,9 +98,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -110,14 +110,15 @@ $Global:MyOSDCloud = [ordered]@{
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
-    OSVersion = "Windows 11"
-    OSBuild = "24H2"
-    OSEdition = "Enterprise"
-    OSLanguage = "en-us"
-    OSLicense = "Volume"
     ZTI = $true
     Firmware = $false
+    FindImageFile = $true
+    ImageIndex = 1
 }
+
+#=======================================================================
+#   Write OSDCloud VARS to Console
+#=======================================================================
 #Launch OSDCloud
 Write-Host -ForegroundColor Green "Starting OSDCloud"
 
@@ -140,15 +141,6 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
 
-<#
-# Download installation files for M365 Office
-Write-Host -ForegroundColor Green "Download installation files for M365 Office"
-Write-Host "Attempting to download Setup from Office Deployment Tool"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
-#Invoke-WebRequest "https://officecdn.microsoft.com/pr/wsus/setup.exe" -OutFile "C:\ProgramData\OSDeploy\M365\setup.exe" -Verbose
-#Write-Host "Download configuration file for M365 Office installation"
-#Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Configuration.xml" -OutFile "C:\ProgramData\OSDeploy\M365\Configuration.xml" -Verbose
-#>
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
     New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
 }
@@ -321,7 +313,7 @@ $UnattendXml = @"
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDDisplayLanguage</InputLocale>
-            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>
@@ -363,7 +355,7 @@ $UnattendXml = @"
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDDisplayLanguage</InputLocale>
-            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>
@@ -404,13 +396,16 @@ foreach ($profile in $profiles) {
 
 Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Scripts\OSDCloudRegistration.pfx" -Destination "C:\OSDCloud\Scripts\OSDCloudRegistration.pfx" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force -Verbose
+
+# M365 Office
+(New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
@@ -425,9 +420,7 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageOff.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageOff.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
 
@@ -439,8 +432,7 @@ $OOBECMD = @'
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-LanguageOff.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
@@ -449,9 +441,6 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 exit 
 '@
 $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
-
-# Copy START file
-Copy-Item "X:\OSDCloud\START*.txt" -Destination "C:\ProgramData\OSDeploy" -Recurse -Force
 
 #=======================================================================
 #   Restart-Computer

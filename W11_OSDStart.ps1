@@ -30,10 +30,6 @@ foreach ($UpdateNew in $UpdateNews) {
 }
 Start-Sleep -Seconds 10
 
-# Create Start OSD Deployment file
-$StartTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
-New-Item -Path "X:\OSDCloud\START-$StartTime.txt" -ItemType File
-
 #=======================================================================
 #   [PostOS] Start U++ (user interface)
 #=======================================================================
@@ -396,6 +392,10 @@ Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "
 Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force -Verbose
+
+# M365 Office
+(New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
+Copy-Item -Path "$OSDCloudDrive\OSDCloud\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"

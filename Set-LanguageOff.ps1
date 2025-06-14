@@ -1,13 +1,13 @@
 #=============================================================================================================================
 #
-# Script Name:     Set-Language.ps1
+# Script Name:     Set-LanguageOff.ps1
 # Description:     Set Language, Keyboard and TimeZone
 # Created:         06/14/2025
 # Version:         3.0
 #
 #=============================================================================================================================
 
-$Title = "Install Language Packs"
+$Title = "Set Language Offline"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
@@ -41,7 +41,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
-$Global:Transcript = "Set-Language.log"
+$Global:Transcript = "Set-LanguageOff.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 #=======================================================================
@@ -92,10 +92,6 @@ Import-Module LanguagePackManagement
 # Install language pack and change the language of the OS on different places
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {        
-    
-    # Add Language Pack from USB
-    Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
-    Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
 
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
