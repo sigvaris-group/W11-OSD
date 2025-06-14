@@ -266,10 +266,6 @@ try {
     Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Recurse -ErrorAction SilentlyContinue
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
-    # Create End OSD Deployment file
-    $EndTime = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
-    New-Item -Path "C:\ProgramData\OSDeploy\END-$EndTime.txt" -ItemType File
-
     Stop-Transcript | Out-Null
 
     # Exit code Soft Reboot

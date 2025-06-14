@@ -455,9 +455,6 @@ exit
 '@
 $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
 
-# Copy START file
-Copy-Item "X:\OSDCloud\START*.txt" -Destination "C:\ProgramData\OSDeploy" -Recurse -Force
-
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
