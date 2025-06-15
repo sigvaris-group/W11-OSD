@@ -11,7 +11,7 @@ Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
 "05/25/2025 Windows 11 Ofline Image deployment"
 "06/05/2025 SecureConnect moved to USB"
-"06/12/2025 SecureConnect fixed and language packs added to USB"
+"06/12/2025 SecureConnect fixed and language packs added to Image"
 "06/14/2025 2025-06 Cummulative Update Included"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"

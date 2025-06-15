@@ -1,13 +1,13 @@
 ﻿#=============================================================================================================================
 #
 # Script Name:     Install-PreApps.ps1
-# Description:     Install prerequisite applications
+# Description:     Install prerequired applications
 # Created:         06/14/2025
 # Version:         3.0
 #
 #=============================================================================================================================
 
-$Title = "Install prerequisite applications"
+$Title = "Install prerequired applications"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
@@ -38,6 +38,7 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 }
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
+
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "Install-PreApps.log"
