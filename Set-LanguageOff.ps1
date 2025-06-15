@@ -93,9 +93,9 @@ Import-Module LanguagePackManagement
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {        
     If ($OSDDisplayLanguage -eq 'de-CH') {
-        Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage) and change the language of the OS on different places"
-        $proc = Install-Language $OSDDisplayLanguage -CopyToSettings -Verbose -ErrorAction SilentlyContinue
-        $proc.WaitForExit()
+        # Add Language Feature Pack from USB
+        Write-Host -ForegroundColor Green "Install language Feature pack $($OSDDisplayLanguage)"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
     }
     
     Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
