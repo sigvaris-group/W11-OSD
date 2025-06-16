@@ -94,6 +94,8 @@ Import-Module LanguagePackManagement
 try {        
     If ($OSDDisplayLanguage -eq 'de-CH') {
         # Add Language Feature Pack from USB
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$$OSDLanguage" -IgnoreCheck -NoRestart
         Write-Host -ForegroundColor Green "Install language Feature pack $($OSDDisplayLanguage)"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
     }
