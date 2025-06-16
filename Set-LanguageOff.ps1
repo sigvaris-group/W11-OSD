@@ -98,10 +98,11 @@ try {
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
         Write-Host -ForegroundColor Green "Install language Feature pack $($OSDDisplayLanguage)"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
+    } 
+    else {
+        Write-Host -ForegroundColor Green "Install language Feature pack $($OSDDisplayLanguage)"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
     }
-    
-    Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
-    Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
 
     # Configure new language defaults under current user (system) after which it can be copied to system
     Write-Host -ForegroundColor Green "Configure new language $($OSDDisplayLanguage) defaults under current user (system) after which it can be copied to system"
