@@ -54,30 +54,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 $OSDTimeZone = $json.OSDTimeZone
 
 try {
-    #===================================================================================================================================================
-    #    Install Teams per machine
-    #===================================================================================================================================================
-    #Write-Host -ForegroundColor Green "Downloading Msix file"
-    #$Msixx64Url = 'https://go.microsoft.com/fwlink/?linkid=2196106'
-    $MsixDest = "C:\Windows\Temp\MSTeams-x64.msix"
-    #Invoke-WebRequest $Msixx64Url -OutFile $MsixDest -Verbose
-    #Write-Host -ForegroundColor Green "Downloading teamsbootstrapper file"
-    #$Teamsx64Url = 'https://go.microsoft.com/fwlink/?linkid=2243204'
-    $TeamsDest = "C:\Windows\Temp\teamsbootstrapper.exe"
-    #Invoke-WebRequest $Teamsx64Url -OutFile $TeamsDest -Verbose
-    Write-Host -ForegroundColor Green "Install Teams per machine"
-    $proc = Start-Process $TeamsDest -ArgumentList "-p -o $MsixDest" -WindowStyle Hidden -PassThru
-    $proc.WaitForExit()
-
-    <#
-    #===================================================================================================================================================
-    #   Enable location services so the time zone will be set automatically (even when skipping the privacy page in OOBE) when an administrator signs in
-    #===================================================================================================================================================
-    Write-Host -ForegroundColor Green "Enable location services to automatically set the time zone"
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Name "Value" -Type "String" -Value "Allow" -Force -ErrorAction SilentlyContinue
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" -Name "SensorPermissionState" -Type "DWord" -Value 1 -Force -ErrorAction SilentlyContinue
-    Start-Service -Name "lfsvc" -ErrorAction SilentlyContinue
-    #>
 
     #===================================================================================================================================================
     #  Set TimeZone
