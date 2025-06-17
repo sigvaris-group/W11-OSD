@@ -220,9 +220,6 @@ try {
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
     Stop-Transcript | Out-Null
-
-    # Exit code Soft Reboot
-    Exit 3010
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Autopilot Branding failed with error: $($_.Exception.Message)"
