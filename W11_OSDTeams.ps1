@@ -299,8 +299,6 @@ Write-Host -ForegroundColor Green "Copying script files"
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Teams.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Teams.ps1" -Force -Verbose
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force -Verbose
 
 # Set Computername
 Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
@@ -311,7 +309,7 @@ Rename-Computer -NewName $OSDComputername
 #================================================
 Write-Host -ForegroundColor Green "Downloading and creating scripts for OOBE phase"
 Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBrandingTeams.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBrandingTeams.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBrandingTeams.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Set-Language.ps1"
