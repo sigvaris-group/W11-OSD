@@ -191,6 +191,12 @@ try {
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
     New-ItemProperty -Path $registryPath -Name "EnableFirstLogonAnimation" -Value 0 -PropertyType DWord -Force | Out-Null
     New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -PropertyType DWord -Force | Out-Null
+    
+    #===================================================================================================================================================
+    #    Uninstall OneDrive
+    #===================================================================================================================================================
+    Write-Host -ForegroundColor Green 'Uninstall OneDrive'
+    winget uninstall onedrive
 
     #===================================================================================================================================================
     #    Remove OSDCloudRegistration Certificate
