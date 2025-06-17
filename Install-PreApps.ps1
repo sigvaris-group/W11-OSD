@@ -55,9 +55,6 @@ try {
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
 
     Stop-Transcript | Out-Null
-
-    # Exit code Soft Reboot
-    Exit 3010
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Install PreApps failed with error: $($_.Exception.Message)"
