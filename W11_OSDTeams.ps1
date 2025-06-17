@@ -308,7 +308,7 @@ Rename-Computer -NewName $OSDComputername
 #  [PostOS] OOBE CMD Command Line
 #================================================
 Write-Host -ForegroundColor Green "Downloading and creating scripts for OOBE phase"
-Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
+Write-Host -ForegroundColor Green "Download AutopilotBrandingTeamsa.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBrandingTeams.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBrandingTeams.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
