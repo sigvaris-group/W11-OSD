@@ -1,6 +1,4 @@
-﻿$Title = "Install prerequired applications"
-$host.UI.RawUI.WindowTitle = $Title
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+﻿[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
 
 $env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
