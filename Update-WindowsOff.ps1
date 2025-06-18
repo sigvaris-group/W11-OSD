@@ -60,7 +60,7 @@ try {
     If ($OSDDomainJoin -eq "Yes") {                
         
         # Params
-        $ExcludeDrivers = $false
+        $ExcludeDrivers = $true
         $ExcludeUpdates = $false
 
         # Main logic
