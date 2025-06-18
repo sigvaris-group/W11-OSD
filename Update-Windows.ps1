@@ -90,7 +90,7 @@ try {
         Import-Module PSWindowsUpdate -Scope Global
 
         Write-Host -ForegroundColor Green "Install Windows Updates"
-        Install-WindowsUpdate -ForceInstall -AcceptAll -AutoReboot 
+        Install-WindowsUpdate -ForceInstall -AcceptAll -IgnoreReboot
 
         # Uninstall blocking language Update
         # Microsoft Community notes that after installing KB5050009, 
