@@ -110,10 +110,10 @@ try {
     Write-Host -ForegroundColor Green "Old WinUserLanguageList: $($OldList.LanguageTag)"
     $UserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
     Write-Host -ForegroundColor Green "New-WinUserLanguageList: $($UserLanguageList.LanguageTag)"
-    $UserLanguageList += $OldList
+    #$UserLanguageList += $OldList
     Set-WinUserLanguageList -LanguageList $UserLanguageList -Force -Verbose
     $NewUserLanguageList = Get-WinUserLanguageList
-    Write-Host -ForegroundColor Green "New WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
+    Write-Host -ForegroundColor Green "WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
 
     # Set Win Home Location, sets the home location setting for the current user. This is for Region location 
     Write-Host -ForegroundColor Green "Set Win Home Location GeoID $($OSDGeoID)"
