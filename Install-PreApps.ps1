@@ -1,13 +1,4 @@
-﻿#=============================================================================================================================
-#
-# Script Name:     Install-PreApps.ps1
-# Description:     Install prerequired applications
-# Created:         06/14/2025
-# Version:         3.0
-#
-#=============================================================================================================================
-
-$Title = "Install prerequired applications"
+﻿$Title = "Install prerequired applications"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
