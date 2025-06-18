@@ -52,6 +52,14 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDWindowsUpdate = $json.OSDWindowsUpdate
+$OSDTimeZone = $json.OSDTimeZone
+
+#===================================================================================================================================================
+#  Set TimeZone
+#===================================================================================================================================================
+Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
+Set-TimeZone -Id $OSDTimeZone
+tzutil.exe /s "$($OSDTimeZone)"  
 
 try {
 
