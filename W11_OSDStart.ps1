@@ -296,12 +296,7 @@ $UnattendXml = @"
                     <Order>1</Order>
                     <Description>Install prerequired applications</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                         
-                <RunSynchronousCommand wcm:action="add">               
-                    <Order>2</Order>
-                    <Description>Connect to WiFi</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand>                                                           
+                </RunSynchronousCommand>                                                                                                 
             </RunSynchronous>
         </component>
     </settings>

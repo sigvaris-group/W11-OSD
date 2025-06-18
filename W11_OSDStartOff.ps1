@@ -307,11 +307,11 @@ $UnattendXml = @"
                     <Description>Install prerequired applications</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
                 </RunSynchronousCommand>  
-                <RunSynchronousCommand wcm:action="add">                           
+                <RunSynchronousCommand wcm:action="add">   
                     <Order>2</Order>
-                    <Description>Connect to WiFi</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand>                    
+                    <Description>Join Domain</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1 -Wait</Path>
+                </RunSynchronousCommand>                               
             </RunSynchronous>
         </component>
     </settings>
@@ -441,7 +441,7 @@ $OOBECMD = @'
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-LanguageOff.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
