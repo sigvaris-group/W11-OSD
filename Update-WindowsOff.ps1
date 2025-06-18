@@ -51,11 +51,12 @@ Write-Host -ForegroundColor Green "Load C:\ProgramData\OSDeploy\UIjson.json file
 $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFrom-Json
 
 # Access JSON properties
-$OSDWindowsUpdate = $json.OSDWindowsUpdate
+$OSDDomainJoin = $json.OSDDomainJoin
+#$OSDWindowsUpdate = $json.OSDWindowsUpdate
 
 try {
 
-    If ($OSDWindowsUpdate -eq "Yes") {                
+    If ($OSDDomainJoin -eq "Yes") {                
 
         # Install latest NuGet package provider
         Write-Host -ForegroundColor Green "Install latest NuGet package provider"
