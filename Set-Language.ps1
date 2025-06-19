@@ -145,6 +145,9 @@ try {
     tzutil.exe /s "$($OSDTimeZone)"    
 
     Stop-Transcript | Out-Null
+
+    # Exit code Soft Reboot
+    Exit 3010    
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "$($OSDDisplayLanguage) install failed with error: $($_.Exception.Message)"
