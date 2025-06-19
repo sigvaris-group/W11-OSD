@@ -100,7 +100,27 @@ try {
         Write-Host -ForegroundColor Green "Install language Feature pack $($OSDDisplayLanguage)"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
     } 
-    If ($OSDDisplayLanguage -eq 'de-AT') {
+    elseif ($OSDDisplayLanguage -eq 'de-AT') {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+    }
+    elseif ($OSDDisplayLanguage -eq 'en-FR') {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+    }    
+    elseif ($OSDDisplayLanguage -eq 'en-PL') {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+    }     
+    elseif ($OSDDisplayLanguage -eq 'en-BR') {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+    } 
+    elseif ($OSDDisplayLanguage -eq 'en-PT') {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+    }  
+    elseif ($OSDDisplayLanguage -eq 'en-MX') {
         Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
     }    

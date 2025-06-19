@@ -62,7 +62,7 @@
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP" And "%OSDLanguage%" = "pt-PT"'>"pt-BR"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI" And "%OSDLanguage%" = "en-US"'>"en-PT"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI" And "%OSDLanguage%" = "pt-PT"'>"pt-PT"</Action>
-    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC" And "%OSDLanguage%" = "en-US"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC" And "%OSDLanguage%" = "en-US"'>"en-MX"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC" And "%OSDLanguage%" = "es-ES"'>"es-MX"</Action>    
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
