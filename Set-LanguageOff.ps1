@@ -92,6 +92,7 @@ Import-Module LanguagePackManagement
 # Install language pack and change the language of the OS on different places
 # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program. 
 try {        
+    
     If ($OSDDisplayLanguage -eq 'de-CH') {
         # Add Language Feature Pack from USB
         Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
