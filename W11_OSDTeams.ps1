@@ -1,15 +1,15 @@
 #=============================================================================================================================
 #
 # Script Name:     W11_OSDTeams.ps1
-# Description:     Windows 11 OSD Deployment for TEAMS Room devices
-# Created:         06/16/2025
+# Description:     Windows 11 for TEAMS room devices
+# Created:         06/19/2025
 # Version:         1.0
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Windows 11 OSD Deployment for TEAMS Room devices"
+Write-Host -ForegroundColor Green "Windows 11 for TEAMS room devices"
 $UpdateNews = @(
-"06/16/2025 Deployment"
+"06/19/2025 Setup deployment process for Windows 11 TEAMS room devices"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -22,7 +22,7 @@ Start-Sleep -Seconds 10
 #=======================================================================
 Write-Host -ForegroundColor Green "Start UI Client Setup"
 $location = "X:\OSDCloud\Config\UI"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UITeams++.xml" -OutFile "$location\UI++.xml" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
     Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
@@ -38,6 +38,7 @@ $OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OS
 $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
+$OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 $OSDWindowsUpdate = 'Yes'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
@@ -49,6 +50,7 @@ Write-Host "  Keyboard: $OSDKeyboard"
 Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"
 Write-Host "  TimeZone: $OSDTimeZone"
+Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
 
 #================================================
@@ -80,7 +82,7 @@ $Global:MyOSDCloud = [ordered]@{
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
-    SyncMSUpCatDriverUSB = [bool]$false
+    SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true    
 }
 
@@ -222,6 +224,7 @@ $UIjson = @"
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
     "OSDGeoID" : "$OSDGeoID",
     "OSDTimeZone" : "$OSDTimeZone",
+    "OSDDomainJoin" : "$OSDDomainJoin",
     "OSDWindowsUpdate" : "$OSDWindowsUpdate"
 }
 "@
@@ -230,7 +233,6 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 #  [PostOS] Create Unattend XML file
 #================================================
-
 Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -240,14 +242,19 @@ $UnattendXml = @"
             <ComputerName>$OSDComputername</ComputerName>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>                             
-                <RunSynchronousCommand wcm:action="add">               
+            <RunSynchronous>  
+                <RunSynchronousCommand wcm:action="add">   
                     <Order>1</Order>
+                    <Description>Install prerequired applications</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                          
+                <RunSynchronousCommand wcm:action="add">               
+                    <Order>2</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
                 </RunSynchronousCommand> 
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
+                    <Order>3</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Teams.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                               
@@ -308,7 +315,7 @@ Rename-Computer -NewName $OSDComputername
 #  [PostOS] OOBE CMD Command Line
 #================================================
 Write-Host -ForegroundColor Green "Downloading and creating scripts for OOBE phase"
-Write-Host -ForegroundColor Green "Download AutopilotBrandingTeamsa.ps1"
+Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBrandingTeams.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBrandingTeams.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
@@ -325,7 +332,6 @@ $OOBECMD = @'
 
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBrandingTeams.ps1

@@ -2,7 +2,7 @@
 #
 # Script Name:     AutopilotBrandingTeams.ps1
 # Description:     Configure Windows Autopilot Branding for TEAMS devices
-# Created:         06/16/2025
+# Created:         06/19/2025
 # Version:         1.0
 #
 #=============================================================================================================================
@@ -220,6 +220,10 @@ try {
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
     Stop-Transcript | Out-Null
+
+    Restart-Computer -Force -Wait 5
+    # Exit code Soft Reboot
+    Exit 3010    
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Autopilot Branding failed with error: $($_.Exception.Message)"
