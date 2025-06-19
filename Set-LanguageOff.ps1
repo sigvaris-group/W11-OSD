@@ -104,25 +104,37 @@ try {
         Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
     }
+    elseif ($OSDDisplayLanguage -eq 'en-CH') {
+        Write-Host -ForegroundColor Green "Install language pack de-DE in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\de-DE" -IgnoreCheck -NoRestart
+        Write-Host -ForegroundColor Green "Install language Feature pack de-CH"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\de-CH" -IgnoreCheck -NoRestart
+        $OSDDisplayLanguage = 'en-US'
+    }    
     elseif ($OSDDisplayLanguage -eq 'en-FR') {
-        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+        Write-Host -ForegroundColor Green "Install language pack fr-FR in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\fr-FR" -IgnoreCheck -NoRestart
+        $OSDDisplayLanguage = 'en-US'
     }    
     elseif ($OSDDisplayLanguage -eq 'en-PL') {
-        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+        Write-Host -ForegroundColor Green "Install language pack pl-PL in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\pl-PL" -IgnoreCheck -NoRestart
+        $OSDDisplayLanguage = 'en-US'
     }     
     elseif ($OSDDisplayLanguage -eq 'en-BR') {
-        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+        Write-Host -ForegroundColor Green "Install language pack pt-BR in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\pt-BR" -IgnoreCheck -NoRestart
+        $OSDDisplayLanguage = 'en-US'
     } 
     elseif ($OSDDisplayLanguage -eq 'en-PT') {
-        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+        Write-Host -ForegroundColor Green "Install language pack pt-PT in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\pt-PT" -IgnoreCheck -NoRestart
+        $OSDDisplayLanguage = 'en-US'
     }  
     elseif ($OSDDisplayLanguage -eq 'en-MX') {
-        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
-        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+        Write-Host -ForegroundColor Green "Install language pack es-MX in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\es-MX" -IgnoreCheck -NoRestart
+        $OSDDisplayLanguage = 'en-US'
     }    
 
     # Configure new language defaults under current user (system) after which it can be copied to system
