@@ -158,6 +158,9 @@ try {
         Write-Host -ForegroundColor Yellow "No Windows Updates installed"
         Stop-Transcript | Out-Null
     }
+
+    # Exit code Soft Reboot
+    Exit 3010  
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"
@@ -209,4 +212,7 @@ catch [System.Exception] {
     Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
     
     Stop-Transcript | Out-Null
+
+    # Exit code Soft Reboot
+    Exit 3010      
 }
