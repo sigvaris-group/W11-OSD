@@ -22,7 +22,7 @@ Start-Sleep -Seconds 10
 #=======================================================================
 Write-Host -ForegroundColor Green "Start UI Client Setup"
 $location = "X:\OSDCloud\Config\UI"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UITeams++.xml" -OutFile "$location\UI++.xml" -Verbose
 $UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
 if ($UI) {
     Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
