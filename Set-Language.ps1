@@ -100,6 +100,10 @@ try {
         Write-Host -ForegroundColor Green "Install language Feature pack $($OSDDisplayLanguage)"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDDisplayLanguage" -IgnoreCheck -NoRestart
     } 
+    elseif ($OSDDisplayLanguage -eq 'de-AT') {
+        Write-Host -ForegroundColor Green "Install language pack $($OSDLanguage) in addition because of system settings"
+        Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\$OSDLanguage" -IgnoreCheck -NoRestart
+    }
     else {
         # Add Language Pack from USB
         Write-Host -ForegroundColor Green "Install language pack $($OSDDisplayLanguage)"
