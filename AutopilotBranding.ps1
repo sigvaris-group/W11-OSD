@@ -263,8 +263,7 @@ try {
     #    Copy OSDCloud logs and delete C:\OSDCloud folder
     #===================================================================================================================================================
     Write-Host -ForegroundColor Green "Copy OSDCloud logs and delete C:\OSDCloud folder"
-    #Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Recurse -ErrorAction SilentlyContinue
-    Copy-Item C:\OSDCloud\Logs C:\ProgramData\OSDeploy -Recurse -Force -Verbose
+    Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Force -Recurse -Verbose -ErrorAction SilentlyContinue
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
     Stop-Transcript | Out-Null
