@@ -63,108 +63,103 @@ Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)"  
 
 try {
-
-    If ($OSDWindowsUpdate -eq "Yes") {    
         
-        # Params
-        $ExcludeDrivers = $false
-        $ExcludeUpdates = $false
+    # Params
+    $ExcludeDrivers = $false
+    $ExcludeUpdates = $false
 
-        # Main logic
-        $script:needReboot = $false
+    # Main logic
+    $script:needReboot = $false
 
-        # Opt into Microsoft Update
-        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-        Write-Host -ForegroundColor Green "$ts Opting into Microsoft Update"
-        $ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
-        $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
-        $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
+    # Opt into Microsoft Update
+    $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+    Write-Host -ForegroundColor Green "$ts Opting into Microsoft Update"
+    $ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
+    $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
+    $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
 
-        # Install all available updates
-        $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
-        $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
-        if ($ExcludeDrivers) {
-            # Updates only
-            Write-Host "$ts Only Windows updates will be installed"
-            $queries = @("IsInstalled=0 and Type='Software'")
-        }
-        elseif ($ExcludeUpdates) {
-            # Drivers only
-            Write-Host "$ts Only drivers will be installed"
-            $queries = @("IsInstalled=0 and Type='Driver'")
-        } else {
-            # Both
-            Write-Host "$ts Drivers and Windows updates will be installed"
-            $queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
-        }
+    # Install all available updates
+    $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
+    $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
+    if ($ExcludeDrivers) {
+        # Updates only
+        Write-Host "$ts Only Windows updates will be installed"
+        $queries = @("IsInstalled=0 and Type='Software'")
+    }
+    elseif ($ExcludeUpdates) {
+        # Drivers only
+        Write-Host "$ts Only drivers will be installed"
+        $queries = @("IsInstalled=0 and Type='Driver'")
+    } else {
+        # Both
+        Write-Host "$ts Drivers and Windows updates will be installed"
+        $queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
+    }
 
-        $WUUpdates = New-Object -ComObject Microsoft.Update.UpdateColl
-        $queries | ForEach-Object {
-        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-        Write-Host -ForegroundColor Green "$ts Getting $_ updates."        
-            try {
-                ((New-Object -ComObject Microsoft.Update.Session).CreateupdateSearcher().Search($_)).Updates | ForEach-Object {
-                    if (!$_.EulaAccepted) { $_.AcceptEula() }
-                    $featureUpdate = $_.Categories | Where-Object { $_.CategoryID -eq "3689BDC8-B205-4AF4-8D4A-A63924C5E9D5" }
-                    if ($featureUpdate) {
-                        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-                        Write-Host -ForegroundColor Green "$ts Skipping feature update: $($_.Title)"
-                    } elseif ($_.Title -match "Preview") { 
-                        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-                        Write-Host -ForegroundColor Green "$ts Skipping preview update: $($_.Title)"
-                    } else {
-                        [void]$WUUpdates.Add($_)
-                    }
+    $WUUpdates = New-Object -ComObject Microsoft.Update.UpdateColl
+    $queries | ForEach-Object {
+    $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+    Write-Host -ForegroundColor Green "$ts Getting $_ updates."        
+        try {
+            ((New-Object -ComObject Microsoft.Update.Session).CreateupdateSearcher().Search($_)).Updates | ForEach-Object {
+                if (!$_.EulaAccepted) { $_.AcceptEula() }
+                $featureUpdate = $_.Categories | Where-Object { $_.CategoryID -eq "3689BDC8-B205-4AF4-8D4A-A63924C5E9D5" }
+                if ($featureUpdate) {
+                    $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+                    Write-Host -ForegroundColor Green "$ts Skipping feature update: $($_.Title)"
+                } elseif ($_.Title -match "Preview") { 
+                    $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+                    Write-Host -ForegroundColor Green "$ts Skipping preview update: $($_.Title)"
+                } else {
+                    [void]$WUUpdates.Add($_)
                 }
-            } catch {
-                # If this script is running during specialize, error 8024004A will happen:
-                # 8024004A	Windows Update agent operations are not available while OS setup is running.
-                $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-                Write-Warning "$ts Unable to search for updates: $_"
             }
-        }
-
-        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-        if ($WUUpdates.Count -eq 0) {
-            Write-Host -ForegroundColor Green "$ts No Updates Found"
-            Stop-Transcript | Out-Null
-            Exit 0
-        } else {
-            Write-Host -ForegroundColor Green "$ts Updates found: $($WUUpdates.count)"
-        }
-        
-        foreach ($update in $WUUpdates) {
-        
-            $singleUpdate = New-Object -ComObject Microsoft.Update.UpdateColl
-            $singleUpdate.Add($update) | Out-Null
-        
-            $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
-            $WUDownloader.Updates = $singleUpdate
-        
-            $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
-            $WUInstaller.Updates = $singleUpdate
-            $WUInstaller.ForceQuiet = $true
-        
+        } catch {
+            # If this script is running during specialize, error 8024004A will happen:
+            # 8024004A	Windows Update agent operations are not available while OS setup is running.
             $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-            Write-Host -ForegroundColor Green "$ts Downloading update: $($update.Title)"
-            $Download = $WUDownloader.Download()
-            $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-            Write-Host -ForegroundColor Green "$ts   Download result: $($Download.ResultCode) ($($Download.HResult))"
-        
-            $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-            Write-Host -ForegroundColor Green "$ts Installing update: $($update.Title)"
-            $Results = $WUInstaller.Install()
-            $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
-            Write-Host -ForegroundColor Green "$ts   Install result: $($Results.ResultCode) ($($Results.HResult))"
-
-            # result code 2 = success, see https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode
-
+            Write-Warning "$ts Unable to search for updates: $_"
         }
     }
-    else {
-        Write-Host -ForegroundColor Yellow "No Windows Updates installed"
+
+    $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+    if ($WUUpdates.Count -eq 0) {
+        Write-Host -ForegroundColor Green "$ts No Updates Found"
         Stop-Transcript | Out-Null
+        Exit 0
+    } else {
+        Write-Host -ForegroundColor Green "$ts Updates found: $($WUUpdates.count)"
     }
+    
+    foreach ($update in $WUUpdates) {
+    
+        $singleUpdate = New-Object -ComObject Microsoft.Update.UpdateColl
+        $singleUpdate.Add($update) | Out-Null
+    
+        $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
+        $WUDownloader.Updates = $singleUpdate
+    
+        $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
+        $WUInstaller.Updates = $singleUpdate
+        $WUInstaller.ForceQuiet = $true
+    
+        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+        Write-Host -ForegroundColor Green "$ts Downloading update: $($update.Title)"
+        $Download = $WUDownloader.Download()
+        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+        Write-Host -ForegroundColor Green "$ts   Download result: $($Download.ResultCode) ($($Download.HResult))"
+    
+        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+        Write-Host -ForegroundColor Green "$ts Installing update: $($update.Title)"
+        $Results = $WUInstaller.Install()
+        $ts = get-date -f "yyyy/MM/dd hh:mm:ss tt"
+        Write-Host -ForegroundColor Green "$ts   Install result: $($Results.ResultCode) ($($Results.HResult))"
+
+        # result code 2 = success, see https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode
+
+    }
+    Stop-Transcript | Out-Null
+
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"
