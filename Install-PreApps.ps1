@@ -66,9 +66,9 @@ try {
     )
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
 
-    $IPConfigBefore = Get-NetIPConfiguration
+    $IPConfigAfter = Get-NetIPConfiguration
     Write-host -ForegroundColor Yellow "IPConfig After install Forescout"
-    Write-Output $IPConfigBefore
+    Write-Output $IPConfigAfter
 
     $TestDomain = Test-NetConnection sigvaris-group.com -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
     Write-host -ForegroundColor Green "Test Domain Connection"
