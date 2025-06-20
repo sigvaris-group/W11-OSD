@@ -276,16 +276,7 @@ $UnattendXml = @"
     <settings pass="specialize">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
-        </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>                                        
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Description>Install prerequired apps</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                               
-            </RunSynchronous>
-        </component>    
+        </component>  
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -309,19 +300,14 @@ $UnattendXml = @"
             <ComputerName>$OSDComputername</ComputerName>
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>
-                 <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Description>Install prerequired apps</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Install-PreApps.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                         
+            <RunSynchronous>                                                      
                 <RunSynchronousCommand wcm:action="add">               
-                    <Order>2</Order>
+                    <Order>1</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
                 </RunSynchronousCommand> 
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
+                    <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                               
