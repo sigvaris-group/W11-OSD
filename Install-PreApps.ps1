@@ -48,6 +48,14 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Install-PreApps.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+$IPConfig = Get-NetIPConfiguration
+Write-host -ForegroundColor Green "IPConfig before install Forescout"
+Write-Output $IPConfig
+
+$TestDomain = Test-NetConnection sigvaris-group.com -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
+Write-host -ForegroundColor Green "Test Domain Connection"
+Write-Output $TestDomain
+
 try {
 
     Write-Host -ForegroundColor Green "Install Forescout Secure Connector"
@@ -57,6 +65,15 @@ try {
         "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
     )
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
+
+    $IPConfig = Get-NetIPConfiguration
+    Write-host -ForegroundColor Green "IPConfig after install Forescout"
+    Write-Output $IPConfig
+
+    $TestDomain = Test-NetConnection sigvaris-group.com -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
+    Write-host -ForegroundColor Green "Test Domain Connection"
+    Write-Output $TestDomain
+
     Stop-Transcript | Out-Null
 } 
 catch [System.Exception] {
