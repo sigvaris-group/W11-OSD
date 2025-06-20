@@ -268,7 +268,7 @@ try {
 
     Stop-Transcript | Out-Null
 
-    Restart-Computer -Force -Wait 5
+    #Restart-Computer -Force -Wait 5
     # Exit code Soft Reboot
     Exit 3010
 } 
