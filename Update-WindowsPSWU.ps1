@@ -1,13 +1,13 @@
 #=============================================================================================================================
 #
-# Script Name:     Update-Windows.ps1
-# Description:     Install Windows Updates
-# Created:         06/14/2025
-# Version:         3.0
+# Script Name:     Update-WindowsPSWU.ps1
+# Description:     Install Windows Updates with PowerShell Module PSWindowsUpdate
+# Created:         06/20/2025
+# Version:         1.0
 #
 #=============================================================================================================================
 
-$Title = "Install Windows Updates"
+$Title = "Install Windows Updates with PowerShell Module PSWindowsUpdate"
 $host.UI.RawUI.WindowTitle = $Title
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
@@ -41,29 +41,15 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
-$Global:Transcript = "Update-Windows.log"
+$Global:Transcript = "Update-WindowsPSWU.ps1.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
-#=======================================================================
-#   Load UIjson.json file
-#=======================================================================
-Write-Host -ForegroundColor Green "Load C:\ProgramData\OSDeploy\UIjson.json file"
-$json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFrom-Json
-
-# Access JSON properties
-$OSDWindowsUpdate = $json.OSDWindowsUpdate
-$OSDTimeZone = $json.OSDTimeZone
-
-#===================================================================================================================================================
-#  Set TimeZone
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
-tzutil.exe /s "$($OSDTimeZone)"  
+# check if Update-Windows.ps1 failed
+$file = Get-Item -Path "C:\ProgramData\OSDeploy\NoUpdates.txt"
 
 try {
 
-    If ($OSDWindowsUpdate -eq "Yes") {                
+    If ($file) {                
 
         # Install latest NuGet package provider
         Write-Host -ForegroundColor Green "Install latest NuGet package provider"
@@ -110,11 +96,9 @@ try {
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
         Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
     }
-    else {
-        Write-Host -ForegroundColor Yellow "No Windows Updates installed"
-    }
-
+    Write-Host -ForegroundColor Green "Windows Updates Installed"
     Stop-Transcript | Out-Null
+    Exit 0
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"

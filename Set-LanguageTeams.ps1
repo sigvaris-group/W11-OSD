@@ -109,32 +109,32 @@ try {
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\de-DE" -IgnoreCheck -NoRestart
         Write-Host -ForegroundColor Green "Install language Feature pack de-CH"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\de-CH" -IgnoreCheck -NoRestart
-        $OSDDisplayLanguage = 'de-CH'
+        $OSDDisplayLanguage = 'en-US'
     }    
     elseif ($OSDDisplayLanguage -eq 'en-FR') {
         Write-Host -ForegroundColor Green "Install language pack fr-FR in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\fr-FR" -IgnoreCheck -NoRestart
-        $OSDDisplayLanguage = 'fr-FR'
+        $OSDDisplayLanguage = 'en-US'
     }    
     elseif ($OSDDisplayLanguage -eq 'en-PL') {
         Write-Host -ForegroundColor Green "Install language pack pl-PL in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\pl-PL" -IgnoreCheck -NoRestart
-        $OSDDisplayLanguage = 'pl-PL'
+        $OSDDisplayLanguage = 'en-US'
     }     
     elseif ($OSDDisplayLanguage -eq 'en-BR') {
         Write-Host -ForegroundColor Green "Install language pack pt-BR in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\pt-BR" -IgnoreCheck -NoRestart
-        $OSDDisplayLanguage = 'pt-BR'
+        $OSDDisplayLanguage = 'en-US'
     } 
     elseif ($OSDDisplayLanguage -eq 'en-PT') {
         Write-Host -ForegroundColor Green "Install language pack pt-PT in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\pt-PT" -IgnoreCheck -NoRestart
-        $OSDDisplayLanguage = 'pt-PT'
+        $OSDDisplayLanguage = 'en-US'
     }  
     elseif ($OSDDisplayLanguage -eq 'en-MX') {
         Write-Host -ForegroundColor Green "Install language pack es-MX in addition because of system settings"
         Add-WindowsPackage -Online -PackagePath "C:\OSDCloud\Config\Languages\es-MX" -IgnoreCheck -NoRestart
-        $OSDDisplayLanguage = 'es-MX'
+        $OSDDisplayLanguage = 'en-US'
     }                 
     else {
         # Add Language Pack from USB
