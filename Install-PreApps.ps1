@@ -52,6 +52,10 @@ $IPConfig = Get-NetIPConfiguration
 Write-host -ForegroundColor Green "IPConfig before install Forescout"
 Write-Output $IPConfig
 
+$TestDomain = Test-NetConnection sigvaris-group.com -Hops 1 -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
+Write-host -ForegroundColor Green "Test Domain Connection"
+Write-Output $TestDomain
+
 try {
 
     Write-Host -ForegroundColor Green "Install Forescout Secure Connector"
@@ -65,6 +69,10 @@ try {
     $IPConfig = Get-NetIPConfiguration
     Write-host -ForegroundColor Green "IPConfig after install Forescout"
     Write-Output $IPConfig
+
+    $TestDomain = Test-NetConnection sigvaris-group.com -Hops 1 -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
+    Write-host -ForegroundColor Green "Test Domain Connection"
+    Write-Output $TestDomain
 
     Stop-Transcript | Out-Null
 } 
