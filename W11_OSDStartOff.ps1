@@ -173,6 +173,118 @@ $OfficeXml = @"
 $OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\configuration.xml" -Encoding utf8 -Width 2000 -Force
 
 #================================================
+#  [PostOS] OOBEDeploy Configuration
+#================================================
+Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json"
+$OOBEDeployJson = @'
+{
+    "AddNetFX3":  {
+                      "IsPresent":  false
+                  },
+    "Autopilot":  {
+                      "IsPresent":  false
+                  },
+    "RemoveAppx":  [
+                    "*ActiproSoftwareLLC*",
+                    "*AdobeSystemsIncorporated.AdobePhotoshopExpress*",
+                    "Disney.37853FC22B2CE",
+                    "*Duolingo-LearnLanguagesforFree*",
+                    "*EclipseManager*",
+                    "*PandoraMediaInc*",
+                    "*CandyCrush*",
+                     "*BubbleWitch3Saga*"
+                    "*Wunderlist*",
+                    "*Flipboard*",
+                    "*Twitter*",
+                    "*Facebook*",
+                    "*Spotify*",
+                    "*Minecraft*",
+                    "*Royal Revolt*",
+                    "*Sway*",
+                    "*Speed Test*",
+                    "*Dolby*",
+                    "*Office*",
+                    "*Disney*",
+                    "clipchamp.clipchamp",
+                    "*gaming*",
+                    "MicrosoftCorporationII.MicrosoftFamily"
+                    "C27EB4BA.DropboxOEM"
+                    "*DevHome*"
+                    "Microsoft.549981C3F5F10",
+                    "Microsoft.BingWeather",
+                    "Microsoft.BingNews",
+                    "Microsoft.Copilot",
+                    "Microsoft.GamingApp",
+                    "Microsoft.GetHelp",
+                    "Microsoft.Getstarted",
+                    "Microsoft.Messaging",
+                    "Microsoft.Microsoft3DViewer",
+                    "Microsoft.MicrosoftOfficeHub",
+                    "Microsoft.MicrosoftSolitaireCollection",
+                    "Microsoft.MicrosoftStickyNotes",
+                    "Microsoft.MSPaint",
+                    "Microsoft.MixedReality.Portal",
+                    "Microsoft.NetworkSpeedTest",
+                    "Microsoft.News",
+                    "Microsoft.Office.Lens",
+                    "Microsoft.OneConnect",
+                    "Microsoft.People",
+                    "Microsoft.PowerAutomateDesktop",
+                    "Microsoft.Print3D",
+                    "Microsoft.SkypeApp",
+                    "SpotifyAB.SpotifyMusic",
+                    "Microsoft.StorePurchaseApp",
+                    "MicrosoftTeams",
+                    "Microsoft.Todos",
+                    "microsoft.windowscommunicationsapps",
+                    "Microsoft.WindowsFeedbackHub",
+                    "Microsoft.WindowsMaps",
+                    "Microsoft.WindowsSoundRecorder",
+                    "Microsoft.Xbox.TCUI",
+                    "Microsoft.GamingApp",
+                    "Microsoft.XboxGameOverlay",
+                    "Microsoft.XboxGamingOverlay",
+                    "Microsoft.XboxGamingOverlay_5.721.10202.0_neutral_~_8wekyb3d8bbwe",
+                    "Microsoft.XboxIdentityProvider",
+                    "Microsoft.XboxSpeechToTextOverlay",
+                    "Microsoft.YourPhone",
+                    "Microsoft.ZuneMusic",
+                    "Microsoft.ZuneVideo"
+                   ],
+    "UpdateDrivers":  {
+                          "IsPresent":  true
+                      },
+    "UpdateWindows":  {
+                          "IsPresent":  true
+                      }
+}
+'@
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+}
+$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+
+#================================================
+#  [PostOS] Create UIJson file
+#================================================
+Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UIjson.json"
+$UIjson = @"
+{
+    "OSDComputername" : "$OSDComputername",
+    "OSDLanguage" : "$OSDLanguage",
+    "OSDDisplayLanguage" : "$OSDDisplayLanguage",
+    "OSDLocation" : "$OSDLocation",
+    "OSDKeyboard" : "$OSDKeyboard",
+    "OSDKeyboardLocale" : "$OSDKeyboardLocale",
+    "OSDGeoID" : "$OSDGeoID",
+    "OSDTimeZone" : "$OSDTimeZone",
+    "OSDDomainJoin" : "$OSDDomainJoin",
+    "OSDWindowsUpdate" : "$OSDWindowsUpdate"
+}
+"@
+$UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
+
+#================================================
 #  [PostOS] Create Unattend XML file
 #================================================
 if ($OSDDomainJoin -eq 'Yes') {
