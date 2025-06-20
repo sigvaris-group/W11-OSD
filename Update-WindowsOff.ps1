@@ -45,6 +45,14 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Update-WindowsOff.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+$IPConfig = Get-NetIPConfiguration
+Write-host -ForegroundColor Green "IPConfig"
+Write-Output $IPConfig
+
+$TestDomain = Test-NetConnection sigvaris-group.com -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
+Write-host -ForegroundColor Green "Test Domain Connection"
+Write-Output $TestDomain
+
 #=======================================================================
 #   Load UIjson.json file
 #=======================================================================
