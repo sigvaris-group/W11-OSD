@@ -85,4 +85,5 @@ catch [System.Exception] {
     exit 1
 }
 
-Restart-Computer -Force -Wait 5
+Write-Host  -ForegroundColor Green "Restarting in 60 seconds!"
+Restart-Computer -Force -Wait 60
