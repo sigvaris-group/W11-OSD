@@ -172,6 +172,9 @@ try {
 
             # result code 2 = success, see https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode
 
+            Stop-Transcript | Out-Null
+            # Exit code Soft Reboot
+            Exit 3010              
         }
     }
     else {
@@ -180,10 +183,6 @@ try {
         Stop-Transcript | Out-Null
         Exit 1
     }
-
-    Stop-Transcript | Out-Null
-    # Exit code Soft Reboot
-    Exit 3010  
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"  
