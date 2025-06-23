@@ -84,6 +84,3 @@ catch [System.Exception] {
     Stop-Transcript | Out-Null
     exit 1
 }
-
-Write-Host  -ForegroundColor Green "Restarting in 60 seconds!"
-Restart-Computer -Force -Wait 60
