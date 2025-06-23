@@ -101,7 +101,7 @@ try {
         Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
 
         # Exit code Soft Reboot
-        Exit 3010        
+        Exit 0        
     }
 } 
 catch [System.Exception] {

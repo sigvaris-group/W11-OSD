@@ -170,7 +170,7 @@ try {
 
             Stop-Transcript | Out-Null
             # Exit code Soft Reboot
-            Exit 3010           
+            Exit 0           
         }
     }
 } 
