@@ -119,8 +119,6 @@ try {
 }
 catch {
         Write-Host -ForegroundColor Red "Error installing language $($OSDDisplayLanguage). Error: $($_.Exception.Message). Exiting script"
-        Stop-Transcript | Out-Null
-        Exit 1
 }
 
 <#
