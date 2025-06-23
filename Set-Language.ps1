@@ -2,8 +2,8 @@
 #
 # Script Name:     Set-Language.ps1
 # Description:     Set Language, Keyboard and TimeZone
-# Created:         06/14/2025
-# Version:         3.0
+# Created:         06/23/2025
+# Version:         4.0
 #
 #=============================================================================================================================
 

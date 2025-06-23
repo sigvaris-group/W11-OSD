@@ -3,8 +3,8 @@
 # Script Name:     Update-Windows.ps1
 # Description:     Install Windows Updates
 # Link:            https://github.com/mtniehaus/UpdateOS/blob/main/UpdateOS/UpdateOS.ps1
-# Created:         06/18/2025
-# Version:         1.0
+# Created:         06/23/2025
+# Version:         4.0
 #
 #=============================================================================================================================
 
