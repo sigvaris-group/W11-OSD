@@ -2,8 +2,8 @@
 #
 # Script Name:     W11_OSDStart.ps1
 # Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
-# Created:         06/20/2025
-# Version:         3.1
+# Created:         06/23/2025
+# Version:         4.0
 #
 #=============================================================================================================================
 
