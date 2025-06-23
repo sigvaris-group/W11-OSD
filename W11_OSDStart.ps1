@@ -10,12 +10,12 @@
 Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
 $UpdateNews = @(
 "06/22/2025 Forescout Secure Connector fixed (Ipconfig and wait counter added)
-            Language Pack for Poland fixed (language list hardcoded)
             Domain Join fixed (issue with Forescout)
-            Windows updates can be choosen now (not needed anymore for Language and Domain Join)"
+            Windows updates can be choosen now"
 "06/23/2025 Enrollment changed to pre-provisioning. It junps directly to Windows login (No Autopilot authentication needed)"
 "06/23/2025 Language and Keyboard must be choosen before enrollment"
 )
+Writ
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
     Write-Host "  $($UpdateNew)"
