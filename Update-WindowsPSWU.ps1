@@ -48,14 +48,10 @@ $IPConfig = Get-NetIPConfiguration
 Write-host -ForegroundColor Green "IPConfig"
 Write-Output $IPConfig
 
-$TestDomain = Test-NetConnection sigvaris-group.com -TraceRoute -InformationLevel Detailed -Verbose -ErrorAction SilentlyContinue
-Write-host -ForegroundColor Green "Test Domain Connection"
-Write-Output $TestDomain
-
-# check if Update-Windows.ps1 failed
-$file = Get-Item -Path "C:\ProgramData\OSDeploy\NoUpdates.txt"
-
 try {
+
+    # check if Update-Windows.ps1 failed
+    $file = Get-Item -Path "C:\ProgramData\OSDeploy\NoUpdates.txt" -ErrorAction SilentlyContinue    
 
     If ($file) {                
 
@@ -103,10 +99,10 @@ try {
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
         Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
+
+        # Exit code Soft Reboot
+        Exit 3010        
     }
-    Write-Host -ForegroundColor Green "Windows Updates Installed"
-    Stop-Transcript | Out-Null
-    Exit 0
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"

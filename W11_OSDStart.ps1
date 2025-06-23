@@ -9,7 +9,7 @@
 
 Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
 $UpdateNews = @(
-"06/20/2025 Removed Language and Windows update scripts."
+"06/23/2025 New installation procress integrated."
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -40,7 +40,7 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-$OSDWindowsUpdate = 'Yes'
+$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
 
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
@@ -256,6 +256,7 @@ $UIjson = @"
     "OSDComputername" : "$OSDComputername",
     "OSDLanguage" : "$OSDLanguage",
     "OSDDisplayLanguage" : "$OSDDisplayLanguage",
+    "OSDOSDLanguagePack" : "$OSDLanguagePack",    
     "OSDLocation" : "$OSDLocation",
     "OSDKeyboard" : "$OSDKeyboard",
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",

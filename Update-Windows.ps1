@@ -170,14 +170,8 @@ try {
 
             Stop-Transcript | Out-Null
             # Exit code Soft Reboot
-            Exit 0              
+            Exit 3010           
         }
-    }
-    else {
-        Write-Host -ForegroundColor Yellow "No Windows Updates installed"
-        New-Item -ItemType "File" -Path "C:\ProgramData\OSDeploy\NoUpdates.txt"
-        Stop-Transcript | Out-Null
-        Exit 1
     }
 } 
 catch [System.Exception] {
