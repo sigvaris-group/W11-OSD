@@ -61,6 +61,7 @@ $OSDLanguagePack = $json.OSDLanguagePack
 $OSDKeyboard = $json.OSDKeyboard
 $OSDGeoID = $json.OSDGeoID
 $OSDTimeZone = $json.OSDTimeZone
+$OSDWindowsUpdate = $json.OSDWindowsUpdate
 
 Write-Host -ForegroundColor Green "OS Language: $OSDLanguage"
 Write-Host -ForegroundColor Green "Display Language: $OSDDisplayLanguage"
@@ -68,6 +69,7 @@ Write-Host -ForegroundColor Green "Language Pack: $OSDLanguagePack"
 Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
 Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
 Write-Host -ForegroundColor Green "TimeZone: $OSDTimeZone"
+Write-Host -ForegroundColor Green "Windows Update: $OSDWindowsUpdate"
 
 #===================================================================================================================================================
 #  Set TimeZone
@@ -108,20 +110,20 @@ $InstalledLanguages = Get-InstalledLanguage
 $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
 Write-Host -ForegroundColor Green "Current installed languages: $($InstalledLanguages)"
 
-<#
-try {
-    # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
-    If ($OSDDisplayLanguage -ne 'en-US') {
-        Write-Host "    Install OS Language: $($OSDLanguage)"
-        Install-Language -Language $OSDLanguage -CopyToSettings
-        Write-Host "    Add Language Features: $($OSDLanguagePack)"
-        Add-WindowsCapability -Online -Name "$OSDLanguagePack"
+If ($OSDWindowsUpdate -eq "Yes") { 
+    try {
+        # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
+        If ($OSDDisplayLanguage -ne 'en-US') {
+            Write-Host "    Install OS Language: $($OSDLanguage)"
+            Install-Language -Language $OSDLanguage -CopyToSettings
+            Write-Host "    Add Language Features: $($OSDLanguagePack)"
+            Add-WindowsCapability -Online -Name "$OSDLanguagePack"
+        }
+    }
+    catch {
+            Write-Host -ForegroundColor Red "Error installing language $($OSDDisplayLanguage). Error: $($_.Exception.Message). Exiting script"
     }
 }
-catch {
-        Write-Host -ForegroundColor Red "Error installing language $($OSDDisplayLanguage). Error: $($_.Exception.Message). Exiting script"
-}
-#>
 
 <#
 # Set the language as the system preferred language

@@ -13,7 +13,7 @@ $UpdateNews = @(
             Domain Join fixed (issue with Forescout)
             Windows updates can be choosen now"
 "06/23/2025 Enrollment changed to pre-provisioning. It jumps directly to Windows login (No Autopilot authentication needed)"
-"06/23/2025 Language and Keyboard must be choosen before enrollment"
+"06/23/2025 Language and Keyboard must be choosen before enrollment if Windows updates not set"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
