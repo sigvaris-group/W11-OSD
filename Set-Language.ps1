@@ -151,11 +151,12 @@ try {
     $NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
     Write-Host "    New-WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
 
-    $NewUserLanguageList += $OldUserLanguageList
-    Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
-
     if ($OSDDisplayLanguage -eq 'pl-PL') {
         Set-WinUserLanguageList -LanguageList 'pl-PL' -Force -Verbose
+    } 
+    else {
+        $NewUserLanguageList += $OldUserLanguageList
+        Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
     }
     
     $UserLanguageList = Get-WinUserLanguageList
