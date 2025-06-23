@@ -1,20 +1,15 @@
 #=============================================================================================================================
 #
-# Script Name:     W11_OSDStart.ps1
-# Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
+# Script Name:     W11_OSDStartVM.ps1
+# Description:     Start Windows 11 OSD Deployment for VMs
 # Created:         06/23/2025
-# Version:         4.0
+# Version:         1.0
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
+Write-Host -ForegroundColor Green "Start Windows 11 OSD Deployment for VMs"
 $UpdateNews = @(
-"06/22/2025 Forescout Secure Connector fixed (Ipconfig and wait counter added)
-            Language Pack for Poland fixed (language list hardcoded)
-            Domain Join fixed (issue with Forescout)
-            Windows updates can be choosen now (not needed anymore for Language and Domain Join)"
-"06/23/2025 Enrollment changed to pre-provisioning. It junps directly to Windows login (No Autopilot authentication needed)"
-"06/23/2025 Language and Keyboard must be choosen before enrollment"
+"06/22/2025 First deployment"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {

@@ -13,8 +13,8 @@ $UpdateNews = @(
             Language Pack for Poland fixed (language list hardcoded)
             Domain Join fixed (issue with Forescout)
             Windows updates can be choosen now (not needed anymore for Language and Domain Join)"
-"06/23/2025 Language packs must be installed online. Can take 20 minutes. MS releated."
 "06/23/2025 Enrollment changed to pre-provisioning. It junps directly to Windows login (No Autopilot authentication needed)"
+"06/23/2025 Language and Keyboard must be choosen before enrollment"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
