@@ -153,8 +153,8 @@ try {
         Set-WinUserLanguageList -LanguageList 'pl-PL' -Force -Verbose
     } 
     else {
-        $NewUserLanguageList += $OldUserLanguageList
-        Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
+        #$NewUserLanguageList += $OldUserLanguageList
+        Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -Verbose
     }
     
     $UserLanguageList = Get-WinUserLanguageList
