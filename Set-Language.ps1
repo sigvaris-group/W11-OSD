@@ -121,6 +121,7 @@ catch {
         Exit 1
 }
 
+<#
 # Set the language as the system preferred language
 try {
     Set-SystemPreferredUILanguage $OSDLanguage -Verbose
@@ -129,6 +130,7 @@ try {
 } catch {
     Write-Host -ForegroundColor Red "Error setting system preferred UI language to $($OSDLanguage). Error: $($_.Exception.Message)"
 }
+#>
 
 # Configure new language defaults under current user (system) after which it can be copied to system
 try {
@@ -149,6 +151,11 @@ try {
 
     $NewUserLanguageList += $OldUserLanguageList
     Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
+
+    if ($OSDDisplayLanguage -eq 'pl-PL') {
+        $NewUserLanguageList = 'pl-PL en-US'
+        Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
+    }
     
     $UserLanguageList = Get-WinUserLanguageList
     Write-Host -ForegroundColor Green "   Successfully set WinUserLanguageList to $($UserLanguageList.LanguageTag)"    
