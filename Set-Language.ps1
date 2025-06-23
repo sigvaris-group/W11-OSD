@@ -112,6 +112,8 @@ try {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
     If ($OSDDisplayLanguage -ne 'en-US') {
         Write-Host "    Install OS Language: $($OSDLanguage)"
+        Install-Language -Language $OSDLanguage -CopyToSettings
+        Write-Host "    Add Language Features: $($OSDLanguagePack)"
         Add-WindowsCapability -Online -Name "$OSDLanguagePack"
     }
 }
@@ -153,8 +155,7 @@ try {
     Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
 
     if ($OSDDisplayLanguage -eq 'pl-PL') {
-        $NewUserLanguageList = 'pl-PL en-US'
-        Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -Verbose
+        Set-WinUserLanguageList -LanguageList 'pl-PL' -Force -Verbose
     }
     
     $UserLanguageList = Get-WinUserLanguageList
