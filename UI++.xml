@@ -57,6 +57,23 @@
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-PT"</Action>
     <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>    
+
+    <!-- This Section change the display language based on location-->
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIUSGA"'>"Language.Basic~~~en-US~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIUSMI"'>"Language.Basic~~~en-US~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SICAMO"'>"Language.Basic~~~en-CA~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIUKAN"'>"Language.Basic~~~en-GB~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIDEME"'>"Language.Basic~~~de-DE~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SICHSG"'>"Language.Basic~~~de-CH~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIATVI"'>"Language.TextToSpeech~~~de-AT~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRSJ"'>"Language.Basic~~~fr-FR~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRHU"'>"Language.Basic~~~fr-FR~0.0.1.0</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIITSI"'>"Language.Basic~~~it-IT~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIPLGU"'>"Language.Basic~~~pl-PL~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIAUME"'>"Language.Basic~~~en-AU~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIBRSP"'>"Language.Basic~~~pt-BR~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIPTLI"'>"Language.Basic~~~pt-PT~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIMXMC"'>"Language.Basic~~~es-MX~0.0.1.0"</Action>   
     <!-- This Section determines the keyboard based on location-->
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
     <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
@@ -126,6 +143,7 @@
       <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
       <Property Name="OSDLanguage" Type="CIM_STRING" Value="%OSDLanguage%" Key="True"/>
       <Property Name="OSDDisplayLanguage" Type="CIM_STRING" Value="%OSDDisplayLanguage%" Key="True"/>
+      <Property Name="OSDLanguagePack" Type="CIM_STRING" Value="%OSDLanguagePack%" Key="True"/>
       <Property Name="OSDLocation" Type="CIM_STRING" Value="%OSDLocation%" Key="True"/>
       <Property Name="OSDKeyboard" Type="CIM_STRING" Value="%OSDKeyboard%" Key="True"/>
       <Property Name="OSDKeyboardLocale" Type="CIM_STRING" Value="%OSDKeyboardLocale%" Key="True"/>
