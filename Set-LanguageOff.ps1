@@ -189,4 +189,4 @@ try {
     Write-Host -ForegroundColor Red "Error copying user international settings to system. Error: $($_.Exception.Message)"
 }
 
-Stop-Transcript | Out-Null}
+Stop-Transcript | Out-Null
