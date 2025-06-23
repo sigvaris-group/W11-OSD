@@ -2,14 +2,18 @@
 #
 # Script Name:     W11_OSDStartOff.ps1
 # Description:     Start Windows 11 OSD Offline Deployment
-# Created:         06/20/2025
-# Version:         3.1
+# Created:         06/23/2025
+# Version:         4.0
 #
 #=============================================================================================================================
 
 Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
-"06/20/2025 Removed Language and Windows update scripts."
+"06/23/2025 Forescout Secure Connector fixed (Ipconfig and wait counter added)
+            Language Pack for Poland fixed (language list hardcoded)
+            Domain Join fixed (issue with Forescout)
+            Windows updates can be choosen now (not needed anymore for Language and Domain Join)"
+"06/23/2025 Language packs must be installed online. Can take 20 minutes. MS releated."
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -34,33 +38,26 @@ $OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config"
 $OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
 $OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
 $OSDDisplayLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDisplayLanguage
+$OSDLanguagePack = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguagePack
 $OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
 $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-$OSDWindowsUpdate = 'Yes'
+$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
 
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
 Write-Host "  Location: $OSDLocation"
 Write-Host "  OS Language: $OSDLanguage"
 Write-Host "  Display Language: $OSDDisplayLanguage"
+Write-Host "  Language Pack: $OSDLanguagePack"
 Write-Host "  Keyboard: $OSDKeyboard"
 Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
 Write-Host "  GeoID: $OSDGeoID"
 Write-Host "  TimeZone: $OSDTimeZone"
 Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
 Write-Host "  Windows Updates: $OSDWindowsUpdate"
-
-If (-not $OSDComputername) {
-    Add-Type -AssemblyName System.Windows.Forms
-    [System.Windows.Forms.MessageBox]::Show('PLEASE CHECK INTERNET CONNECTION AND REBOOT')
-}
-
-# Set TimeZone
-Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
 
 #================================================
 #   [PreOS] Update Module
@@ -113,9 +110,6 @@ $Params = @{
     ImageIndex = 1
 }
 
-#=======================================================================
-#   Write OSDCloud VARS to Console
-#=======================================================================
 #Launch OSDCloud
 Write-Host -ForegroundColor Green "Starting OSDCloud"
 
@@ -273,6 +267,7 @@ $UIjson = @"
     "OSDComputername" : "$OSDComputername",
     "OSDLanguage" : "$OSDLanguage",
     "OSDDisplayLanguage" : "$OSDDisplayLanguage",
+    "OSDLanguagePack" : "$OSDLanguagePack",    
     "OSDLocation" : "$OSDLocation",
     "OSDKeyboard" : "$OSDKeyboard",
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
@@ -289,6 +284,28 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 if ($OSDDomainJoin -eq 'Yes') {
 Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
+$UnattendXml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <ComputerName>$OSDComputername</ComputerName>
+        </component>  
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <OOBE>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideEULAPage>true</HideEULAPage>
+                <ProtectYourPC>3</ProtectYourPC>
+            </OOBE>
+        </component>
+    </settings>
+</unattend>
+"@     
+}
+else {
+Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -345,6 +362,7 @@ $UnattendXml = @"
 </unattend>
 "@ 
 }
+
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
 }
@@ -395,8 +413,8 @@ Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Set-LanguageOff.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageOff.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageOff.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Update-WindowsOff.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-WindowsOff.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-WindowsOff.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-WindowsPSWU.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-WindowsPSWU.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-WindowsPSWU.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
@@ -409,9 +427,9 @@ $OOBECMD = @'
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-WindowsOff.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-WindowsOffPSWU.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-LanguageOff.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-WindowsPSWU.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-LanguageOff.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 
