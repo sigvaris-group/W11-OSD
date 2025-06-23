@@ -82,7 +82,7 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$false
+    WindowsUpdate = [bool]$true
     WindowsUpdateDrivers = [bool]$false
     WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
@@ -399,11 +399,11 @@ $OOBECMD = @'
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-WindowsPSWU.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-WindowsPSWU.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass
