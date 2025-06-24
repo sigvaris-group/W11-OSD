@@ -91,13 +91,13 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
-    SyncMSUpCatDriverUSB = [bool]$true
+    SyncMSUpCatDriverUSB = [bool]$false
     CheckSHA1 = [bool]$true    
 }
 

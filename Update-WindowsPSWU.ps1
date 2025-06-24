@@ -98,10 +98,9 @@ try {
         # in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
         Write-Host -ForegroundColor Green "Uninstall KB5050009"
-        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot
-
-        # Exit code Soft Reboot
-        Exit 0        
+        Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot   
+        
+        Stop-Transcript | Out-Null
     }
 } 
 catch [System.Exception] {

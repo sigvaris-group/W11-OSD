@@ -168,9 +168,7 @@ try {
 
             # result code 2 = success, see https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode
 
-            Stop-Transcript | Out-Null
-            # Exit code Soft Reboot
-            Exit 0           
+            Stop-Transcript | Out-Null       
         }
     }
 } 
