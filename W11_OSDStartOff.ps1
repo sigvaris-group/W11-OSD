@@ -2,16 +2,14 @@
 #
 # Script Name:     W11_OSDStartOff.ps1
 # Description:     Start Windows 11 OSD Offline Deployment
-# Created:         06/23/2025
-# Version:         4.0
+# Created:         06/24/2025
+# Version:         5.0
 #
 #=============================================================================================================================
 
 Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
-"06/22/2025 Forescout Secure Connector fixed (Ipconfig and wait counter added)
-            Domain Join fixed (issue with Forescout)"
-"06/23/2025 Enrollment changed to pre-provisioning. It jumps directly to Windows login (No Autopilot authentication needed)"
+"06/24/2025 New ISOs created"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -388,8 +386,6 @@ Write-Host -ForegroundColor Green "Download Set-LanguageOff.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageOff.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageOff.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Update-WindowsPSWU.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-WindowsPSWU.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-WindowsPSWU.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
 
@@ -402,7 +398,6 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-WindowsPSWU.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-LanguageOff.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
