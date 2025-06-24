@@ -62,11 +62,11 @@ try {
     )
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
 
+    Start-Sleep -Seconds 60
+
     $IPConfig = Get-NetIPConfiguration
     Write-host -ForegroundColor Green "IPConfig after install Forescout"
     Write-Output $IPConfig
-
-    Start-Sleep -Seconds 60
 
     Stop-Transcript | Out-Null
 } 
