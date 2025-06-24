@@ -13,7 +13,7 @@ $UpdateNews = @(
             Domain Join fixed (issue with Forescout)
             Windows updates can be choosen now"
 "06/23/2025 Enrollment changed to pre-provisioning. It jumps directly to Windows login (No Autopilot authentication needed)"
-"06/23/2025 Language and Keyboard must be choosen before enrollment"
+"06/24/2025 As Windows 11 24H2 has to much issues with languages ...., we use 23H2 which will be updated after enrollment"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -293,6 +293,11 @@ $UnattendXml = @"
         </component>  
     </settings>
     <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>    
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
@@ -312,45 +317,14 @@ $UnattendXml = @"
     <settings pass="specialize">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
-        </component>  
-    </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OOBE>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideEULAPage>true</HideEULAPage>
-                <ProtectYourPC>3</ProtectYourPC>
-            </OOBE>
-        </component>
-    </settings>
-</unattend>
-"@     
-}
-else {
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
-$UnattendXml = @"
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <ComputerName>$OSDComputername</ComputerName>
-        </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>                                                      
-                <RunSynchronousCommand wcm:action="add">               
-                    <Order>1</Order>
-                    <Description>Connect to WiFi</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand> 
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
-                    <Description>Start Autopilot Import and Assignment Process</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                               
-            </RunSynchronous>
         </component>
     </settings>
     <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>        
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>

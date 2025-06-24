@@ -44,7 +44,8 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
+#$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
+$OSDWindowsUpdate = 'Yes'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
@@ -95,7 +96,7 @@ $Global:MyOSDCloud = [ordered]@{
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
     OSVersion = "Windows 11"
-    OSBuild = "23H2"
+    OSBuild = "24H2"
     OSEdition = "Enterprise"
     OSLanguage = "en-us"
     OSLicense = "Volume"

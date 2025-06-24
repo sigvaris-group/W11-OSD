@@ -31,7 +31,8 @@
         <Choice Option="SIPTLI - Lisboa " Value="SIPTLI" AlternateValue="SIPTLI - Lisboa" />
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
-      <InputCheckbox Variable="OSDWindowsUpdate" Question="Install Windows Updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes"/>
+      <!-- <InputCheckbox Variable="OSDWindowsUpdate" Question="Install Windows Updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes"/>-->
+      <InputInfo></InputInfo>  
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No" Default="No"/>
     </Action>
     <!-- This Section is an Information for domain joined devices-->
