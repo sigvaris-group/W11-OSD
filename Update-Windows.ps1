@@ -96,6 +96,8 @@ try {
     Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot   
     
     Stop-Transcript | Out-Null
+
+    Exit 0
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Windows Updates failed with error: $($_.Exception.Message)"
