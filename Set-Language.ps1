@@ -109,20 +109,19 @@ Import-Module LanguagePackManagement
 $InstalledLanguages = Get-InstalledLanguage
 $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
 Write-Host -ForegroundColor Green "Current installed languages: $($InstalledLanguages)"
-<#
-    try {
-        # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
-        If ($OSDDisplayLanguage -ne 'en-US') {
-            Write-Host "    Install OS Language: $($OSDLanguage)"
-            Install-Language -Language $OSDLanguage -CopyToSettings
-            Write-Host "    Add Language Features: $($OSDLanguagePack)"
-            Add-WindowsCapability -Online -Name "$OSDLanguagePack"
-        }
+
+try {
+    # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
+    If ($OSDDisplayLanguage -ne 'en-US') {
+        Write-Host "    Install OS Language: $($OSDLanguage)"
+        Install-Language -Language $OSDLanguage -CopyToSettings
+        Write-Host "    Add Language Features: $($OSDLanguagePack)"
+        Add-WindowsCapability -Online -Name "$OSDLanguagePack"
     }
-    catch {
-            Write-Host -ForegroundColor Red "Error installing language $($OSDDisplayLanguage). Error: $($_.Exception.Message). Exiting script"
-    }
-#>
+}
+catch {
+        Write-Host -ForegroundColor Red "Error installing language $($OSDDisplayLanguage). Error: $($_.Exception.Message). Exiting script"
+}
 
 <#
 # Set the language as the system preferred language
