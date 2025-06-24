@@ -10,10 +10,8 @@
 Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
 "06/22/2025 Forescout Secure Connector fixed (Ipconfig and wait counter added)
-            Domain Join fixed (issue with Forescout)
-            Windows updates can be choosen now"
+            Domain Join fixed (issue with Forescout)"
 "06/23/2025 Enrollment changed to pre-provisioning. It jumps directly to Windows login (No Autopilot authentication needed)"
-"06/24/2025 As Windows 11 24H2 has to much issues with languages ...., we use 23H2 which will be updated after enrollment"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -44,7 +42,8 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
+#$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
+$OSDWindowsUpdate = 'No'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
