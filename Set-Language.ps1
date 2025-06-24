@@ -113,8 +113,8 @@ Write-Host -ForegroundColor Green "Current installed languages: $($InstalledLang
 try {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
     If ($OSDDisplayLanguage -ne 'en-US') {
-        Write-Host "    Install OS Display Language: $($OSDDisplayLanguage)"
-        Install-Language -Language $OSDDisplayLanguage -CopyToSettings
+        Write-Host "    Install OS Display Language: $($OSDLanguage)"
+        Install-Language -Language $OSDLanguage
         Write-Host "    Add Language Features: $($OSDLanguagePack)"
         Add-WindowsCapability -Online -Name "$OSDLanguagePack"
     }
