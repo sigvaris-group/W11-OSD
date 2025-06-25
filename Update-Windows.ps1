@@ -41,7 +41,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
-$Global:Transcript = "Update-WindowsPSWU.ps1.log"
+$Global:Transcript = "Update-Windows.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 $IPConfig = Get-NetIPConfiguration
