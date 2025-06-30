@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UIpp Title="Windows 11" DialogIcons="Yes">
+	<Actions>
+    <!-- This Section determines the build type-->
+    <Action Type="WMIRead" Namespace="root\cimv2" Class="Win32_ComputerSystem" Property="Name" Variable="OSDComputerName" />
+    <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="Tall">
+      <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
+      <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
+        <Choice Option="English" Value="en-US" AlternateValue="English" />
+        <Choice Option="German" Value="de-DE" AlternateValue="German" />
+        <Choice Option="French" Value="fr-FR" AlternateValue="French" />
+        <Choice Option="Italian" Value="it-IT" AlternateValue="Italian" />
+        <Choice Option="Polish" Value="pl-PL" AlternateValue="Polish" />
+        <Choice Option="Portuguese" Value="pt-PT" AlternateValue="Portuguese" />
+        <Choice Option="Spanish" Value="es-ES" AlternateValue="Spanish" />  
+      </ChoiceInput>
+      <ChoiceInput Variable="OSDLocation" Question="Select the location" Required="True" Sort="False" Color="#000000" AlternateVariable="AVARSOSDLocation">
+        <Choice Option="SIUSGA - Peachtree City" Value="SIUSGA" AlternateValue="SIUSGA - Peachtree City" />
+        <Choice Option="SIUSMI - Michigan" Value="SIUSMI" AlternateValue="SIUSMI - Michigan" />
+        <Choice Option="SICAMO - Montreal" Value="SICAMO" AlternateValue="SICAMO - Montreal" />
+        <Choice Option="SIUKAN - Andover" Value="SIUKAN" AlternateValue="SIUKAN - Andover" />
+        <Choice Option="SIDEME - Memmingen" Value="SIDEME" AlternateValue="SIDEME - Memmingen" />
+        <Choice Option="SICHSG - St. Gallen" Value="SICHSG" AlternateValue="SICHSG - St. Gallen" />
+        <Choice Option="SIATVI - Vienna" Value="SIATVI" AlternateValue="SIATVI - Vienna" />
+        <Choice Option="SIFRSJ - St. Just" Value="SIFRSJ" AlternateValue="SIFRSJ - St. Just" />
+        <Choice Option="SIFRHU - Huningue" Value="SIFRHU" AlternateValue="SIFRHU - Huningue" />
+        <Choice Option="SIITSI - Silea" Value="SIITSI" AlternateValue="SIITSI - Silea" />
+        <Choice Option="SIPLGU - Wrzesnia" Value="SIPLGU" AlternateValue="SIPLGU - Wrzesnia" />
+        <Choice Option="SIAUME - Melbourne" Value="SIAUME" AlternateValue="SIAUME - Melbourne" />
+        <Choice Option="SIBRSP - Jundia" Value="SIBRSP" AlternateValue="SIBRSP - Jundia" />
+        <Choice Option="SIPTLI - Lisboa " Value="SIPTLI" AlternateValue="SIPTLI - Lisboa" />
+        <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
+      </ChoiceInput>
+      <InputCheckbox Variable="OSDWindowsUpdate" Question="Install all Windows and driver updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes"/>
+      <InputInfo></InputInfo>  
+      <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No" Default="No"/>
+    </Action>
+    <!-- This Section is an Information for domain joined devices-->
+    <Action Type="Input" Name="AD" Title="Active Directory Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
+      <InputInfo></InputInfo>   
+      <InputInfo Color="#992233">Delete device first from AD,ConfigMgr,Autopilot,Intune and EntraID!                                                                             </InputInfo>   
+      <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
+    </Action>
+    <!-- This Section change the display language based on location-->
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIUKAN"'>"en-GB"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRSJ"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIFRHU"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIITSI"'>"it-IT"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPLGU"'>"pl-PL"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIAUME"'>"en-AU"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-PT"</Action>
+    <Action Type="TSVar" Name="OSDDisplayLanguage" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>    
+
+    <!-- This Section change the display language based on location-->
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIUSGA"'>"Language.Basic~~~en-US~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIUSMI"'>"Language.Basic~~~en-US~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SICAMO"'>"Language.Basic~~~en-CA~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIUKAN"'>"Language.Basic~~~en-GB~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIDEME"'>"Language.Basic~~~de-DE~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SICHSG"'>"Language.Basic~~~de-CH~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIATVI"'>"Language.TextToSpeech~~~de-AT~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRSJ"'>"Language.Basic~~~fr-FR~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRHU"'>"Language.Basic~~~fr-FR~0.0.1.0</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIITSI"'>"Language.Basic~~~it-IT~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIPLGU"'>"Language.Basic~~~pl-PL~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIAUME"'>"Language.Basic~~~en-AU~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIBRSP"'>"Language.Basic~~~pt-BR~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIPTLI"'>"Language.Basic~~~pt-PT~0.0.1.0"</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIMXMC"'>"Language.Basic~~~es-MX~0.0.1.0"</Action>   
+    <!-- This Section determines the keyboard based on location-->
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSGA"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUSMI"'>"en-US"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SICAMO"'>"en-CA"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIUKAN"'>"en-GB"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIDEME"'>"de-DE"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SICHSG"'>"de-CH"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIATVI"'>"de-AT"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIFRSJ"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIFRHU"'>"fr-FR"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIITSI"'>"it-IT"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIPLGU"'>"pl-PL"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIAUME"'>"en-AU"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIBRSP"'>"pt-BR"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIPTLI"'>"pt-PT"</Action>
+    <Action Type="TSVar" Name="OSDKeyboard" Condition='"%OSDLocation%" = "SIMXMC"'>"es-MX"</Action>
+    <!-- This Section determines the keyboard locale based on location-->
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIUSGA"'>"0409:00000409"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIUSMI"'>"0409:00000409"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SICAMO"'>"1009:00000409"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIUKAN"'>"0809:00000809"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIDEME"'>"0407:00000407"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SICHSG"'>"0807:00000807"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIATVI"'>"0c07:00000407"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIFRSJ"'>"040c:0000040c"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIFRHU"'>"040c:0000040c"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIITSI"'>"0410:00000410"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIPLGU"'>"0415:00000415"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIAUME"'>"0c09:00000409"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIBRSP"'>"0416:00010416"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIPTLI"'>"0816:00000816"</Action>
+    <Action Type="TSVar" Name="OSDKeyboardLocale" Condition='"%OSDLocation%" = "SIMXMC"'>"080a:0000080a"</Action>  
+    <!-- This Section determines the GeoID based on location-->
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIUSGA"'>"244"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIUSMI"'>"244"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SICAMO"'>"39"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIUKAN"'>"242"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIDEME"'>"94"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SICHSG"'>"223"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIATVI"'>"14"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIFRSJ"'>"84"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIFRHU"'>"84"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIITSI"'>"118"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIPLGU"'>"191"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIAUME"'>"12"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIBRSP"'>"32"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIPTLI"'>"193"</Action>
+    <Action Type="TSVar" Name="OSDGeoID" Condition='"%OSDLocation%" = "SIMXMC"'>"166"</Action>
+    <!-- This Section determines the TimeZone based on location-->
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIUSGA"'>"Eastern Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIUSMI"'>"Eastern Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SICAMO"'>"Eastern Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIUKAN"'>"GMT Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIDEME"'>"W. Europe Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SICHSG"'>"W. Europe Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIATVI"'>"W. Europe Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIFRSJ"'>"Romance Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIFRHU"'>"Romance Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIITSI"'>"W. Europe Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIPLGU"'>"Central European Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIAUME"'>"AUS Eastern Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIBRSP"'>"E. South America Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIPTLI"'>"GMT Standard Time"</Action>
+    <Action Type="TSVar" Name="OSDTimeZone" Condition='"%OSDLocation%" = "SIMXMC"'>"Central Standard Time"</Action>         
+    <!-- This Section write the variable into WMI-->   
+    <Action Type="WMIWrite" Namespace="root\UIVars" Class="Local_Config" >
+      <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
+      <Property Name="OSDLanguage" Type="CIM_STRING" Value="%OSDLanguage%" Key="True"/>
+      <Property Name="OSDDisplayLanguage" Type="CIM_STRING" Value="%OSDDisplayLanguage%" Key="True"/>
+      <Property Name="OSDLanguagePack" Type="CIM_STRING" Value="%OSDLanguagePack%" Key="True"/>
+      <Property Name="OSDLocation" Type="CIM_STRING" Value="%OSDLocation%" Key="True"/>
+      <Property Name="OSDKeyboard" Type="CIM_STRING" Value="%OSDKeyboard%" Key="True"/>
+      <Property Name="OSDKeyboardLocale" Type="CIM_STRING" Value="%OSDKeyboardLocale%" Key="True"/>
+      <Property Name="OSDGeoID" Type="CIM_STRING" Value="%OSDGeoID%" Key="True"/>
+      <Property Name="OSDTimeZone" Type="CIM_STRING" Value="%OSDTimeZone%" Key="True"/>
+      <Property Name="OSDDomainJoin" Type="CIM_STRING" Value="%OSDDomainJoin%" Key="True"/>
+      <Property Name="OSDWindowsUpdate" Type="CIM_STRING" Value="%OSDWindowsUpdate%" Key="True"/>
+    </Action>
+  </Actions>
+</UIpp>
