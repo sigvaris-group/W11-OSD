@@ -28,7 +28,7 @@ Write-Host -ForegroundColor Green "[$($DT)] [Start]  Script started $($StartTime
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Start]  Windows 11 OS Deployment"
+Write-Host -ForegroundColor Blue "[$($DT)] [Start] Windows 11 OS Deployment"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
@@ -480,7 +480,7 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download AutopilotBranding.ps1
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Import-WiFiProfiles.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/ImportWiFiProfilesDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
@@ -496,7 +496,7 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\ImportWiFiProfilesDev.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\UpdateWindowsDev.ps1
