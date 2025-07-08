@@ -10,6 +10,7 @@
 Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
 $UpdateNews = @(
 "06/24/2025 New ISOs created"
+"07/07/2025 Scripts adjusted to check internet connection."
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
