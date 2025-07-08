@@ -44,6 +44,19 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Set-Language.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+# Check Internet Connection
+$CheckURL = 'techcommunity.microsoft.com'
+Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckURL)"
+
+$ping = Test-NetConnection techcommunity.microsoft.com
+if ($ping.PingSucceeded -eq $false) {
+    Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup." 
+    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait      
+}
+else {
+    Write-Host -ForegroundColor Green -NoNewline "Internet connection to $($ping.ComputerName) succesfull "
+}
+
 $IPConfig = Get-NetIPConfiguration
 Write-host -ForegroundColor Green "IPConfig"
 Write-Output $IPConfig
