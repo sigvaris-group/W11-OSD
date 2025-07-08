@@ -1,17 +1,25 @@
-# Script Information
+# Script Information Variables
 $ScriptName = 'W11OSDStartDev.ps1' # Name
 $ScriptDescription = 'Windows 11 OS Deployment' # Description
 $ScriptEnv = 'Development' # Environment: Production, Offline, Development
+$OSVersion = 'Windows 11' # Windows version
+$OSBuild = '24H2' # Windows Release 
+$OSEdition = 'Enterprise' # Windows Release 
+$OSLanguage = 'en-us' # Windows default language
+$OSLicense = "Volume" # Windows licenses
 $ScriptVersion = '1.0' # Version
 $ScriptDate = '28.06.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
+$Product = (Get-MyComputerProduct)
+$Model = (Get-MyComputerModel)
+$Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 
 # Updates
 $UpdateNews = @(
-"28.06.2025 [TEST] Windows 11 OS Deployment"
+"08.07.2025 New script created"
 )
 
 # Script Local Variables
@@ -24,14 +32,19 @@ $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Green "[$($DT)] [Start]  Script started $($StartTime)"
+Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] Windows 11 OS Deployment"
+Write-Host -ForegroundColor Blue "[$($DT)] [Start] $($OSVersion) $($OSBuild) $($OSEdition) $($OSLanguage) Deployment"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
+Write-Host -ForegroundColor Cyan "OSVersion:        $($OSVersion)"
+Write-Host -ForegroundColor Cyan "OSBuild:          $($OSBuild)"
+Write-Host -ForegroundColor Cyan "OSEdition:        $($OSEdition)"
+Write-Host -ForegroundColor Cyan "OSLanguage:       $($OSLanguage)"
+Write-Host -ForegroundColor Cyan "OSLicense:        $($OSLicense)"
 Write-Host -ForegroundColor Cyan "Version:          $($ScriptVersion)"
 Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
 Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
@@ -40,7 +53,9 @@ Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
 Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
 Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
 Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
-Write-Host -ForegroundColor Cyan "Start time:       $($StartTime)"
+Write-Host -ForegroundColor Cyan "Product:          $($Product)"
+Write-Host -ForegroundColor Cyan "Model:            $($Model)"
+Write-Host -ForegroundColor Cyan "Manufacturer:     $($Manufacturer)"
 Write-Host -ForegroundColor DarkBlue $EL
 
 
@@ -52,15 +67,15 @@ foreach ($UpdateNew in $UpdateNews) {
     Write-Host -ForegroundColor Green "$($UpdateNew)"
 }
 Write-Host -ForegroundColor DarkBlue $EL
-Start-Sleep -Seconds 10
+Start-Sleep -Seconds 5
 
 
 # IPConfig 
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [Network] Network information"
 Write-Host -ForegroundColor DarkBlue $SL
-$IPConfig = Get-NetIPConfiguration
 Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Get-NetIPConfiguration"
+$IPConfig = Get-NetIPConfiguration
 Write-Output $IPConfig
 Write-Host -ForegroundColor DarkBlue $EL
 
@@ -135,9 +150,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -149,11 +164,11 @@ Write-Output $Global:MyOSDCloud
 
 # Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
-    OSVersion = "Windows 11"
-    OSBuild = "24H2"
-    OSEdition = "Enterprise"
-    OSLanguage = "en-us"
-    OSLicense = "Volume"
+    OSVersion = "$($OSVersion)"
+    OSBuild = "$($OSBuild))"
+    OSEdition = "$($OSEdition)"
+    OSLanguage = "$($OSLanguage)"
+    OSLicense = "$($OSLicense)"
     ZTI = $true
     Firmware = $false
 }
@@ -173,16 +188,16 @@ Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Download custom stuff"
 Write-Host -ForegroundColor DarkBlue $SL
 
 # Copy CMTrace.exe local
-Write-Host -ForegroundColor Cyan "`n[$($DT)] [PostOSD] Download and copy cmtrace file"
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy cmtrace file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" -OutFile "C:\Windows\System32\CMTrace.exe"
 
 # Copy sigvaris.bmp local
-Write-Host -ForegroundColor Cyan "`n[$($DT)] [PostOSD] Download and copy sigvaris.bmp file"
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy sigvaris.bmp file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/sigvaris.bmp" -OutFile "C:\Windows\sigvaris.bmp"
 
 # Copy WirelessConnect.exe local
-Write-Host -ForegroundColor Cyan "`n[$($DT)] [PostOSD] Download and copy WirelessConnect.exe file"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe"
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy WirelessConnect.exe file"
+Invoke-WebRequest "https://github.com/okieselbach/Helpers/raw/master/WirelessConnect/WirelessConnect/bin/Release/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe"
 
 # Create XML file for Microsoft M365 App
 Write-Host -ForegroundColor DarkBlue $SL
@@ -377,13 +392,18 @@ $UnattendXml = @"
         </component>
         <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <RunSynchronous>                                                      
-                <RunSynchronousCommand wcm:action="add">               
+                <RunSynchronousCommand wcm:action="add">
                     <Order>1</Order>
+                    <Description>Import WiFi Profiless</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1 -Wait</Path>
+                </RunSynchronousCommand>                               
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
                 </RunSynchronousCommand> 
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
+                    <Order>3</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                               
@@ -429,11 +449,11 @@ netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [Wifi] Change Wi-Fi connectionMode to Auto"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
-$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
-foreach ($profile in $profiles) {
-    [xml]$wifiProfile = Get-Content -path $profile.fullname
+$XMLprofiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
+foreach ($XMLprofile in $XMLprofiles) {
+    [xml]$wifiProfile = Get-Content -path $XMLprofile.fullname
     $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($profile.fullname)")
+    $wifiProfile.Save("$($XMLprofile.fullname)")
 }
 
 # Copy script files from USB

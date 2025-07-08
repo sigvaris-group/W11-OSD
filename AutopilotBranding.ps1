@@ -288,6 +288,7 @@ try {
     Write-Host -ForegroundColor Green "Copy OSDCloud logs and delete C:\OSDCloud folder"
     Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Force -Recurse -Verbose -ErrorAction SilentlyContinue
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+    Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
     Rename-Computer -NewName $OSDComputername
 
