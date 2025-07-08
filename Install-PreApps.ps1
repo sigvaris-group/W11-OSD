@@ -52,7 +52,7 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 $CheckURL = 'techcommunity.microsoft.com'
 Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckURL)"
 
-$ping = Test-NetConnection techcommunity.microsoft.com
+$ping = Test-NetConnection $CheckURL
 if ($ping.PingSucceeded -eq $false) {
     Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup." 
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait 
