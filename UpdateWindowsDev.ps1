@@ -55,6 +55,7 @@ $DT = Get-Date -format G
 $LogFilePath = 'C:\ProgramData\OSDeploy'
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
+$CheckURL = 'techcommunity.microsoft.com'
 
 If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
@@ -88,7 +89,22 @@ foreach ($UpdateNew in $UpdateNews) {
 Write-Host -ForegroundColor DarkBlue $EL
 
 
-# IPConfig 
+# Check Internet Connection 
+Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Blue "[$($DT)] [Network] Check Internet Connection: $($CheckURL)"
+Write-Host -ForegroundColor DarkBlue $SL
+
+$ping = Test-NetConnection techcommunity.microsoft.com
+if ($ping.PingSucceeded -eq $false) {
+    Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup."  
+    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
+    start-Sleep -Seconds 10   
+}
+else {
+    Write-Host -ForegroundColor Green -NoNewline "[$($DT)] [Network] Internet connection to: "
+    Write-Host -ForegroundColor Green -NoNewline "$($ping.ComputerName) succesfull"
+}
+
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [Network] Network information"
 Write-Host -ForegroundColor DarkBlue $SL

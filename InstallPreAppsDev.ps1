@@ -55,8 +55,8 @@ Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckURL)"
 $ping = Test-NetConnection techcommunity.microsoft.com
 if ($ping.PingSucceeded -eq $false) {
     Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup." 
-    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait 
-    start-Sleep -Seconds 10     
+    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
+    start-Sleep -Seconds 10      
 }
 else {
     Write-Host -ForegroundColor Green -NoNewline "Internet connection to $($ping.ComputerName) succesfull "

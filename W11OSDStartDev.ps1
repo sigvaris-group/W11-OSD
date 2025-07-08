@@ -485,11 +485,11 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Update-Windows.ps1"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download UpdateWindowsDev.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UpdateWindowsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\UpdateWindowsDev.ps1' -Encoding ascii -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Install-PreApps.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download InstallPreAppsDev.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/InstallPreAppsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\InstallPreAppsDev.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Setup scripts for OOBE phase"
 $OOBECMD = @'
@@ -497,8 +497,8 @@ $OOBECMD = @'
 
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\ImportWiFiProfilesDev.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\InstallPreAppsDev.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\UpdateWindowsDev.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
