@@ -1,14 +1,6 @@
-$Title = "Install Windows Updates"
-$host.UI.RawUI.WindowTitle = $Title
+# Check if running in x64bit environment
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
-$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
-$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
-$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
-
-# Check if running in x64bit environment
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
@@ -32,77 +24,60 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Information
 $ScriptName = 'UpdateWindowsDev.ps1' # Name
-$ScriptDescription = 'This script uses the Windows Update COM objects to install the latest updates for Windows 11.' # Description
+$ScriptDescription = 'This script uses the Windows Update COM objects to install the latest updates for Windows' # Description
 $ScriptEnv = 'Development' # Environment: Production, Offline, Development
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '02.07.2025' # Created on
+$ScriptDate = '08.07.2025' # Created on
 $ScriptURL = 'https://github.com/mtniehaus/UpdateOS/blob/main/UpdateOS/UpdateOS.ps1' # Copied from 
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 
-# Updates
-$UpdateNews = @(
-"02.07.2025 [TEST] Install Windows Updates with the Windows Update COM object"
-)
-
 # Script Local Variables
 $Error.Clear()
 $SL = "================================================================================================================================================~"
 $EL = "`n================================================================================================================================================~`n"
 $DT = Get-Date -format G
-$LogFilePath = 'C:\ProgramData\OSDeploy'
+$LogFilePath = "C:\OSDCloud\Logs"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
-$CheckURL = 'techcommunity.microsoft.com'
+
 
 If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Green "[$($DT)] [Start]  Script started $($StartTime)"
+Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] Install Windows Updates"
+Write-Host -ForegroundColor Blue "[$($DT)] [Script] Information"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
 Write-Host -ForegroundColor Cyan "Version:          $($ScriptVersion)"
 Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
-Write-Host -ForegroundColor Cyan "Copied from:      $($ScriptURL)"
 Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
 Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
 Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
 Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
 Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
 Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
-Write-Host -ForegroundColor Cyan "Start time:       $($StartTime)"
 Write-Host -ForegroundColor DarkBlue $EL
-
-# Updates
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Updates] Below you find the newest updates of the script"
-Write-Host -ForegroundColor DarkBlue $SL
-foreach ($UpdateNew in $UpdateNews) {
-    Write-Host -ForegroundColor Green "$($UpdateNew)"
-}
-Write-Host -ForegroundColor DarkBlue $EL
-
 
 # Check Internet Connection 
+$CheckDomain = 'techcommunity.microsoft.com'
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Network] Check Internet Connection: $($CheckURL)"
+Write-Host -ForegroundColor Blue "[$($DT)] [Network] Check Internet Connection: $($CheckDomain)"
 Write-Host -ForegroundColor DarkBlue $SL
 
-$ping = Test-NetConnection techcommunity.microsoft.com
+$ping = Test-NetConnection $CheckDomain
 if ($ping.PingSucceeded -eq $false) {
     Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup."  
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
     start-Sleep -Seconds 10   
 }
 else {
-    Write-Host -ForegroundColor Green -NoNewline "[$($DT)] [Network] Internet connection to: "
-    Write-Host -ForegroundColor Green -NoNewline "$($ping.ComputerName) succesfull"
+    Write-Host -ForegroundColor Green "[$($DT)] [Network] Internet connection to $($CheckDomain) succesfull"
 }
 
 Write-Host -ForegroundColor DarkBlue $SL
@@ -112,7 +87,6 @@ $IPConfig = Get-NetIPConfiguration
 Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Get-NetIPConfiguration"
 Write-Output $IPConfig
 Write-Host -ForegroundColor DarkBlue $EL
-
 
 # Load UIjson.json file
 Write-Host -ForegroundColor DarkBlue $SL
@@ -126,7 +100,6 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Your Settings are:"
 Write-Host -ForegroundColor Green "Windows Updates: $OSDWindowsUpdate"
 Write-Host -ForegroundColor Green "TimeZone: $OSDTimeZone "
 
-
 # Set TimeZone
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [TimeZone] Set TimeZone"
@@ -134,7 +107,6 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Cyan "[$($DT)] [TimeZone] Set TimeZone to $($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)"  
-
 
 # Start Windows Updates 
 Write-Host -ForegroundColor DarkBlue $SL

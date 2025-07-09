@@ -1,27 +1,6 @@
-#=============================================================================================================================
-#
-# Script Name:     Install-PreApps.ps1
-# Description:     Install prerequired apps
-# Created:         06/14/2025
-# Version:         3.0
-#
-#=============================================================================================================================
-
-$Title = "Install prerequired apps"
-$host.UI.RawUI.WindowTitle = $Title
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
-$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
-$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
-$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
-
 # Check if running in x64bit environment
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
@@ -43,28 +22,68 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
-$Global:Transcript = "Install-PreApps.log"
-Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
+# Script Informationa
+$ScriptName = 'InstallPreAppsDev.ps1' # Name
+$ScriptDescription = 'Install prerequired apps' # Description
+$ScriptEnv = 'Development' # Environment: Production, Offline, Development
+$ScriptVersion = '1.0' # Version
+$ScriptDate = '08.07.2025' # Created on
+$ScriptUpdateDate = '' # Update on
+$ScriptUpdateReason = '' # Update reason
+$ScriptDepartment = 'Global IT' # Department
+$ScriptAuthor = 'Andreas Schilling' # Author
 
-# Check Internet Connection
-$CheckURL = 'techcommunity.microsoft.com'
-Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckURL)"
+# Script Local Variables
+$Error.Clear()
+$SL = "================================================================================================================================================~"
+$EL = "`n================================================================================================================================================~`n"
+$DT = Get-Date -format G
+$LogFilePath = "C:\OSDCloud\Logs"
+$LogFile = $ScriptName -replace ".{3}$", "log"
+$StartTime = Get-Date
 
-$ping = Test-NetConnection techcommunity.microsoft.com
+Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
+Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)"
+
+# Script Information
+Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Blue "[$($DT)] [Script] Information"
+Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
+Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
+Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
+Write-Host -ForegroundColor Cyan "Version:          $($ScriptVersion)"
+Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
+Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
+Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
+Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
+Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
+Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
+Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
+Write-Host -ForegroundColor DarkBlue $EL
+
+# Check Internet Connection 
+$CheckDomain = 'techcommunity.microsoft.com'
+Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Blue "[$($DT)] [Network] Check Internet Connection: $($CheckDomain)"
+Write-Host -ForegroundColor DarkBlue $SL
+
+$ping = Test-NetConnection $CheckDomain
 if ($ping.PingSucceeded -eq $false) {
-    Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup." 
+    Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup."  
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
-    start-Sleep -Seconds 10      
+    start-Sleep -Seconds 10   
 }
 else {
-    Write-Host -ForegroundColor Green -NoNewline "Internet connection to $($ping.ComputerName) succesfull "
+    Write-Host -ForegroundColor Green "[$($DT)] [Network] Internet connection to $($CheckDomain) succesfull"
 }
 
+Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Blue "[$($DT)] [Network] Network information"
+Write-Host -ForegroundColor DarkBlue $SL
 $IPConfig = Get-NetIPConfiguration
-Write-host -ForegroundColor Green "IPConfig before install Forescout"
+Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Get-NetIPConfiguration"
 Write-Output $IPConfig
+Write-Host -ForegroundColor DarkBlue $EL
 
 try {
 
@@ -89,3 +108,11 @@ catch [System.Exception] {
     Stop-Transcript | Out-Null
     exit 1
 }
+
+$EndTime = Get-Date
+$ExecutionTime = $EndTime - $StartTime
+
+Write-Host -ForegroundColor Green "[$($DT)] [End] Script ended $($EndTime)"
+Write-Host -ForegroundColor Green "[$($DT)] [End] Script took $($ExecutionTime.Minutes) minutes to execute"
+
+Stop-Transcript | Out-Null

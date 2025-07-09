@@ -290,6 +290,7 @@ try {
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
     Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
+    Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
     Rename-Computer -NewName $OSDComputername
 
     Stop-Transcript | Out-Null

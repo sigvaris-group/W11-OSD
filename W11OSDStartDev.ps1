@@ -36,7 +36,7 @@ Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] $($OSVersion) $($OSBuild) $($OSEdition) $($OSLanguage) Deployment"
+Write-Host -ForegroundColor Blue "[$($DT)] [Script] $($OSVersion) $($OSBuild) $($OSEdition) $($OSLanguage) Deployment"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
@@ -390,25 +390,6 @@ $UnattendXml = @"
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
         </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>                                                      
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <Description>Import WiFi Profiless</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1 -Wait</Path>
-                </RunSynchronousCommand>                               
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
-                    <Description>Connect to WiFi</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand> 
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <Description>Start Autopilot Import and Assignment Process</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                               
-            </RunSynchronous>
-        </component>
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -436,24 +417,30 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
-# Setup Wi-Fi profile
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Wifi] Setup Wi-Fi profile"
-Write-Host -ForegroundColor DarkBlue $SL
+# Setup Wi-Fi profile if connected
+$WiFiConProfile = Get-NetConnectionProfile | Where-Object { $_.InterfaceAlias -like '*wi-fi*' }
+if ($WiFiConProfile.IPv4Connectivity -eq 'Internet' -or  $WiFiConProfile.IPv6Connectivity -eq 'Internet') {
+    Write-Host -ForegroundColor DarkBlue $SL
+    Write-Host -ForegroundColor Blue "[$($DT)] [Wifi] Setup Wi-Fi profile"
+    Write-Host -ForegroundColor DarkBlue $SL
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [Wifi] Export Wi-Fi profile"
-If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
-    New-Item "C:\ProgramData\OSDeploy\WiFi" -ItemType Directory -Force | Out-Null
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Wifi] Export Wi-Fi profile $($WiFiConProfile.Name)"
+    $XmlDirectory = "C:\OSDCloud\WiFi" 
+    If (!(Test-Path $XmlDirectory)) {
+        New-Item $XmlDirectory -ItemType Directory -Force | Out-Null
+    }   
+    netsh wlan export profile "$($WiFiConProfile.Name)" key=clear folder=$XmlDirectory
+
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Wifi] Change Wi-Fi Connection Mode to Auto"
+    $XMLprofiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
+    foreach ($XMLprofile in $XMLprofiles) {
+        [xml]$wifiProfile = Get-Content -path $XMLprofile.fullname
+        $wifiProfile.WLANProfile.connectionMode = "Auto"
+        $wifiProfile.Save("$($XMLprofile.fullname)")
+    }
 }
-netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [Wifi] Change Wi-Fi connectionMode to Auto"
-$XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
-$XMLprofiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
-foreach ($XMLprofile in $XMLprofiles) {
-    [xml]$wifiProfile = Get-Content -path $XMLprofile.fullname
-    $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($XMLprofile.fullname)")
+else {
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Wifi] Device is wired connected"    
 }
 
 # Copy script files from USB
@@ -486,7 +473,6 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [USB] Copy M365 setup.exe"
 (New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
 Copy-Item -Path "X:\OSDCloud\Config\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
 
-
 # OOBE Customization
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [OOBE] OOBE Customization"
@@ -496,29 +482,29 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Set Computername $($OSDComputername)"
 Rename-Computer -NewName $OSDComputername
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download AutopilotBranding.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Import-WiFiProfiles.ps1"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download ImportWiFiProfilesDev.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/ImportWiFiProfilesDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1' -Encoding ascii -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download InstallPreAppsDev.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/InstallPreAppsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\InstallPreAppsDev.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download UpdateWindowsDev.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UpdateWindowsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\UpdateWindowsDev.ps1' -Encoding ascii -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download InstallPreAppsDev.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/InstallPreAppsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\InstallPreAppsDev.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Set-Language.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
+
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download AutopilotBranding.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Setup scripts for OOBE phase"
 $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\ImportWiFiProfilesDev.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\InstallPreAppsDev.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\W11_Autopilot.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\UpdateWindowsDev.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
@@ -543,6 +529,7 @@ $ExecutionTime = $EndTime - $StartTime
 
 Write-Host -ForegroundColor Green "[$($DT)] [End] Script ended $($EndTime)"
 Write-Host -ForegroundColor Green "[$($DT)] [End] Script took $($ExecutionTime.Minutes) minutes to execute"
+
 Write-Host -ForegroundColor Red "[$($DT)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
 Stop-Transcript | Out-Null  
