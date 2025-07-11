@@ -1,18 +1,18 @@
 # Script Information Variables
-$ScriptName = 'W11OSDStartDev.ps1' # Name
-$ScriptDescription = 'Windows 11 OS Deployment' # Description
-$ScriptEnv = 'Development' # Environment: Production, Offline, Development
+$ScriptName = 'W11_OSD_Start-Dev.ps1' # Name
+$ScriptDescription = 'Windows OS Deployment' # Description
+$ScriptEnv = 'TEST' # Environment: TEST, PRODUCTION, OFFLINE
 $OSVersion = 'Windows 11' # Windows version
 $OSBuild = '24H2' # Windows Release 
 $OSEdition = 'Enterprise' # Windows Release 
 $OSLanguage = 'en-us' # Windows default language
 $OSLicense = "Volume" # Windows licenses
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '28.06.2025' # Created on
+$ScriptDate = '08.07.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
-$ScriptAuthor = 'Andreas Schilling' # Author
+#$ScriptAuthor = 'Andreas Schilling' # Author
 $Product = (Get-MyComputerProduct)
 $Model = (Get-MyComputerModel)
 $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
@@ -36,7 +36,7 @@ Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Script] $($OSVersion) $($OSBuild) $($OSEdition) $($OSLanguage) Deployment"
+Write-Host -ForegroundColor Blue "[$($DT)] [$($ScriptEnv)] $($OSVersion) $($OSBuild) $($OSEdition) $($OSLanguage) Deployment"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
@@ -50,7 +50,7 @@ Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
 Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
 Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
 Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
-Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
+#Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
 Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
 Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
 Write-Host -ForegroundColor Cyan "Product:          $($Product)"

@@ -49,17 +49,19 @@ $Global:Transcript = "Install-PreApps.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 # Check Internet Connection
-$CheckURL = 'techcommunity.microsoft.com'
+$CheckDomain = 'techcommunity.microsoft.com'
+$CheckIP = '23.63.114.210'
 Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckURL)"
 
-$ping = Test-NetConnection $CheckURL
-if ($ping.PingSucceeded -eq $false) {
-    Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup." 
-    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait 
-    start-Sleep -Seconds 10     
+$ping = Test-NetConnection $CheckDomain -Hops 4
+$port = Test-NetConnection $CheckIP -Port 443 -InformationLevel Detailed
+if ($ping.PingSucceeded -eq $false -or $port.TcpTestSucceeded -eq $false) {
+    Write-Host -ForegroundColor Yellow "No Internet Connection. Start Wi-Fi setup."  
+    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
+    start-Sleep -Seconds 10 
 }
 else {
-    Write-Host -ForegroundColor Green -NoNewline "Internet connection to $($ping.ComputerName) succesfull "
+    Write-Host -ForegroundColor Green -NoNewline "Internet connection to $($CheckDomain) succesfull "
 }
 
 $IPConfig = Get-NetIPConfiguration

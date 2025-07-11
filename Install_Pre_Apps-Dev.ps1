@@ -23,15 +23,15 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Informationa
-$ScriptName = 'ImportWiFiProfilesDev.ps1' # Name
-$ScriptDescription = 'Import WiFi Profiles' # Description
-$ScriptEnv = 'Development' # Environment: Production, Offline, Development
+$ScriptName = 'Install_Pre_Apps-Dev.ps1' # Name
+$ScriptDescription = 'Install prerequired apps' # Description
+$ScriptEnv = 'TEST' # Environment: TEST, PRODUCTION, OFFLINE
 $ScriptVersion = '1.0' # Version
 $ScriptDate = '08.07.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
-$ScriptAuthor = 'Andreas Schilling' # Author
+#$ScriptAuthor = 'Andreas Schilling' # Author
 
 # Script Local Variables
 $Error.Clear()
@@ -47,7 +47,7 @@ Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Script] Information"
+Write-Host -ForegroundColor Blue "[$($DT)] [$($ScriptEnv)] Script"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
@@ -56,24 +56,10 @@ Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
 Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
 Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
 Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
-Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
+#Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
 Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
 Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
 Write-Host -ForegroundColor DarkBlue $EL
-
-# Start Import Wi-Fi profiles
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Wi-Fi] Start Import Wi-Fi profiles"
-Write-Host -ForegroundColor DarkBlue $SL
-
-$XmlDirectory = "C:\OSDCloud\WiFi" 
-if (Test-Path $XmlDirectory) {
-    Write-Host -ForegroundColor Green "[$($DT)] [Wi-Fi] Import Wi-Fi profiles from $($XmlDirectory)"
-    Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
-}
-else {
-    Write-Host -ForegroundColor Cyan "[$($DT)] [Wi-Fi] No Wi-Fi profiles exists."
-}
 
 # Check Internet Connection 
 $CheckDomain = 'techcommunity.microsoft.com'
@@ -98,6 +84,30 @@ $IPConfig = Get-NetIPConfiguration
 Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Get-NetIPConfiguration"
 Write-Output $IPConfig
 Write-Host -ForegroundColor DarkBlue $EL
+
+try {
+
+    Write-Host -ForegroundColor Green "Install Forescout Secure Connector"
+    $MSIArguments = @(
+        "/i"
+        ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
+        "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
+    )
+    Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
+
+    Start-Sleep -Seconds 60
+
+    $IPConfig = Get-NetIPConfiguration
+    Write-host -ForegroundColor Green "IPConfig after install Forescout"
+    Write-Output $IPConfig
+
+    Stop-Transcript | Out-Null
+} 
+catch [System.Exception] {
+    Write-Host -ForegroundColor Red "Install PreApps failed with error: $($_.Exception.Message)"
+    Stop-Transcript | Out-Null
+    exit 1
+}
 
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime

@@ -23,16 +23,15 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Information
-$ScriptName = 'UpdateWindowsDev.ps1' # Name
-$ScriptDescription = 'This script uses the Windows Update COM objects to install the latest updates for Windows' # Description
-$ScriptEnv = 'Development' # Environment: Production, Offline, Development
+$ScriptName = 'Update_Windows-Dev.ps1' # Name
+$ScriptDescription = 'This script uses the Windows Update COM objects to install the latest updates for Windows' # Description: https://github.com/mtniehaus/UpdateOS/blob/main/UpdateOS/UpdateOS.ps1
+$ScriptEnv = 'TEST' # Environment: TEST, PRODUCTION, OFFLINE
 $ScriptVersion = '1.0' # Version
 $ScriptDate = '08.07.2025' # Created on
-$ScriptURL = 'https://github.com/mtniehaus/UpdateOS/blob/main/UpdateOS/UpdateOS.ps1' # Copied from 
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
-$ScriptAuthor = 'Andreas Schilling' # Author
+#$ScriptAuthor = 'Andreas Schilling' # Author
 
 # Script Local Variables
 $Error.Clear()
@@ -50,7 +49,7 @@ Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Script] Information"
+Write-Host -ForegroundColor Blue "[$($DT)] [$($ScriptEnv)] Script"
 Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
 Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
 Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
@@ -59,7 +58,7 @@ Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
 Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
 Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
 Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
-Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
+#Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
 Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
 Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
 Write-Host -ForegroundColor DarkBlue $EL
