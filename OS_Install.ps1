@@ -99,8 +99,10 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Set TimeZone to $($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)" 
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Set Computername to $($OSDComputername)"
-Rename-Computer -NewName $OSDComputername
+if ($OSDComputername -ne $env:COMPUTERNAME) {
+    Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Set Computername to $($OSDComputername)"
+    Rename-Computer -NewName $OSDComputername
+}
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
@@ -199,15 +201,11 @@ $CheckDomain = 'techcommunity.microsoft.com'
 $CheckIP = '23.63.114.210'
 Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Check Internet Connection: $($CheckDomain)"
 
-$ping = Test-NetConnection $CheckDomain -Hops 4
+#$ping = Test-NetConnection $CheckDomain -Hops 4
 $port = Test-NetConnection $CheckIP -Port 443 -InformationLevel Detailed
 if ($ping.PingSucceeded -eq $false -or $port.TcpTestSucceeded -eq $false) {
     Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection" 
-    Write-Host -ForegroundColor Red "[$($DT)] [Network] OS Installation cancel"
-
-    $wshell = New-Object -ComObject Wscript.Shell
-    $wshell.Popup("Verify if the device has Internet Connection and restart the installation",0,"OS INSTALLATION CANCEL","16")
-    Exit 1
+    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
 }
 else {
     Write-Host -ForegroundColor Green "[$($DT)] [Network] Successfull connected to Internet"      

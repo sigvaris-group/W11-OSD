@@ -155,7 +155,7 @@ Write-Output $Global:MyOSDCloud
 # Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
     OSVersion = "$($OSVersion)"
-    OSBuild = "$($OSBuild))"
+    OSBuild = "$($OSBuild)"
     OSEdition = "$($OSEdition)"
     OSLanguage = "$($OSLanguage)"
     OSLicense = "$($OSLicense)"
