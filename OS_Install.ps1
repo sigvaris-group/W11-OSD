@@ -203,7 +203,7 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Check Internet Connection: 
 
 #$ping = Test-NetConnection $CheckDomain -Hops 4
 $port = Test-NetConnection $CheckIP -Port 443 -InformationLevel Detailed
-if ($ping.PingSucceeded -eq $false -or $port.TcpTestSucceeded -eq $false) {
+if ($port.TcpTestSucceeded -eq $false) {
     Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection" 
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
 }
@@ -229,7 +229,7 @@ Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Autopilot"
 Write-Host -ForegroundColor DarkBlue $SL
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [Autopilot] Start Autopilot registration"
-Start-Process /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\W11_Autopilot.ps1
+Start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\W11_Autopilot.ps1
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
@@ -514,7 +514,7 @@ Write-Host -ForegroundColor DarkBlue $SL
 
 If ($OSDDomainJoin -eq "Yes") {
     Write-Host -ForegroundColor Cyan "[$($DT)] [DomainJoin] Join computer into Active Directory domain"
-    Start-Process /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
+    Start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 }
 else {
     Write-Host -ForegroundColor Yellow "[$($DT)] [DomainJoin] Computer is Entra ID only"
