@@ -12,7 +12,7 @@ $ScriptDate = '08.07.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
-#$ScriptAuthor = 'Andreas Schilling' # Author
+$ScriptAuthor = 'Andreas Schilling' # Author
 $Product = (Get-MyComputerProduct)
 $Model = (Get-MyComputerModel)
 $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
@@ -50,7 +50,7 @@ Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
 Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
 Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
 Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
-#Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
+Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
 Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
 Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
 Write-Host -ForegroundColor Cyan "Product:          $($Product)"
@@ -68,16 +68,6 @@ foreach ($UpdateNew in $UpdateNews) {
 }
 Write-Host -ForegroundColor DarkBlue $EL
 Start-Sleep -Seconds 5
-
-
-# IPConfig 
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Network] Network information"
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Cyan "[$($DT)] [Network] Get-NetIPConfiguration"
-$IPConfig = Get-NetIPConfiguration
-Write-Output $IPConfig
-Write-Host -ForegroundColor DarkBlue $EL
 
 # U++ (user interface)
 Write-Host -ForegroundColor DarkBlue $SL
@@ -478,37 +468,15 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [OOBE] OOBE Customization"
 Write-Host -ForegroundColor DarkBlue $SL
 
-# Set Computername
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Set Computername $($OSDComputername)"
-Rename-Computer -NewName $OSDComputername
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download ImportWiFiProfilesDev.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/ImportWiFiProfilesDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1' -Encoding ascii -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download InstallPreAppsDev.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/InstallPreAppsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\InstallPreAppsDev.ps1' -Encoding ascii -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download UpdateWindowsDev.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UpdateWindowsDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\UpdateWindowsDev.ps1' -Encoding ascii -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download AutopilotBranding.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Download OS_Installps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/OS_Install.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\OS_Install.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [OOBE] Setup scripts for OOBE phase"
 $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\ImportWiFiProfilesDev.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\InstallPreAppsDev.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\W11_Autopilot.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\UpdateWindowsDev.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\OS_install.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass

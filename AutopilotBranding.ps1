@@ -47,11 +47,11 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 # Check Internet Connection
 $CheckDomain = 'techcommunity.microsoft.com'
 $CheckIP = '23.63.114.210'
-Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckURL)"
+Write-Host -ForegroundColor Green "Check Internet Connection: $($CheckDomain)"
 
-$ping = Test-NetConnection $CheckDomain -Hops 4
+#$ping = Test-NetConnection $CheckDomain -Hops 4
 $port = Test-NetConnection $CheckIP -Port 443 -InformationLevel Detailed
-if ($ping.PingSucceeded -eq $false -or $port.TcpTestSucceeded -eq $false) {
+if ($port.TcpTestSucceeded -eq $false) {
     Write-Host -ForegroundColor Yellow "No Internet Connection. Start Wi-Fi setup."  
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
     start-Sleep -Seconds 10 
