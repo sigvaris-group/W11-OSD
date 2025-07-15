@@ -51,9 +51,6 @@ try {
         "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
     )
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
-
-    Start-Sleep -Seconds 60
-
     $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
     if ($SecCon) {
         Write-Host -ForegroundColor Green "Forescout Version $($SecCon.Version) successfully installed" 
@@ -61,6 +58,8 @@ try {
     else {
         Write-Host -ForegroundColor Red "Forescout Secure Connector is not installed"
     }
+
+    Start-Sleep -Seconds 60    
 
     $IPConfig = Get-NetIPConfiguration
     Write-host -ForegroundColor Green "IPConfig after install Forescout"
