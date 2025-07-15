@@ -316,14 +316,9 @@ $UnattendXml = @"
                     <Order>1</Order>
                     <Description>Connect to WiFi</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand> 
+                </RunSynchronousCommand>                  
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
-                    <Description>Import Wi-Fi Profiles</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1 -Wait</Path>
-                </RunSynchronousCommand>                    
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                               
@@ -408,7 +403,7 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
