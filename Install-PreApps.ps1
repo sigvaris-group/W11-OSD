@@ -61,7 +61,7 @@ if ($port.TcpTestSucceeded -eq $false) {
     start-Sleep -Seconds 10 
 }
 else {
-    Write-Host -ForegroundColor Green -NoNewline "Internet connection to $($CheckDomain) succesfull "
+    Write-Host -ForegroundColor Green "Internet connection to $($CheckDomain) succesfull "
 }
 
 
@@ -80,6 +80,14 @@ try {
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments -Verbose
 
     Start-Sleep -Seconds 60
+
+    $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
+    if ($SecCon) {
+        Write-Host -ForegroundColor Green "Forescout Version $($SecCon.Version) successfully installed" 
+    }
+    else {
+        Write-Host -ForegroundColor Red "Forescout Secure Connector is not installed"
+    }
 
     $IPConfig = Get-NetIPConfiguration
     Write-host -ForegroundColor Green "IPConfig after install Forescout"
