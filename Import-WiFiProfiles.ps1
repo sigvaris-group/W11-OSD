@@ -27,6 +27,17 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Import-WiFiProfiles.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
+
+Write-Host -ForegroundColor Cyan "Starting WlanSvc Service" -NoNewline
+if (Get-Service -Name WlanSvc) {
+    if ((Get-Service -Name WlanSvc).Status -ne 'Running') {
+        Get-Service -Name WlanSvc | Start-Service
+        Start-Sleep -Seconds 10
+
+    }
+}
+Write-Host -ForegroundColor Green 'OK'
+
 Write-Host -ForegroundColor Green "Import Wi-Fi profiles"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
 Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
