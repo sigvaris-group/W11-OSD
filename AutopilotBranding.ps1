@@ -278,7 +278,7 @@ try {
 
     #Restart-Computer -Force -Wait 5
     # Exit code Soft Reboot
-    Exit 3010
+    Exit 0
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "Autopilot Branding failed with error: $($_.Exception.Message)"
