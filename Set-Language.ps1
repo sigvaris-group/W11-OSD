@@ -38,8 +38,6 @@ else {
     start-Sleep -Seconds 10
 }
 
-
-
 $IPConfig = Get-NetIPConfiguration
 Write-host -ForegroundColor Green "IPConfig"
 Write-Output $IPConfig
