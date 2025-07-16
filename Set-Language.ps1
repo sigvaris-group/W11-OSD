@@ -190,6 +190,11 @@ try {
     Write-Host -ForegroundColor Red "Error copying user international settings to system. Error: $($_.Exception.Message)"
 }
 
-Restart-Computer -Force -Wait 5
+Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
+Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
+Import-Module PSWindowsUpdate -Scope Global
+
+Write-Host -ForegroundColor Green "Install Windows Updates"
+Install-WindowsUpdate -AcceptAll -AutoReboot
 
 Stop-Transcript | Out-Null

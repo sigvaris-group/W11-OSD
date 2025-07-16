@@ -91,8 +91,8 @@ try {
     # such as the Settings side panel or desktop icon labels, 
     # in English or a different language. This is particularly noticeable 
     # if additional languages were previously installed
-    Write-Host -ForegroundColor Green "Uninstall KB5050009"
-    Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot   
+    #Write-Host -ForegroundColor Green "Uninstall KB5050009"
+    #Remove-WindowsUpdate -KBArticleID KB5050009 -IgnoreReboot   
     
     Stop-Transcript | Out-Null
 } 
