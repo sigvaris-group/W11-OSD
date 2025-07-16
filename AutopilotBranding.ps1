@@ -99,13 +99,6 @@ try {
     #>
 
     #===================================================================================================================================================
-    #  Set TimeZone
-    #===================================================================================================================================================
-    Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
-    Set-TimeZone -Id $OSDTimeZone
-    tzutil.exe /s "$($OSDTimeZone)"
-
-    #===================================================================================================================================================
     #  Hide the widgets
     #  This will fail on Windows 11 24H2 due to UCPD, see https://kolbi.cz/blog/2024/04/03/userchoice-protection-driver-ucpd-sys/
     #  New Work Around tested with 24H2 to disable widgets as a preference
