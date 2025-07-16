@@ -355,10 +355,10 @@ netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
 Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
 $profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
-foreach ($wfprofile in $profiles) {
-    [xml]$wifiProfile = Get-Content -path $wfprofile.fullname
+foreach ($profile in $profiles) {
+    [xml]$wifiProfile = Get-Content -path $profile.fullname
     $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($wfprofile.fullname)")
+    $wifiProfile.Save("$($profile.fullname)")
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
