@@ -1,8 +1,9 @@
 # Check if running in x64bit environment
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+
+Write-Host -ForegroundColor Green "OS Setup: " -NoNewline
+Write-Host -ForegroundColor Yellow "OS_Install.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
@@ -83,17 +84,29 @@ $OSDTimeZone = $($json.OSDTimeZone)
 $OSDDomainJoin = $($json.OSDDomainJoin)
 $OSDWindowsUpdate = $($json.OSDWindowsUpdate)
 
-Write-Host -ForegroundColor Green "Computername: $($OSDComputername)"
-Write-Host -ForegroundColor Green "Location: $($OSDLocation)"
-Write-Host -ForegroundColor Green "OS Language: $($OSDLanguage)"
-Write-Host -ForegroundColor Green "Display Language: $($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Green "Language Pack: $($OSDLanguagePack)"
-Write-Host -ForegroundColor Green "Keyboard: $($OSDKeyboard)"
-Write-Host -ForegroundColor Green "KeyboardLocale: $($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Green "GeoID: $($OSDGeoID)"
-Write-Host -ForegroundColor Green "TimeZone: $($OSDTimeZone)"
-Write-Host -ForegroundColor Green "Active Directory Domain Join: $($OSDDomainJoin)"
-Write-Host -ForegroundColor Green "Windows Updates: $($OSDWindowsUpdate)"
+Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Cyan "Computername: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDComputername)"
+Write-Host -ForegroundColor Cyan "Location: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDLocation)"
+Write-Host -ForegroundColor Cyan "OS Language: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDLanguage)"
+Write-Host -ForegroundColor Cyan "Display Language: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Cyan "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Cyan "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDKeyboard)"
+Write-Host -ForegroundColor Cyan "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Cyan "GeoID: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDGeoID)"
+Write-Host -ForegroundColor Cyan "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDTimeZone)"
+Write-Host -ForegroundColor Cyan "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDDomainJoin)"
+Write-Host -ForegroundColor Cyan "Windows Updates: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDWindowsUpdate)"
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Set TimeZone to $($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone

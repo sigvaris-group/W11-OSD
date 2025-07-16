@@ -9,8 +9,6 @@ $OSLanguage = 'en-us' # Windows default language
 $OSLicense = "Volume" # Windows licenses
 $ScriptVersion = '1.0' # Version
 $ScriptDate = '08.07.2025' # Created on
-$ScriptUpdateDate = '' # Update on
-$ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Global IT' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 $Product = (Get-MyComputerProduct)
@@ -37,26 +35,40 @@ Write-Host -ForegroundColor Magenta "[$($DT)] [Start] Script started $($StartTim
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [$($ScriptEnv)] $($OSVersion) $($OSBuild) $($OSEdition) $($OSLanguage) Deployment"
-Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
-Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
-Write-Host -ForegroundColor Cyan "Environment:      $($ScriptEnv)"
-Write-Host -ForegroundColor Cyan "OSVersion:        $($OSVersion)"
-Write-Host -ForegroundColor Cyan "OSBuild:          $($OSBuild)"
-Write-Host -ForegroundColor Cyan "OSEdition:        $($OSEdition)"
-Write-Host -ForegroundColor Cyan "OSLanguage:       $($OSLanguage)"
-Write-Host -ForegroundColor Cyan "OSLicense:        $($OSLicense)"
-Write-Host -ForegroundColor Cyan "Version:          $($ScriptVersion)"
-Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
-Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
-Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
-Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
-Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
-Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
-Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
-Write-Host -ForegroundColor Cyan "Product:          $($Product)"
-Write-Host -ForegroundColor Cyan "Model:            $($Model)"
-Write-Host -ForegroundColor Cyan "Manufacturer:     $($Manufacturer)"
+Write-Host -ForegroundColor Cyan "Name: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptName)"
+Write-Host -ForegroundColor Cyan "Description: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptDescription)"
+Write-Host -ForegroundColor Cyan "Environment: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptEnv)"
+Write-Host -ForegroundColor Cyan "OSVersion: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($OSVersion)"
+Write-Host -ForegroundColor Cyan "OSBuild: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($OSBuild)"
+Write-Host -ForegroundColor Cyan "OSEdition: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($OSEdition)"
+Write-Host -ForegroundColor Cyan "OSLanguage: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($OSLanguage)"
+Write-Host -ForegroundColor Cyan "OSLicense: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($OSLicense)"
+Write-Host -ForegroundColor Cyan "Script Version: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptVersion)"
+Write-Host -ForegroundColor Cyan "Created on: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptDate)"
+Write-Host -ForegroundColor Cyan "Department: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptDepartment)"
+Write-Host -ForegroundColor Cyan "Author: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ScriptAuthor)"
+Write-Host -ForegroundColor Cyan "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($LogFilePath)"
+Write-Host -ForegroundColor Cyan "Logfile: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($LogFile)"
+Write-Host -ForegroundColor Cyan "Product: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($Product)"
+Write-Host -ForegroundColor Cyan "Model: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($Model)"
+Write-Host -ForegroundColor Cyan "Manufacturer: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($Manufacturer)"
 Write-Host -ForegroundColor DarkBlue $EL
 
 # Updates
