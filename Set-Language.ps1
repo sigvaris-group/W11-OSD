@@ -30,23 +30,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Set-Language.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
-# Check Internet Connection
-$AllNetConnectionProfiles = Get-NetConnectionProfile
-$AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
-if ($AllNetConnectionProfiles) { 
-    Write-Host -ForegroundColor Green "Internet connection succesfull"
-    Write-Output $AllNetConnectionProfiles
-}
-else {
-    Write-Host -ForegroundColor Yellow "No Internet Connection. Start Wi-Fi setup."  
-    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
-    start-Sleep -Seconds 10
-}
-
-$IPConfig = Get-NetIPConfiguration
-Write-host -ForegroundColor Green "IPConfig"
-Write-Output $IPConfig
-
 #=======================================================================
 #   Load UIjson.json file
 #=======================================================================
@@ -189,11 +172,5 @@ try {
 } catch {
     Write-Host -ForegroundColor Red "Error copying user international settings to system. Error: $($_.Exception.Message)"
 }
-
-Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
-Import-Module PSWindowsUpdate -Scope Global
-
-Write-Host -ForegroundColor Green "Install Windows Updates"
-Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
 
 Stop-Transcript | Out-Null

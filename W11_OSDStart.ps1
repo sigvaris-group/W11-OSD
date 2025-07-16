@@ -274,35 +274,7 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 #  [PostOS] Create Unattend XML file
 #================================================
-if ($OSDDomainJoin -eq 'Yes') {
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
-$UnattendXml = @"
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <ComputerName>$OSDComputername</ComputerName>
-        </component>  
-    </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
-            <UserLocale>$OSDDisplayLanguage</UserLocale>
-        </component>    
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OOBE>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideEULAPage>true</HideEULAPage>
-                <ProtectYourPC>3</ProtectYourPC>
-            </OOBE>
-        </component>
-    </settings>
-</unattend>
-"@     
-}
-else {
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
+Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -316,13 +288,24 @@ $UnattendXml = @"
                     <Order>1</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                               
+                </RunSynchronousCommand> 
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Install Windows Updates</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\Scripts\Update-Windows.ps1 -Wait</Path>
+                </RunSynchronousCommand>    
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Install and set language</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Set-Language.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                                  
             </RunSynchronous>
         </component>
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>        
@@ -336,7 +319,6 @@ $UnattendXml = @"
     </settings>
 </unattend>
 "@ 
-}
 
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
@@ -401,8 +383,8 @@ $OOBECMD = @'
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
 

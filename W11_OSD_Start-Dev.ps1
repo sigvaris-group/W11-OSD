@@ -19,7 +19,8 @@ $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 
 # Updates
 $UpdateNews = @(
-"08.07.2025 New script created"
+"08.07.2025 Script created"
+"16.07.2025 Script adjusted"
 )
 
 # Script Local Variables
@@ -32,7 +33,7 @@ $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)"
+Write-Host -ForegroundColor Magenta "[$($DT)] [Start] Script started $($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
@@ -58,7 +59,6 @@ Write-Host -ForegroundColor Cyan "Model:            $($Model)"
 Write-Host -ForegroundColor Cyan "Manufacturer:     $($Manufacturer)"
 Write-Host -ForegroundColor DarkBlue $EL
 
-
 # Updates
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [Updates] Below you find the newest updates of the script"
@@ -71,19 +71,20 @@ Start-Sleep -Seconds 5
 
 # U++ (user interface)
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [UI] Start U++ (user interface)"
+Write-Host -ForegroundColor Blue "[$($DT)] [UI] Start User Interface"
 Write-Host -ForegroundColor DarkBlue $SL
 
 # USB UI Folder
 $UILocation = "X:\OSDCloud\Config\UI" 
 
 # Download UI++ Setup XML
+Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load UI++Dev.xml from $($UILocation)"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Dev.xml" -OutFile "$($UILocation)\UI++.xml" 
 
 # Start UI++ 
 $UI = Start-Process -FilePath "$($UILocation)\UI++64.exe" -WorkingDirectory $UILocation -Wait
 if ($UI) {
-    Write-Host -ForegroundColor Yellow "[$($DT)] [UI] Waiting for UI Client Setup to complete"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Waiting for UI Client Setup to complete"
     if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
         Wait-Process -Id $UI.Id
     } 
@@ -103,21 +104,32 @@ $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").
 $OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Green "Computername: $OSDComputername"
-Write-Host -ForegroundColor Green "Location: $OSDLocation"
-Write-Host -ForegroundColor Green "OS Language: $OSDLanguage"
-Write-Host -ForegroundColor Green "Display Language: $OSDDisplayLanguage"
-Write-Host -ForegroundColor Green "Language Pack: $OSDLanguagePack"
-Write-Host -ForegroundColor Green "Keyboard: $OSDKeyboard"
-Write-Host -ForegroundColor Green "KeyboardLocale: $OSDKeyboardLocale"
-Write-Host -ForegroundColor Green "GeoID: $OSDGeoID"
-Write-Host -ForegroundColor Green "TimeZone: $OSDTimeZone"
-Write-Host -ForegroundColor Green "Active Directory Domain Join: $OSDDomainJoin"
-Write-Host -ForegroundColor Green "Windows Updates: $OSDWindowsUpdate"
+Write-Host -ForegroundColor Cyan "Computername: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDComputername)"
+Write-Host -ForegroundColor Cyan "Location: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDLocation)"
+Write-Host -ForegroundColor Cyan "OS Language: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDLanguage)"
+Write-Host -ForegroundColor Cyan "Display Language: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Cyan "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Cyan "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDKeyboard)"
+Write-Host -ForegroundColor Cyan "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Cyan "GeoID: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDGeoID)"
+Write-Host -ForegroundColor Cyan "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDTimeZone)"
+Write-Host -ForegroundColor Cyan "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDDomainJoin)"
+Write-Host -ForegroundColor Cyan "Windows Updates: " -NoNewline
+Write-Host -ForegroundColor Green "$($OSDWindowsUpdate)"
 
 # Update OSD Module
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [OSDCloud] Start OSD Module"
+Write-Host -ForegroundColor Blue "[$($DT)] [OSDCloud] Start OSDCloud"
 Write-Host -ForegroundColor DarkBlue $SL
 
 if ((Get-MyComputerModel) -match 'Virtual') {
@@ -129,11 +141,11 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] Updating OSD PowerShell Mo
 Set-ExecutionPolicy -ExecutionPolicy ByPass 
 Install-Module OSD -SkipPublisherCheck -Force
 
-Write-Host -ForegroundColor  Cyan "[$($DT)] [OSDCloud] Importing OSD PowerShell Module"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] Importing OSD PowerShell Module"
 Import-Module OSD -Force   
 
 # [OSD] Params and Start-OSDCloud
-Write-Host -ForegroundColor Blue "[$($DT)] [OSDCloud] Set OSDCloud variables and parameters"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] Set OSDCloud variables and parameters"
 
 # Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
@@ -162,23 +174,23 @@ $Params = @{
     ZTI = $true
     Firmware = $false
 }
-Write-Host -ForegroundColor Cyan "`n[$($DT)] [OSDCloud] Windows OS install parameters"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] Windows OS install parameters"
 Write-Output $Params
 
 # Launch OSDCloud
-Write-Host -ForegroundColor Cyan "`n[$($DT)] [OSDCloud] Starting OSDCloud"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] Starting OSDCloud"
 
 Start-OSDCloud @Params
 
-Write-Host -ForegroundColor Cyan "`n[$($DT)] [OSDCloud] OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
 
 # Download custom stuff
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Download custom stuff"
+Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Start PostOSD"
 Write-Host -ForegroundColor DarkBlue $SL
 
 # Copy CMTrace.exe local
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy cmtrace file"
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy CMTrace.exe file"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" -OutFile "C:\Windows\System32\CMTrace.exe"
 
 # Copy sigvaris.bmp local
@@ -191,13 +203,15 @@ Invoke-WebRequest "https://github.com/okieselbach/Helpers/raw/master/WirelessCon
 
 # Create XML file for Microsoft M365 App
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [M365] Create XML file for Microsoft M365 App"
+Write-Host -ForegroundColor Blue "[$($DT)] [M365] Create XML file for Microsoft M365 App which used later in the application deployment"
 Write-Host -ForegroundColor DarkBlue $SL
+
+Write-Host -ForegroundColor Cyan "[$($DT)] [M365] Create C:\ProgramData\OSDeploy\M365\configuration.xml"
 
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
     New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
 }
-Write-Host -ForegroundColor Cyan "[$($DT)] [M365] Create C:\ProgramData\OSDeploy\M365\configuration.xml"
+
 $OfficeXml = @"
 <Configuration ID="44ad4a5b-8ca2-4b1d-9120-4ccb79ab01bc">
   <Info Description="M365 Enterprise without Access" />
@@ -344,8 +358,8 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [Windows] Create Windows Unattend XML file"
 Write-Host -ForegroundColor DarkBlue $SL
 
-if ($OSDDomainJoin -eq 'Yes') {
-Write-Host -ForegroundColor Cyan "[$($DT)] [Windows] Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
+
+Write-Host -ForegroundColor Cyan "[$($DT)] [Windows] Create C:\Windows\Panther\Unattend.xml for Entra ID devices"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -366,6 +380,7 @@ $UnattendXml = @"
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>    
@@ -379,34 +394,6 @@ $UnattendXml = @"
     </settings>
 </unattend>
 "@     
-}
-else {
-Write-Host -ForegroundColor Cyan "[$($DT)] [Windows] Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
-$UnattendXml = @"
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <ComputerName>$OSDComputername</ComputerName>
-        </component>
-    </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
-            <UserLocale>$OSDDisplayLanguage</UserLocale>
-        </component>        
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OOBE>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideEULAPage>true</HideEULAPage>
-                <ProtectYourPC>3</ProtectYourPC>
-            </OOBE>
-        </component>
-    </settings>
-</unattend>
-"@ 
-}
 
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
@@ -417,7 +404,7 @@ $UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
 # Setup Wi-Fi profile if connected
-$WiFiConProfile = Get-NetConnectionProfile | Where-Object { $_.InterfaceAlias -like '*wi-fi*' }
+$WiFiConProfile = Get-NetConnectionProfile | Where-Object { $_.InterfaceAlias -like '*wi-fi*' -or $_.InterfaceAlias -like '*wifi*' -or $_.InterfaceAlias -like '*wlan*' }
 if ($WiFiConProfile.IPv4Connectivity -eq 'Internet' -or  $WiFiConProfile.IPv6Connectivity -eq 'Internet') {
     Write-Host -ForegroundColor DarkBlue $SL
     Write-Host -ForegroundColor Blue "[$($DT)] [Wifi] Setup Wi-Fi profile"
@@ -504,10 +491,10 @@ Write-Host -ForegroundColor DarkBlue $SL
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 
-Write-Host -ForegroundColor Green "[$($DT)] [End] Script ended $($EndTime)"
-Write-Host -ForegroundColor Green "[$($DT)] [End] Script took $($ExecutionTime.Minutes) minutes to execute"
+Write-Host -ForegroundColor Magenta "[$($DT)] [End] Script ended $($EndTime)"
+Write-Host -ForegroundColor Magenta "[$($DT)] [End] Script took $($ExecutionTime.Minutes) minutes to execute"
 
-Write-Host -ForegroundColor Red "[$($DT)] [End] Restarting in 10 seconds into Windows OS"
+Write-Host -ForegroundColor Yellow "[$($DT)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
 Stop-Transcript | Out-Null  
 wpeutil reboot

@@ -30,23 +30,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Update-Windows.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
-# Check Internet Connection
-$AllNetConnectionProfiles = Get-NetConnectionProfile
-$AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
-if ($AllNetConnectionProfiles) { 
-    Write-Host -ForegroundColor Green "Internet connection succesfull"
-    Write-Output $AllNetConnectionProfiles
-}
-else {
-    Write-Host -ForegroundColor Yellow "No Internet Connection. Start Wi-Fi setup."  
-    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
-    start-Sleep -Seconds 10
-}
-
-$IPConfig = Get-NetIPConfiguration
-Write-host -ForegroundColor Green "IPConfig"
-Write-Output $IPConfig
-
 try {
 
     # Install latest NuGet package provider
@@ -82,7 +65,7 @@ try {
     Import-Module PSWindowsUpdate -Scope Global
 
     Write-Host -ForegroundColor Green "Install Windows Updates"
-    Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
+    Install-WindowsUpdate -AcceptAll -ForceInstall -IgnoreReboot
 
     # Uninstall blocking language Update
     # Microsoft Community notes that after installing KB5050009, 
