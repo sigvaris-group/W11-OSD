@@ -20,7 +20,7 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-start-Sleep -Seconds 5
+start-Sleep -Seconds 10
 
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
@@ -186,5 +186,7 @@ try {
 } catch {
     Write-Host -ForegroundColor Red "Error copying user international settings to system. Error: $($_.Exception.Message)"
 }
+
+Restart-Computer -Force -Wait 5
 
 Stop-Transcript | Out-Null
