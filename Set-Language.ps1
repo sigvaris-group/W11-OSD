@@ -191,10 +191,9 @@ try {
 }
 
 Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
-Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
 Import-Module PSWindowsUpdate -Scope Global
 
 Write-Host -ForegroundColor Green "Install Windows Updates"
-Install-WindowsUpdate -AcceptAll -IgnoreReboot
+Install-WindowsUpdate -AcceptAll -ForceInstall -AutoReboot
 
 Stop-Transcript | Out-Null
