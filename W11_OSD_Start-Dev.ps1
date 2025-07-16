@@ -31,7 +31,8 @@ $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Magenta "[$($DT)] [Start] Script started $($StartTime)"
+Write-Host -ForegroundColor Cyan "[$($DT)] [Start] Script started at: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
@@ -72,26 +73,26 @@ Write-Host -ForegroundColor Magenta "$($Manufacturer)"
 Write-Host -ForegroundColor DarkBlue $EL
 
 # Updates
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [Updates] Below you find the newest updates of the script"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Cyan "[$($DT)] [Start] Below you find the newest updates of the script"
 foreach ($UpdateNew in $UpdateNews) {
-    Write-Host -ForegroundColor Green "$($UpdateNew)"
+    Write-Host -ForegroundColor Magenta "$($UpdateNew)"
 }
-Write-Host -ForegroundColor DarkBlue $EL
 Start-Sleep -Seconds 5
 
-# U++ (user interface)
+# ================================================================================================================================================~
+# [SECTION] UI
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [UI] Start User Interface"
+Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] UI"
 Write-Host -ForegroundColor DarkBlue $SL
 
-# USB UI Folder
+# UI config folder
 $UILocation = "X:\OSDCloud\Config\UI" 
-
+$UIXMLFile = "UI++.xml" 
 # Download UI++ Setup XML
-Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load UI++Dev.xml from $($UILocation)"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Dev.xml" -OutFile "$($UILocation)\UI++.xml" 
+Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($UIXMLFile) from $($UILocation)"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Dev.xml" -OutFile "$($UILocation)\$($UIXMLFile)" 
 
 # Start UI++ 
 $UI = Start-Process -FilePath "$($UILocation)\UI++64.exe" -WorkingDirectory $UILocation -Wait
@@ -117,31 +118,43 @@ $OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Your Settings are:"
 Write-Host -ForegroundColor Cyan "Computername: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDComputername)"
+Write-Host -ForegroundColor Magenta "$($OSDComputername)"
 Write-Host -ForegroundColor Cyan "Location: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDLocation)"
+Write-Host -ForegroundColor Magenta "$($OSDLocation)"
 Write-Host -ForegroundColor Cyan "OS Language: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDLanguage)"
+Write-Host -ForegroundColor Magenta "$($OSDLanguage)"
 Write-Host -ForegroundColor Cyan "Display Language: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Magenta "$($OSDDisplayLanguage)"
 Write-Host -ForegroundColor Cyan "Language Pack: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Magenta "$($OSDLanguagePack)"
 Write-Host -ForegroundColor Cyan "Keyboard: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDKeyboard)"
+Write-Host -ForegroundColor Magenta "$($OSDKeyboard)"
 Write-Host -ForegroundColor Cyan "KeyboardLocale: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Magenta "$($OSDKeyboardLocale)"
 Write-Host -ForegroundColor Cyan "GeoID: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDGeoID)"
+Write-Host -ForegroundColor Magenta "$($OSDGeoID)"
 Write-Host -ForegroundColor Cyan "TimeZone: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDTimeZone)"
+Write-Host -ForegroundColor Magenta "$($OSDTimeZone)"
 Write-Host -ForegroundColor Cyan "Active Directory Domain Join: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDDomainJoin)"
+Write-Host -ForegroundColor Magenta "$($OSDDomainJoin)"
 Write-Host -ForegroundColor Cyan "Windows Updates: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDWindowsUpdate)"
+Write-Host -ForegroundColor Magenta "$($OSDWindowsUpdate)"
 
-# Update OSD Module
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [OSDCloud] Start OSDCloud"
+Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] UI"
+Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor Magenta   "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Blue  "minutes to execute."
+Write-Host -ForegroundColor DarkBlue $SL
+
+# ================================================================================================================================================~
+# [SECTION] OSDCloud
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] OSDCloud"
 Write-Host -ForegroundColor DarkBlue $SL
 
 if ((Get-MyComputerModel) -match 'Virtual') {
@@ -503,8 +516,11 @@ Write-Host -ForegroundColor DarkBlue $SL
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 
-Write-Host -ForegroundColor Magenta "[$($DT)] [End] Script ended $($EndTime)"
-Write-Host -ForegroundColor Magenta "[$($DT)] [End] Script took $($ExecutionTime.Minutes) minutes to execute"
+Write-Host -ForegroundColor Cyan "[$($DT)] [End] Script ended at: " -NoNewline
+Write-Host -ForegroundColor Magenta "$($EndTime)"
+Write-Host -ForegroundColor Cyan "[$($DT)] [End] Script took " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ExecutionTime.Minutes)" -NoNewline
+Write-Host -ForegroundColor Cyan " minutes to execute"
 
 Write-Host -ForegroundColor Yellow "[$($DT)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
