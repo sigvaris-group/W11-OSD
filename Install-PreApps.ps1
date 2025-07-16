@@ -2,6 +2,9 @@
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
+Write-Host -ForegroundColor Green "Install prerequired apps: " -NoNewline
+Write-Host -ForegroundColor Yellow "Install-PreApps.ps1"
+
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
     Start-Transcript -Path $TranscriptPath -Force -IncludeInvocationHeader

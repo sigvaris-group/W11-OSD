@@ -2,6 +2,9 @@
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
+Write-Host -ForegroundColor Green "Install and set language: " -NoNewline
+Write-Host -ForegroundColor Yellow "Set-Language.ps1"
+
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
     Start-Transcript -Path $TranscriptPath -Force -IncludeInvocationHeader

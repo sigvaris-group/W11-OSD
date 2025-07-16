@@ -1,25 +1,9 @@
-#=============================================================================================================================
-#
-# Script Name:     Update-Windows.ps1
-# Description:     Install Windows Updates with PowerShell Module PSWindowsUpdate
-# Created:         06/24/2025
-# Version:         4.0
-#
-#=============================================================================================================================
-
-$Title = "Install Windows Updates with PowerShell Module PSWindowsUpdate"
-$host.UI.RawUI.WindowTitle = $Title
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-[System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-
-$env:APPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Roaming"
-$env:LOCALAPPDATA = "C:\Windows\System32\Config\SystemProfile\AppData\Local"
-$Env:PSModulePath = $env:PSModulePath+";C:\Program Files\WindowsPowerShell\Scripts"
-$env:Path = $env:Path+";C:\Program Files\WindowsPowerShell\Scripts"
-
 # Check if running in x64bit environment
 Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
 Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+
+Write-Host -ForegroundColor Green "Install Windows Updates: " -NoNewline
+Write-Host -ForegroundColor Yellow "Update-Windows.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
