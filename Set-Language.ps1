@@ -186,6 +186,21 @@ try {
     Write-Host -ForegroundColor Red "Error copying user international settings to system. Error: $($_.Exception.Message)"
 }
 
-
+# change registry key 
+$registryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Nls\Language"
+Switch ($OSDDisplayLanguage) {
+    'en-CA' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "1009";Set-ItemProperty -Path $registryPath -Name "Default" -Value "1009";break}
+    'en-GB' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0809";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0809";break}
+    'de-DE' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0407";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0407";break}
+    'de-CH' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0807";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0807";break}
+    'de-AT' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0c07";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0c07";break}
+    'fr-FR' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "040c";Set-ItemProperty -Path $registryPath -Name "Default" -Value "040c";break}
+    'it-IT' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0410";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0410";break}
+    'pl-PL' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0415";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0415";break}
+    'en-AU' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0c09";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0c09";break}
+    'pt-BR' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0416";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0416";break}
+    'pt-PT' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0816";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0816";break}
+    'es-MX' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "080a";Set-ItemProperty -Path $registryPath -Name "Default" -Value "080a";break}
+}
 
 Stop-Transcript | Out-Null
