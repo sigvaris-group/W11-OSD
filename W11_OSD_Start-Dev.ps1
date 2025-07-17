@@ -144,9 +144,9 @@ $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] UI"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor Magenta   "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
+Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor Magenta "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Blue "minutes to execute."
 Write-Host -ForegroundColor DarkBlue $SL
 
 # ================================================================================================================================================~
