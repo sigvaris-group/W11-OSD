@@ -45,6 +45,7 @@ Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript)
 
 try {
 
+    <#
     # Install latest NuGet package provider
     Write-Host -ForegroundColor Green "Install latest NuGet package provider"
     Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
@@ -72,9 +73,17 @@ try {
         Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
         Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
     }
+    #>
+
+    Write-Host -ForegroundColor Green "Install latest NuGet package provider"
+    Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
+    
+    Write-Host -ForegroundColor Yellow "Install PackageManagement & PowerShellGet modules"
+    Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+    Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
 
     Write-Host -ForegroundColor Green "Install Module PSWindowsUpdate"
-    Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
+    Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber -Verbose:$true
     Import-Module PSWindowsUpdate -Scope Global
 
     Write-Host -ForegroundColor Green "Install Windows Updates"

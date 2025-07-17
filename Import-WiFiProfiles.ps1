@@ -30,7 +30,6 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $Global:Transcript = "Import-WiFiProfiles.log"
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
-
 Write-Host -ForegroundColor Cyan "Starting WlanSvc Service" -NoNewline
 if (Get-Service -Name WlanSvc) {
     if ((Get-Service -Name WlanSvc).Status -ne 'Running') {
