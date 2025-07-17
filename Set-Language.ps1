@@ -129,6 +129,30 @@ try {
     Write-Host -ForegroundColor Red "Error setting WinUI language override to $($OSDDisplayLanguage). Error: $($_.Exception.Message)"
 }
 
+<#
+# Configure new language defaults under current user (system) after which it can be copied to system
+try {
+    $OldUserLanguageList = Get-WinUserLanguageList
+    Write-Host "    Old-WinUserLanguageList: $($OldUserLanguageList.LanguageTag)"
+    
+    $NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
+    Write-Host "    New-WinUserLanguageList: $($NewUserLanguageList.LanguageTag)"
+
+    if ($OSDDisplayLanguage -eq 'pl-PL') {
+        Set-WinUserLanguageList -LanguageList 'pl-PL' -Force -Verbose
+    } 
+    else {
+        #$NewUserLanguageList += $OldUserLanguageList
+        Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -Verbose
+    }
+    
+    $UserLanguageList = Get-WinUserLanguageList
+    Write-Host -ForegroundColor Green "   Successfully set WinUserLanguageList to $($UserLanguageList.LanguageTag)"    
+} catch {
+    Write-Host -ForegroundColor Red "Error setting WinUserLanguageList to $($OSDDisplayLanguage). Failure: $_"
+}
+#>
+
 # Set Culture, sets the user culture for the current user account. This is for Region format
 try {
     Set-Culture -CultureInfo $OSDDisplayLanguage -Verbose
