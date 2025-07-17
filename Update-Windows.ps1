@@ -124,16 +124,17 @@ $queries | ForEach-Object {
                     Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] See result codes at: https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode"
                 }
             }
-            # Uninstall blocking language Update
-            # Microsoft Community notes that after installing KB5050009, 
-            # users might experience situations where the new display language 
-            # isn't fully applied, leaving some elements of the UI, 
-            # such as the Settings side panel or desktop icon labels, 
-            # in English or a different language. This is particularly noticeable 
-            # if additional languages were previously installed
-            Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Uninstall KB5050009 because of the display language issue"
-            wusa /uninstall /kb:5050009 /quiet /norestart 
         } 
+        
+        # Uninstall blocking language Update
+        # Microsoft Community notes that after installing KB5050009, 
+        # users might experience situations where the new display language 
+        # isn't fully applied, leaving some elements of the UI, 
+        # such as the Settings side panel or desktop icon labels, 
+        # in English or a different language. This is particularly noticeable 
+        # if additional languages were previously installed
+        Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Uninstall KB5050009 because of the display language issue"
+        wusa /uninstall /kb:5050009 /quiet /norestart 
 
     } catch {
         # If this script is running during OOBE specialize, error 8024004A will happen:
