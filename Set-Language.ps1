@@ -98,7 +98,6 @@ $InstalledLanguages = Get-InstalledLanguage
 $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
 Write-Host -ForegroundColor Green "Current installed languages: $($InstalledLanguages)"
 
-
 try {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
     If ($OSDDisplayLanguage -ne 'en-US') {
@@ -197,5 +196,7 @@ Switch ($OSDDisplayLanguage) {
     'es-MX' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "080a";Set-ItemProperty -Path $registryPath -Name "Default" -Value "080a";break}
 }
 #>
+
+Restart-Computer -Wait 10
 
 Stop-Transcript | Out-Null
