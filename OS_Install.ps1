@@ -271,7 +271,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
     Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
     $ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
     
-    #$ServiceManager.Services
+    # ServiceManager.Services
     Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Enable Windows Update for other Microsoft products"
     $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
     $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null

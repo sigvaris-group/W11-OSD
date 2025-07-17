@@ -361,8 +361,8 @@ Rename-Computer -NewName $OSDComputername
 Write-Host -ForegroundColor Green "Downloading and creating scripts for OOBE phase"
 Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
+#Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
+#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Set-Language.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
