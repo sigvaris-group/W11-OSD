@@ -59,7 +59,7 @@ $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
 $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
 
 # Set query for updates
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Setup query for all available updates and drivers"
+Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Setup query for all available updates"
 $queries = @("IsInstalled=0 and Type='Software'")
 
 # Create update collection 
