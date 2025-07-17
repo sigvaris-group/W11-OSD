@@ -60,7 +60,7 @@ $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
 
 # Set query for updates
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Setup query for all available updates and drivers"
-$queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
+$queries = @("IsInstalled=0 and Type='Software'")
 
 # Create update collection 
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
@@ -125,7 +125,7 @@ $queries | ForEach-Object {
                 }
             }
         } 
-        
+
         # Uninstall blocking language Update
         # Microsoft Community notes that after installing KB5050009, 
         # users might experience situations where the new display language 
