@@ -133,8 +133,8 @@ $queries | ForEach-Object {
         # such as the Settings side panel or desktop icon labels, 
         # in English or a different language. This is particularly noticeable 
         # if additional languages were previously installed
-        Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Uninstall KB5050009 because of the display language issue"
-        wusa /uninstall /kb:5050009 /quiet /norestart 
+        #Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Uninstall KB5050009 because of the display language issue"
+        #wusa /uninstall /kb:5050009 /quiet /norestart 
 
     } catch {
         # If this script is running during OOBE specialize, error 8024004A will happen:
