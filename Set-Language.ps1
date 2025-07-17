@@ -67,13 +67,6 @@ Write-Host -ForegroundColor Green "TimeZone: $OSDTimeZone"
 Write-Host -ForegroundColor Green "Windows Update: $OSDWindowsUpdate"
 
 #===================================================================================================================================================
-#  Set TimeZone
-#===================================================================================================================================================
-Write-Host -ForegroundColor Green "Set TimeZone to $($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
-tzutil.exe /s "$($OSDTimeZone)"  
-
-#===================================================================================================================================================
 #  Install Language Modules
 #===================================================================================================================================================
 # Check if module "LanguagePackManagement" is installed
@@ -105,6 +98,7 @@ $InstalledLanguages = Get-InstalledLanguage
 $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
 Write-Host -ForegroundColor Green "Current installed languages: $($InstalledLanguages)"
 
+
 try {
     # Install an additional language pack including FODs. With CopyToSettings (optional), this will change language for non-Unicode program.  
     If ($OSDDisplayLanguage -ne 'en-US') {
@@ -118,7 +112,6 @@ catch {
         Write-Host -ForegroundColor Red "Error installing language $($OSDDisplayLanguage). Error: $($_.Exception.Message). Exiting script"
 }
 
-<#
 # Set the language as the system preferred language
 try {
     Set-SystemPreferredUILanguage $OSDLanguage -Verbose
@@ -127,7 +120,6 @@ try {
 } catch {
     Write-Host -ForegroundColor Red "Error setting system preferred UI language to $($OSDLanguage). Error: $($_.Exception.Message)"
 }
-#>
 
 # Configure new language defaults under current user (system) after which it can be copied to system
 try {
