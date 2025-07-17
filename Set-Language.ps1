@@ -186,8 +186,10 @@ try {
     Write-Host -ForegroundColor Red "Error copying user international settings to system. Error: $($_.Exception.Message)"
 }
 
+<#
 # change registry key 
 $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Nls\Language"
+Write-Host -ForegroundColor Green "   Set registry key"
 Switch ($OSDDisplayLanguage) {
     'en-CA' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "1009";Set-ItemProperty -Path $registryPath -Name "Default" -Value "1009";break}
     'en-GB' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0809";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0809";break}
@@ -202,5 +204,6 @@ Switch ($OSDDisplayLanguage) {
     'pt-PT' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "0816";Set-ItemProperty -Path $registryPath -Name "Default" -Value "0816";break}
     'es-MX' {Set-ItemProperty -Path $registryPath -Name "InstallLanguage" -Value "080a";Set-ItemProperty -Path $registryPath -Name "Default" -Value "080a";break}
 }
+#>
 
 Stop-Transcript | Out-Null
