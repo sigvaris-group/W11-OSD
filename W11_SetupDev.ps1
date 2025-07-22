@@ -1,9 +1,9 @@
 # Check if running in x64bit environment
-Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
-Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+Write-Host -ForegroundColor Blue "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Blue "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
-Write-Host -ForegroundColor Green "OS Setup: " -NoNewline
-Write-Host -ForegroundColor Yellow "OS_Install.ps1"
+Write-Host -ForegroundColor Blue "Script: " -NoNewline
+Write-Host -ForegroundColor Cyan "W11_SetupDev.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
@@ -24,13 +24,13 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Information
-$ScriptName = 'OS_Install.ps1' # Name
-$ScriptDescription = 'This script install the Operation System based on the initial script' # Description:
+$ScriptName = 'W11_SetupDev.ps1' # Name
+$ScriptDescription = 'This script setup the Operation System' # Description:
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '10.07.2025' # Created on
+$ScriptDate = '22.07.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
-$ScriptDepartment = 'Global IT' # Department
+$ScriptDepartment = 'GA & Workplace Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 
 # Script Local Variables
@@ -42,23 +42,33 @@ $LogFilePath = "C:\OSDCloud\Logs"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
+Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
+Write-Host -ForegroundColor Blue "[$($DT)] [Start] Script start at: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($StartTime)"
+
 # Script Information
 Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Cyan "Name:             $($ScriptName)"
-Write-Host -ForegroundColor Cyan "Description:      $($ScriptDescription)"
-Write-Host -ForegroundColor Cyan "Version:          $($ScriptVersion)"
-Write-Host -ForegroundColor Cyan "Created on:       $($ScriptDate)"
-Write-Host -ForegroundColor Cyan "Update on:        $($ScriptUpdateDate)"
-Write-Host -ForegroundColor Cyan "Update reason:    $($ScriptUpdateReason )"
-Write-Host -ForegroundColor Cyan "Department:       $($ScriptDepartment)"
-Write-Host -ForegroundColor Cyan "Author:           $($ScriptAuthor)"
-Write-Host -ForegroundColor Cyan "Logfile Path:     $($LogFilePath)"
-Write-Host -ForegroundColor Cyan "Logfile:          $($LogFile)"
+Write-Host -ForegroundColor Blue "Name: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptName)"
+Write-Host -ForegroundColor Blue "Description: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
+Write-Host -ForegroundColor Blue "Version: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
+Write-Host -ForegroundColor Blue "Created on: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDate)"
+Write-Host -ForegroundColor Blue "Update on: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptUpdateDate)"
+Write-Host -ForegroundColor Blue "Update reason: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptUpdateReason)"
+Write-Host -ForegroundColor Blue "Department: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
+Write-Host -ForegroundColor Blue "Author: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
+Write-Host -ForegroundColor Blue "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($LogFilePath)"
+Write-Host -ForegroundColor Blue "Logfile: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($LogFile)"
 Write-Host -ForegroundColor DarkBlue $EL
-
-If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
-Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Green "[$($DT)] [Start] Script started $($StartTime)"
 
 # ================================================================================================================================================~
 # [SECTION] UI
@@ -68,10 +78,11 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] UI"
 Write-Host -ForegroundColor DarkBlue $SL
 
-$jsonpath = "C:\ProgramData\OSDeploy\UIjson.json"
-Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load UIjson.json file from $($jsonpath)"
+$jsonpath = "C:\ProgramData\OSDeploy"
+$jsonfile = "UIjson.json"
+Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($jsonfile) file from $($jsonpath)"
 
-$json = Get-Content -Path $jsonpath  -Raw | ConvertFrom-Json
+$json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
 $OSDComputername = $($json.OSDComputername)
 $OSDLocation = $($json.OSDLocation)
 $OSDLanguage = $($json.OSDLanguage)
@@ -84,36 +95,38 @@ $OSDTimeZone = $($json.OSDTimeZone)
 $OSDDomainJoin = $($json.OSDDomainJoin)
 $OSDWindowsUpdate = $($json.OSDWindowsUpdate)
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Cyan "Computername: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDComputername)"
-Write-Host -ForegroundColor Cyan "Location: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDLocation)"
-Write-Host -ForegroundColor Cyan "OS Language: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDLanguage)"
-Write-Host -ForegroundColor Cyan "Display Language: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Cyan "Language Pack: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDLanguagePack)"
-Write-Host -ForegroundColor Cyan "Keyboard: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDKeyboard)"
-Write-Host -ForegroundColor Cyan "KeyboardLocale: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Cyan "GeoID: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDGeoID)"
-Write-Host -ForegroundColor Cyan "TimeZone: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDTimeZone)"
-Write-Host -ForegroundColor Cyan "Active Directory Domain Join: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDDomainJoin)"
-Write-Host -ForegroundColor Cyan "Windows Updates: " -NoNewline
-Write-Host -ForegroundColor Green "$($OSDWindowsUpdate)"
+Write-Host -ForegroundColor Blue "[$($DT)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Blue "Computername: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDComputername)"
+Write-Host -ForegroundColor Blue "Location: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLocation)"
+Write-Host -ForegroundColor Blue "OS Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+Write-Host -ForegroundColor Blue "Display Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Blue "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Blue "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
+Write-Host -ForegroundColor Blue "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Blue "GeoID: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+Write-Host -ForegroundColor Blue "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
+Write-Host -ForegroundColor Blue "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
+Write-Host -ForegroundColor Blue "Windows Updates: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Set TimeZone to $($OSDTimeZone)"
+Write-Host -ForegroundColor Blue "[$($DT)] [UI] Set TimeZone to: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)" 
 
 if ($OSDComputername -ne $env:COMPUTERNAME) {
-    Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Set Computername to $($OSDComputername)"
+    Write-Host -ForegroundColor Blue "[$($DT)] [UI] Set Computername to: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDComputername)"
     Rename-Computer -NewName $OSDComputername
 }
 
@@ -121,8 +134,8 @@ $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] UI"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Blue  "minutes to execute."
 Write-Host -ForegroundColor DarkBlue $SL
 
@@ -135,7 +148,7 @@ Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Forescout"
 Write-Host -ForegroundColor DarkBlue $SL
 
 try {
-    Write-Host -ForegroundColor Cyan "[$($DT)] [Forescout] Install Forescout Secure Connector"
+    Write-Host -ForegroundColor Blue "[$($DT)] [Forescout] Install Forescout Secure Connector"
     $MSIArguments = @(
         "/i"
         ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
@@ -146,11 +159,15 @@ try {
     
     $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
     if ($SecCon) {
-        Write-Host -ForegroundColor Green "[$($DT)] [Forescout] $($SecCon.Name) Version $($SecCon.Version) successfully installed" 
+        Write-Host -ForegroundColor Blue "[$($DT)] [Forescout] " -NoNewline
+        Write-Host -ForegroundColor Cyan "$($SecCon.Name)" -NoNewline
+        Write-Host -ForegroundColor Blue "Version " -NoNewline
+        Write-Host -ForegroundColor Cyan "$($SecCon.Version)"  -NoNewline
+        Write-Host -ForegroundColor Blue " successfully installed" 
         Start-Sleep 60
     }
     else {
-        Write-Host -ForegroundColor Red "[$($DT)] [Forescout] Forescout Secure Connector is not installed"
+        Write-Host -ForegroundColor Red "[$($DT)] [Forescout] Secure Connector is not installed"
     }
 } 
 catch {
@@ -164,9 +181,10 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Forescout"
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
+Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkBlue $SL
 
+#>
 # ================================================================================================================================================~
 # [SECTION] Wi-Fi
 # ================================================================================================================================================~
@@ -176,7 +194,8 @@ Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Wi-Fi"
 Write-Host -ForegroundColor DarkBlue $SL
 
 $XmlDirectory = "C:\OSDCloud\WiFi" # Path set by initial script
-Write-Host -ForegroundColor Cyan "[$($DT)] [Wi-Fi] Import Wi-Fi profiles from $($XmlDirectory)"
+Write-Host -ForegroundColor Cyan "[$($DT)] [Wi-Fi] Import Wi-Fi profiles from "
+Write-Host -ForegroundColor Cyan  "$($XmlDirectory)"
 
 try {
     if (Test-Path $XmlDirectory) {
@@ -196,10 +215,10 @@ $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Wi-Fi"
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Blue  "minutes to execute."
 Write-Host -ForegroundColor DarkBlue $SL
-
+<#
 # ================================================================================================================================================~
 # [SECTION] Network
 # ================================================================================================================================================~
@@ -777,7 +796,10 @@ Write-Host -ForegroundColor DarkBlue $SL
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 
-Write-Host -ForegroundColor Green "[$($DT)] [End] Script ended $($EndTime)"
-Write-Host -ForegroundColor Green "[$($DT)] [End] Script took $($ExecutionTime.Minutes) minutes to execute"
+Write-Host -ForegroundColor Blue "[$($DT)] [Start] Script end at: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($EndTime)"
+Write-Host -ForegroundColor Blue "[$($DT)] [End] Script took " -NoNewline 
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
+Write-Host -ForegroundColor Blue " minutes to execute"
 
 Stop-Transcript | Out-Null

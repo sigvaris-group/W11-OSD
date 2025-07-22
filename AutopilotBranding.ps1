@@ -52,7 +52,6 @@ $json = Get-Content -Path "C:\ProgramData\OSDeploy\UIjson.json" -Raw | ConvertFr
 
 # Access JSON properties
 $OSDTimeZone = $json.OSDTimeZone
-$OSDComputername = $json.OOSDComputername
 
 try {
 
@@ -282,7 +281,6 @@ try {
 
     Stop-Transcript | Out-Null
 
-    #Restart-Computer -Force -Wait 5
     # Exit code Soft Reboot
     #Exit 0
 } 
@@ -291,3 +289,5 @@ catch [System.Exception] {
     Stop-Transcript | Out-Null
     exit 1
 }    
+
+Restart-Computer -Force -Wait 5
