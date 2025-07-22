@@ -278,7 +278,7 @@ If ($OSDWindowsUpdate -eq "Yes") {
 
     # Set query for updates
     Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Setup query for all available updates"
-    $queries = @("IsInstalled=0 and Type='Software'")
+    $queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
 
     # Create update collection 
     Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
