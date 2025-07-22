@@ -511,7 +511,7 @@ Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy Copy M365 setup.exe"
 Copy-Item -Path "X:\OSDCloud\Config\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Download W11_SetupDev.ps1" 
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\WW11_SetupDev.ps1' -Encoding ascii -Force
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupDev.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Setup scripts for OOBE phase" 
 $OOBECMD = @'
