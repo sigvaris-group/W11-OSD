@@ -491,8 +491,8 @@ Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy W11_Autopilot.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Force
 
-Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Computer-DomainJoin.ps1" 
-Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Force
+Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Computer_DomainJoin.ps1" 
+Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1" -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy SecureConnectorInstaller.msi" 
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
