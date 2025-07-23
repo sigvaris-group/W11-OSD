@@ -262,7 +262,7 @@ Write-Host -ForegroundColor DarkBlue $SL
 Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] WindowsUpdate"
 Write-Host -ForegroundColor DarkBlue $SL
 
-If ($OSDWindowsUpdate -eq "Yes") { 
+If ($OSDWindowsUpdate -eq "Yes" -or $OSDWindowsUpdate -eq "Yes") { 
     Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Windows Updates enabled: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
 
