@@ -498,13 +498,13 @@ Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy SecureConnectorInstall
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy Copy OneDriveSetup.exe" 
-Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force -Verbose
+Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy MSTeams-x64.msix" 
-Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force -Verbose
+Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy teamsbootstrapper.exe" 
-Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force -Verbose
+Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
 
 Write-Host -ForegroundColor Blue "[$($DT)] [PostOSD] Copy Copy M365 setup.exe" 
 (New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
