@@ -603,6 +603,3 @@ Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
 Write-Host -ForegroundColor Blue " minutes to execute"
 
 Stop-Transcript | Out-Null
-
-Write-Host -ForegroundColor Yellow "[$($DT)] [End] Restarting in 5 seconds"
-Restart-Computer -Force -Wait 5
