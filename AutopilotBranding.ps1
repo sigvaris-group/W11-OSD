@@ -289,5 +289,3 @@ catch [System.Exception] {
     Stop-Transcript | Out-Null
     exit 1
 }    
-
-Restart-Computer -Force -Wait 5
