@@ -82,10 +82,6 @@ $queries | ForEach-Object {
             elseif ($_.Title -match "Preview") { 
                 Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Skipping preview update: $($_.Title)" 
             } 
-            elseif ($_.Title -match "Cumulative Update for Windows 11") {
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Add $($_.Title) to collection" 
-                [void]$WUUpdates.Add($_)
-            }
             else {
                 Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Add $($_.Title) to collection" 
                 #[void]$WUUpdates.Add($_)
