@@ -46,8 +46,6 @@ $LogFile = "Update-Windows.log"
 If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Windows Updates enabled: $($OSDDomainJoin)"
-
 # Opt into Microsoft Update
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
