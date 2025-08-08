@@ -28,10 +28,13 @@ start-Sleep -Seconds 10
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null}
 $Global:Transcript = "AutopilotBranding.log"
+
+If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
 Start-Transcript -Path (Join-Path "C:\ProgramData\OSDeploy\" $Global:Transcript) -ErrorAction Ignore
 
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
+Write-Output $AllNetConnectionProfiles
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
 if ($AllNetConnectionProfiles) { 
     Write-Host -ForegroundColor Green "Internet connection succesfull"

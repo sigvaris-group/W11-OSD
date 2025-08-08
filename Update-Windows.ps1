@@ -25,8 +25,17 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 start-Sleep -Seconds 10
 
+# Script Local Variables
+$DT = Get-Date -format G
+$LogFilePath = "C:\ProgramData\OSDeploy"
+$LogFile = "Update-Windows.log"
+
+If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
+Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
+
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
+Write-Output $AllNetConnectionProfiles
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
 if ($AllNetConnectionProfiles) { 
     Write-Host -ForegroundColor Green "Internet connection succesfull"
@@ -37,14 +46,6 @@ else {
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
     start-Sleep -Seconds 10
 }
-
-# Script Local Variables
-$DT = Get-Date -format G
-$LogFilePath = "C:\ProgramData\OSDeploy"
-$LogFile = "Update-Windows.log"
-
-If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
-Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
 
 # Opt into Microsoft Update
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
