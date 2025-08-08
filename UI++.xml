@@ -67,7 +67,7 @@
     <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SICHSG"'>"Language.Basic~~~de-CH~0.0.1.0"</Action>
     <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIATVI"'>"Language.TextToSpeech~~~de-AT~0.0.1.0"</Action>
     <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRSJ"'>"Language.Basic~~~fr-FR~0.0.1.0"</Action>
-    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRHU"'>"Language.Basic~~~fr-FR~0.0.1.0</Action>
+    <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIFRHU"'>"Language.Basic~~~fr-FR~0.0.1.0"</Action>
     <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIITSI"'>"Language.Basic~~~it-IT~0.0.1.0"</Action>
     <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIPLGU"'>"Language.Basic~~~pl-PL~0.0.1.0"</Action>
     <Action Type="TSVar" Name="OSDLanguagePack" Condition='"%OSDLocation%" = "SIAUME"'>"Language.Basic~~~en-AU~0.0.1.0"</Action>
