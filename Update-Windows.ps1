@@ -83,7 +83,7 @@ $queries | ForEach-Object {
             } 
             else {
                 Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Add $($_.Title) to collection" 
-                #[void]$WUUpdates.Add($_)
+                [void]$WUUpdates.Add($_)
                 Write-Host "no updates"
             }
         }  
