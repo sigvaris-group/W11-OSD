@@ -133,7 +133,7 @@ if ($OSDDomainJoin -eq 'Yes') {
         Write-Host -ForegroundColor Red "[$($DT)] [DomainConnection] Make sure that the device is wired connected and can access the $($CheckDC)" 
     
         $wshell = New-Object -ComObject Wscript.Shell
-        $wshell.Popup("Domain Join failed because domain controller $($CheckDC) is not reachable.",0,"DOMAIN JOIN FAILED","16")
+        $wshell.Popup("Domain Join will be failed because domain controller $($CheckDC) is not reachable.",0,"DOMAIN JOIN FAILED","16")
         Exit 1   
     }
     else {
