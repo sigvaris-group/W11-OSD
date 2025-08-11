@@ -134,11 +134,11 @@ if ($OSDDomainJoin -eq 'Yes') {
         Exit 1   
     }
     else {
-        Write-Host -ForegroundColor Green "[$($DT)] [DomainJoin] Connection to domain controller $($CheckDC) is succesfull"
+        Write-Host -ForegroundColor Green "[$($DT)] [DomainConnection] Connection to domain controller $($CheckDC) is succesfull"
     }
   }
 else {
-    Write-Host -ForegroundColor Cyan "[$($DT)] [DomainJoin] Device will not be domain joined"    
+    Write-Host -ForegroundColor Cyan "[$($DT)] [DomainConnection] Device will not be domain joined"    
 }   
 
 # ================================================================================================================================================~
