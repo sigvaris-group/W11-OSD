@@ -120,11 +120,6 @@ if ($OSDDomainJoin -eq 'Yes') {
     Write-Host -ForegroundColor Blue "[$($DT)] [DomainConnection] Check if Domain Controller " -NoNewline
     Write-Host -ForegroundColor Cyan "$($CheckDC)"
     Write-Host -ForegroundColor Blue " available"
-    
-     $CheckDC = 'siemdc02.sigvaris-group.com'
-    Write-Host -ForegroundColor Blue "[$($DT)] [DomainConnection] Check if Domain Controller " -NoNewline
-    Write-Host -ForegroundColor Cyan "$($CheckDC)"
-    Write-Host -ForegroundColor Blue " available"
 
     $ping = Test-NetConnection $CheckDC -Port 135
     if ($ping.TcpTestSucceeded -eq $false) {
