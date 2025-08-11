@@ -123,7 +123,6 @@ if ($OSDDomainJoin -eq 'Yes') {
     Write-Host -ForegroundColor Blue "[$($DT)] [DomainConnection] Start PowerShell test: " -NoNewline
     Write-Host -ForegroundColor Cyan 'Test-NetConnection siemdc02.sigvaris-group.com -Port 135'
 
-
     $ping = Test-NetConnection $CheckDC -Port 135
     if ($ping.TcpTestSucceeded -eq $false) {
         Write-Host -ForegroundColor Red "[$($DT)] [DomainConnection] Domain Controller $($CheckDC) is not reachable."  
