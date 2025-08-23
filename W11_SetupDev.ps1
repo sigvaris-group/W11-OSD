@@ -155,7 +155,7 @@ try {
         "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
     )
     Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments
-    Start-Sleep -Seconds 60
+    Start-Sleep -Seconds 30
     
     $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
     if ($SecCon) {

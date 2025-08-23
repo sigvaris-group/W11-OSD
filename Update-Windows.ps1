@@ -63,7 +63,7 @@ $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInst
 
 # Set query for updates
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Setup query for all available updates"
-$queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
+$queries = @("IsInstalled=0 and Type='Software'")
 
 # Create update collection 
 Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
