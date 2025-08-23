@@ -131,6 +131,7 @@ if ($OSDDomainJoin -eq 'Yes') {
     
         $wshell = New-Object -ComObject Wscript.Shell
         $wshell.Popup("Domain Join will be failed because domain controller $($CheckDC) is not reachable.",0,"DOMAIN JOIN FAILED","16")
+        Stop-Transcript | Out-Null
         Exit 1   
     }
     else {
