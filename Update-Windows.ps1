@@ -23,8 +23,6 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
-start-Sleep -Seconds 10
-
 # Script Local Variables
 $DT = Get-Date -format G
 $LogFilePath = "C:\ProgramData\OSDeploy"
@@ -33,13 +31,15 @@ $LogFile = "Update-Windows.log"
 If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
 
+# Set Update Success Variable
+$UpdateSuccess = $false
+
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
 Write-Output $AllNetConnectionProfiles
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
 if ($AllNetConnectionProfiles) { 
     Write-Host -ForegroundColor Green "Internet connection succesfull"
-    Write-Output $AllNetConnectionProfiles
 }
 else {
     Write-Host -ForegroundColor Yellow "No Internet Connection. Start Wi-Fi setup."  
@@ -93,6 +93,7 @@ $queries | ForEach-Object {
 
         if ($WUUpdates.Count -eq 0) {
             Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] No Updates Found" 
+            $UpdateSuccess = $false
         } 
         else {
             Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Updates found: $($WUUpdates.count)" 
@@ -120,11 +121,13 @@ $queries | ForEach-Object {
                 Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Install result: $($Results.ResultCode) ($($Results.HResult))"
 
                 if ($Results.ResultCode -eq 2) {
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] All updates installed successfully" # result code 2 = success
+                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] All updates installed successfully" # result code 2 = success   
+                    $UpdateSuccess = $true             
                 }
                 else {
                     Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Windows Updates failed"
                     Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] See result codes at: https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode"
+                    $UpdateSuccess = $false
                 }
             }
         } 
@@ -143,7 +146,57 @@ $queries | ForEach-Object {
         # If this script is running during OOBE specialize, error 8024004A will happen:
         # 8024004A	Windows Update agent operations are not available while OS setup is running.
         Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] Unable to search for updates: $_" 
+        $UpdateSuccess = $false
     }
+}
+
+if ($UpdateSuccess -eq $false) {
+
+    # Use PS Windows Update Module
+    Write-Host ""
+    Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] PowerShell Windows Update Module will be used"
+
+    try {
+
+        # Install latest NuGet package provider
+        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Install latest NuGet package provider"
+        Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
+
+        # Ensure default PSGallery repository is registered
+        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Ensure default PSGallery repository is registered"
+        Register-PSRepository -Default -ErrorAction SilentlyContinue
+
+        # Attempt to get the installed PowerShellGet module
+        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Attempt to get the installed PowerShellGet module"
+        $PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
+        if ($PowerShellGetInstalledModule) {
+            # Attempt to locate the latest available version of the PowerShellGet module from repository
+            Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Attempt to locate the latest available version of the PowerShellGet module from repository"
+            $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
+            if ($PowerShellGetLatestModule) {
+                if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
+                    Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
+                }
+            }
+        }
+        else {
+            # PowerShellGet module was not found, attempt to install from repository
+            Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] PowerShellGet module was not found, attempt to install from repository"
+            Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+            Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
+        }
+
+        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Install Module PSWindowsUpdate"    
+        Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
+        Import-Module PSWindowsUpdate -Scope Global
+
+        Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Install Windows Updates" 
+        Install-WindowsUpdate -AcceptAll -IgnoreReboot
+    } 
+    catch [System.Exception] {
+        Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] Windows Updates failed with error: $($_.Exception.Message)"
+    }    
+
 }
 
 Stop-Transcript | Out-Null
