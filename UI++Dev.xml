@@ -32,7 +32,7 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
       <InputInfo></InputInfo>        
-      <InputCheckbox Variable="OSDWindowsUpdate" Question="Install all Windows and driver updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes"/>
+      <InputCheckbox Variable="OSDWindowsUpdate" Question="Install Windows Updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes">
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No" Default="No"/>
     </Action>
     <!-- This Section is an Information for domain joined devices-->
