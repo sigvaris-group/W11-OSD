@@ -115,7 +115,6 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
 
 Write-Host -ForegroundColor Grey "[$($DT)] [UI] Your Settings are:"
 Write-Host -ForegroundColor Grey "Computername: " -NoNewline
@@ -138,8 +137,6 @@ Write-Host -ForegroundColor Grey "TimeZone: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 Write-Host -ForegroundColor Grey "Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
-Write-Host -ForegroundColor Grey "Windows Updates: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
@@ -375,7 +372,6 @@ $UIjson = @"
     "OSDGeoID" : "$OSDGeoID",
     "OSDTimeZone" : "$OSDTimeZone",
     "OSDDomainJoin" : "$OSDDomainJoin",
-    "OSDWindowsUpdate" : "$OSDWindowsUpdate"
 }
 "@
 $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
@@ -386,36 +382,7 @@ if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
 }
 
-if ($OSDDomainJoin -eq 'Yes') {
-Write-Host -ForegroundColor Yellow "Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
-$UnattendXml = @"
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <ComputerName>$OSDComputername</ComputerName>
-        </component>
-    </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDDisplayLanguage</InputLocale>
-            <SystemLocale>$OSDLanguage</SystemLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
-            <UserLocale>$OSDDisplayLanguage</UserLocale>
-        </component>
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OOBE>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideEULAPage>true</HideEULAPage>
-                <ProtectYourPC>3</ProtectYourPC>
-            </OOBE>
-        </component>
-    </settings>
-</unattend>
-"@     
-}
-else {
-Write-Host -ForegroundColor Cyan "Create C:\Windows\Panther\Unattend.xml for Entre ID Devices"
+Write-Host -ForegroundColor Cyan "Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -433,7 +400,7 @@ $UnattendXml = @"
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
                 </RunSynchronousCommand>                                                                               
             </RunSynchronous>
         </component>
@@ -455,7 +422,6 @@ $UnattendXml = @"
     </settings>
 </unattend>
 "@  
-}
 $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
@@ -464,8 +430,8 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy scripts and config files from USB" 
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy W11_Autopilot.ps1" 
-Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Force
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Autopilot-RegisterDevice.ps1" 
+Copy-Item "X:\OSDCloud\Config\Scripts\Autopilot-RegisterDevice.ps1" -Destination "C:\Windows\Setup\Scripts\Autopilot-RegisterDevice.ps1" -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Computer_DomainJoin.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1" -Force
@@ -494,11 +460,11 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 
 exit 
 '@

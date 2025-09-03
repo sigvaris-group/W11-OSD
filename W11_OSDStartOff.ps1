@@ -89,9 +89,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$false
-    WindowsUpdateDrivers = [bool]$false
-    WindowsDefenderUpdate = [bool]$false
+    WindowsUpdate = [bool]$true
+    WindowsUpdateDrivers = [bool]$true
+    WindowsDefenderUpdate = [bool]$true
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -102,7 +102,7 @@ $Global:MyOSDCloud = [ordered]@{
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
     ZTI = $true
-    Firmware = $false
+    Firmware = $true
     FindImageFile = $true
     ImageIndex = 1
 }
@@ -279,35 +279,7 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 #  [PostOS] Create Unattend XML file
 #================================================
-if ($OSDDomainJoin -eq 'Yes') {
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
-$UnattendXml = @"
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <ComputerName>$OSDComputername</ComputerName>
-        </component>  
-    </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
-            <UserLocale>$OSDDisplayLanguage</UserLocale>
-        </component>    
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <OOBE>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideEULAPage>true</HideEULAPage>
-                <ProtectYourPC>3</ProtectYourPC>
-            </OOBE>
-        </component>
-    </settings>
-</unattend>
-"@     
-}
-else {
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
+Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml file"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -315,10 +287,25 @@ $UnattendXml = @"
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
         </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>  
+                <RunSynchronousCommand wcm:action="add">               
+                    <Order>1</Order>
+                    <Description>Connect to WiFi</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
+                </RunSynchronousCommand>                                                                               
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Start Autopilot Import and Assignment Process</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                               
+            </RunSynchronous>
+        </component>
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>        
@@ -332,7 +319,6 @@ $UnattendXml = @"
     </settings>
 </unattend>
 "@ 
-}
 
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null

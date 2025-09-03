@@ -4,7 +4,7 @@
     <!-- This Section determines the build type-->
     <Action Type="WMIRead" Namespace="root\cimv2" Class="Win32_ComputerSystem" Property="Name" Variable="OSDComputerName" />
     <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="Tall">
-      <TextInput Prompt="%OSDComputerName%" Hint="Name for this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
+      <TextInput Prompt="%OSDComputerName%" Hint="Name of this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
         <Choice Option="English" Value="en-US" AlternateValue="English" />
         <Choice Option="German" Value="de-DE" AlternateValue="German" />
@@ -32,7 +32,6 @@
         <Choice Option="SIMXMC - Mexico" Value="SIMXMC" AlternateValue="SIMXMC - Mexico" />
       </ChoiceInput>
       <InputInfo></InputInfo>        
-      <InputCheckbox Variable="OSDWindowsUpdate" Question="Install Windows Updates?" CheckedValue="Yes" UncheckedValue="No" Default="Yes">
       <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No" Default="No"/>
     </Action>
     <!-- This Section is an Information for domain joined devices-->
@@ -150,7 +149,6 @@
       <Property Name="OSDGeoID" Type="CIM_STRING" Value="%OSDGeoID%" Key="True"/>
       <Property Name="OSDTimeZone" Type="CIM_STRING" Value="%OSDTimeZone%" Key="True"/>
       <Property Name="OSDDomainJoin" Type="CIM_STRING" Value="%OSDDomainJoin%" Key="True"/>
-      <Property Name="OSDWindowsUpdate" Type="CIM_STRING" Value="%OSDWindowsUpdate%" Key="True"/>
     </Action>
   </Actions>
 </UIpp>

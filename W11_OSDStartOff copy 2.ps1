@@ -1,17 +1,15 @@
 #=============================================================================================================================
 #
-# Script Name:     W11_OSDStart.ps1
-# Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
+# Script Name:     W11_OSDStartOff.ps1
+# Description:     Start Windows 11 OSD Offline Deployment
 # Created:         06/24/2025
 # Version:         5.0
 #
 #=============================================================================================================================
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
+Write-Host -ForegroundColor Green "Starting Windows 11 Offline Image Deployment"
 $UpdateNews = @(
 "06/24/2025 New ISOs created"
-"07/07/2025 Scripts adjusted to check internet connection"
-"07/30/2025 Dell 7440 driver packs added to WinPe"
 )
 Write-Host -ForegroundColor Green "UPDATE NEWS!"
 foreach ($UpdateNew in $UpdateNews) {
@@ -43,7 +41,7 @@ $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGe
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 #$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
-$OSDWindowsUpdate = 'Yes'
+$OSDWindowsUpdate = 'No'
 
 Write-Host -ForegroundColor Green "Your Settings are:"
 Write-Host "  Computername: $OSDComputername"
@@ -74,6 +72,16 @@ Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
 Import-Module OSD -Force   
 
 #=======================================================================
+#   LOCAL DRIVE LETTERS
+#=======================================================================
+function Get-OSDCloudDrive {
+    $OSDCloudDrive = (Get-WmiObject Win32_LogicalDisk | Where-Object { $_.VolumeName -eq 'OSDCloud' }).DeviceID
+    return $OSDCloudDrive
+}
+$OSDCloudDrive = Get-OSDCloudDrive
+Write-Host -ForegroundColor Green "Current OSDCLOUD Drive is: $OSDCloudDrive"
+
+#=======================================================================
 #   [OS] Params and Start-OSDCloud
 #=======================================================================
 #Set OSDCloud Vars
@@ -81,9 +89,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -93,13 +101,10 @@ $Global:MyOSDCloud = [ordered]@{
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
-    OSVersion = "Windows 11"
-    OSBuild = "24H2"
-    OSEdition = "Enterprise"
-    OSLanguage = "en-us"
-    OSLicense = "Volume"
     ZTI = $true
     Firmware = $false
+    FindImageFile = $true
+    ImageIndex = 1
 }
 
 #Launch OSDCloud
@@ -157,7 +162,6 @@ $OfficeXml = @"
 </Configuration>
 "@ 
 $OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\configuration.xml" -Encoding utf8 -Width 2000 -Force
-
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
@@ -275,7 +279,35 @@ $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding asc
 #================================================
 #  [PostOS] Create Unattend XML file
 #================================================
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml file"
+if ($OSDDomainJoin -eq 'Yes') {
+Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Domain Joined Devices"
+$UnattendXml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <ComputerName>$OSDComputername</ComputerName>
+        </component>  
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>    
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <OOBE>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideEULAPage>true</HideEULAPage>
+                <ProtectYourPC>3</ProtectYourPC>
+            </OOBE>
+        </component>
+    </settings>
+</unattend>
+"@     
+}
+else {
+Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml for Entra Joined Devices"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -283,25 +315,10 @@ $UnattendXml = @"
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <ComputerName>$OSDComputername</ComputerName>
         </component>
-        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <RunSynchronous>  
-                <RunSynchronousCommand wcm:action="add">               
-                    <Order>1</Order>
-                    <Description>Connect to WiFi</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
-                </RunSynchronousCommand>                                                                               
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
-                    <Description>Start Autopilot Import and Assignment Process</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                               
-            </RunSynchronous>
-        </component>
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <SystemLocale>$OSDLanguage</SystemLocale>
             <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>        
@@ -315,6 +332,7 @@ $UnattendXml = @"
     </settings>
 </unattend>
 "@ 
+}
 
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
@@ -333,10 +351,10 @@ netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
 Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
 $XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
 $profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
-foreach ($wfprofile in $profiles) {
-    [xml]$wifiProfile = Get-Content -path $wfprofile.fullname
+foreach ($profile in $profiles) {
+    [xml]$wifiProfile = Get-Content -path $profile.fullname
     $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($wfprofile.fullname)")
+    $wifiProfile.Save("$($profile.fullname)")
 }
 
 Write-Host -ForegroundColor Green "Copying script files"
@@ -362,10 +380,10 @@ Rename-Computer -NewName $OSDComputername
 Write-Host -ForegroundColor Green "Downloading and creating scripts for OOBE phase"
 Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
-#Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
-#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Green "Download Set-LanguageOff.ps1"
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-LanguageOff.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-LanguageOff.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
 Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
@@ -382,7 +400,7 @@ $OOBECMD = @'
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-LanguageOff.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Check-DomainConnection.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
