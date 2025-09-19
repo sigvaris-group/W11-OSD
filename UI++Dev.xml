@@ -4,7 +4,7 @@
     <!-- This Section determines the build type-->
     <Action Type="WMIRead" Namespace="root\cimv2" Class="Win32_ComputerSystem" Property="Name" Variable="OSDComputerName" />
     <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="Tall">
-      <TextInput Prompt="%OSDComputerName%" Hint="Name of this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" Variable="OSDComputerName" Question="Name of this system" />
+      <TextInput Prompt="%OSDComputerName%" Hint="Name of this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" ForceCase="Upper" Variable="OSDComputerName" Question="Name of this system" />
       <ChoiceInput Variable="OSDLanguage" Question="Select the display language" Required="True" Sort="False" Color="#000000" AlternateVariable="AVAROSDLanguage">
         <Choice Option="English" Value="en-US" AlternateValue="English" />
         <Choice Option="German" Value="de-DE" AlternateValue="German" />
