@@ -8,7 +8,7 @@ $OSEdition = 'Enterprise' # Windows Release
 $OSLanguage = 'en-us' # Windows default language
 $OSLicense = "Volume" # Windows licenses
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '25.08.2025' # Created on
+$ScriptDate = '18.09.2025' # Created on
 $ScriptDepartment = 'Workplace & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 $Product = (Get-MyComputerProduct)
@@ -17,7 +17,7 @@ $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 
 # Updates
 $UpdateNews = @(
-"25.08.2025 New script deployed for testing"
+"18.09.2025 New script deployed for testing"
 )
 
 # Script Local Variables
@@ -30,49 +30,49 @@ $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Grey "[$($DT)] [Start] Script started at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script started at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($StartTime)"
 
 # Script Information
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "Name: " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "Name: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptName)"
-Write-Host -ForegroundColor Grey "Description: " -NoNewline
+Write-Host -ForegroundColor Gray "Description: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
-Write-Host -ForegroundColor Grey "Environment: " -NoNewline
+Write-Host -ForegroundColor Gray "Environment: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptEnv)"
-Write-Host -ForegroundColor Grey "OSVersion: " -NoNewline
+Write-Host -ForegroundColor Gray "OSVersion: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSVersion)"
-Write-Host -ForegroundColor Grey "OSBuild: " -NoNewline
+Write-Host -ForegroundColor Gray "OSBuild: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSBuild)"
-Write-Host -ForegroundColor Grey "OSEdition: " -NoNewline
+Write-Host -ForegroundColor Gray "OSEdition: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSEdition)"
-Write-Host -ForegroundColor Grey "OSLanguage: " -NoNewline
+Write-Host -ForegroundColor Gray "OSLanguage: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSLanguage)"
-Write-Host -ForegroundColor Grey "OSLicense: " -NoNewline
+Write-Host -ForegroundColor Gray "OSLicense: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSLicense)"
-Write-Host -ForegroundColor Grey "Script Version: " -NoNewline
+Write-Host -ForegroundColor Gray "Script Version: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
-Write-Host -ForegroundColor Grey "Created on: " -NoNewline
+Write-Host -ForegroundColor Gray "Created on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDate)"
-Write-Host -ForegroundColor Grey "Department: " -NoNewline
+Write-Host -ForegroundColor Gray "Department: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
-Write-Host -ForegroundColor Grey "Author: " -NoNewline
+Write-Host -ForegroundColor Gray "Author: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
-Write-Host -ForegroundColor Grey "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Gray "Logfile Path: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFilePath)"
-Write-Host -ForegroundColor Grey "Logfile: " -NoNewline
+Write-Host -ForegroundColor Gray "Logfile: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFile)"
-Write-Host -ForegroundColor Grey "Manufacturer: " -NoNewline
+Write-Host -ForegroundColor Gray "Manufacturer: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($Manufacturer)"
-Write-Host -ForegroundColor Grey "Model: " -NoNewline
+Write-Host -ForegroundColor Gray "Model: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($Model)"
-Write-Host -ForegroundColor Grey "Product: " -NoNewline
+Write-Host -ForegroundColor Gray "Product: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($Product)"
-Write-Host -ForegroundColor DarkGrey $EL
+Write-Host -ForegroundColor DarkGray $EL
 
 # Updates
-Write-Host -ForegroundColor Grey "[$($DT)] [Start] Below you find the newest updates of the script"
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Below you find the newest updates of the script"
 foreach ($UpdateNew in $UpdateNews) {
     Write-Host -ForegroundColor Cyan "$($UpdateNew)"
 }
@@ -82,13 +82,13 @@ Start-Sleep -Seconds 5
 # [SECTION] UI
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-Start] UI"
-Write-Host -ForegroundColor DarkGrey $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] UI"
+Write-Host -ForegroundColor DarkGray $SL
 
 # UI config folder
 $UILocation = "X:\OSDCloud\Config\UI" 
-$UIXMLFile = "UI++Dev.xml" 
+$UIXMLFile = "UI++Dev.xml" # change file name if using in production 
 # Download UI++ Setup XML
 Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($UIXMLFile) config file and store it into folder $($UILocation)"
 Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++Dev.xml" -OutFile "$($UILocation)\$($UIXMLFile)"
@@ -96,7 +96,7 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 # Start UI++ 
 $UIExe = "UI++64.exe"
 Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Start $($UIExe) from folder $($UILocation)"
-$UI = Start-Process -FilePath "$($UILocation)\$($UIExe)" -WorkingDirectory $($UILocation) -Wait
+$UI = Start-Process -FilePath "$($UILocation)\$($UIExe)" -ArgumentList "/config:$($UIXMLFile)" -WorkingDirectory $($UILocation) -Wait  
 if ($UI) {
     Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Waiting for UI Client Setup to complete"
     if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
@@ -116,44 +116,44 @@ $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGe
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 
-Write-Host -ForegroundColor Grey "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Grey "Computername: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
-Write-Host -ForegroundColor Grey "Location: " -NoNewline
+Write-Host -ForegroundColor Gray "Location: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLocation)"
-Write-Host -ForegroundColor Grey "OS Language: " -NoNewline
+Write-Host -ForegroundColor Gray "OS Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
-Write-Host -ForegroundColor Grey "Display Language: " -NoNewline
+Write-Host -ForegroundColor Gray "Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Grey "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Gray "Language Pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
-Write-Host -ForegroundColor Grey "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Gray "Keyboard: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
-Write-Host -ForegroundColor Grey "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Gray "KeyboardLocale: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Grey "GeoID: " -NoNewline
+Write-Host -ForegroundColor Gray "GeoID: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
-Write-Host -ForegroundColor Grey "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Gray "TimeZone: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
-Write-Host -ForegroundColor Grey "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Gray "Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-End] UI"
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] UI"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Section took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Grey "minutes to execute."
-Write-Host -ForegroundColor DarkGrey $SL
+Write-Host -ForegroundColor Gray "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # [SECTION] OSDCloud
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-Start] OSDCloud"
-Write-Host -ForegroundColor DarkGrey $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] OSDCloud"
+Write-Host -ForegroundColor DarkGray $SL
 
 if ((Get-MyComputerModel) -match 'Virtual') {
     Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] Setting Display Resolution to 1600x for Virtual Machines"
@@ -209,20 +209,20 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [OSDCloud] OSDCloud Process Complete.
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-End] OSDCloud"
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] OSDCloud"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Section took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Grey "minutes to execute."
-Write-Host -ForegroundColor DarkGrey $SL
+Write-Host -ForegroundColor Gray "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # [SECTION] PostOSD
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-Start] PostOSD"
-Write-Host -ForegroundColor DarkGrey $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] PostOSD"
+Write-Host -ForegroundColor DarkGray $SL
 
 # Copy CMTrace.exe local
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy CMTrace.exe file"
@@ -371,10 +371,11 @@ $UIjson = @"
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
     "OSDGeoID" : "$OSDGeoID",
     "OSDTimeZone" : "$OSDTimeZone",
-    "OSDDomainJoin" : "$OSDDomainJoin",
+    "OSDDomainJoin" : "$OSDDomainJoin"
 }
 "@
 $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
+
 
 # Create Windows Unattend XML file
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Create Windows Unattend XML file"
@@ -401,7 +402,12 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                               
+                </RunSynchronousCommand>  
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Add Language Packs</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Language-AddLanguagePacks.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                              
             </RunSynchronous>
         </component>
     </settings>
@@ -426,12 +432,17 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
-# Copy script files from USB
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy scripts and config files from USB" 
-Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
+# Copy OSDCloud files from USB
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy OSDCloud files from USB" 
+Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
+#Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force -Verbose
+
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Language-AddLanguagePacks.ps1" 
+Copy-Item "X:\OSDCloud\Config\Scripts\Language-AddLanguagePacks.ps1" -Destination "C:\Windows\Setup\Scripts\Language-AddLanguagePacks.ps1" -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Autopilot-RegisterDevice.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Autopilot-RegisterDevice.ps1" -Destination "C:\Windows\Setup\Scripts\Autopilot-RegisterDevice.ps1" -Force
+
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Computer_DomainJoin.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1" -Force
@@ -439,7 +450,7 @@ Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy SecureConnectorInstaller.msi" 
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Copy OneDriveSetup.exe" 
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy OneDriveSetup.exe" 
 Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy MSTeams-x64.msix" 
@@ -472,23 +483,23 @@ $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding asci
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGrey $SL
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-End] PostOSD"
-Write-Host -ForegroundColor Grey "[$($DT)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] PostOSD"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Section took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Grey "minutes to execute."
-Write-Host -ForegroundColor DarkGrey $SL
+Write-Host -ForegroundColor Gray "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
-Write-Host -ForegroundColor Grey "[$($DT)] [End] Script ended at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [End] Script ended at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($EndTime)"
-Write-Host -ForegroundColor Grey "[$($DT)] [End] Script took " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [End] Script took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)" -NoNewline
-Write-Host -ForegroundColor Grey " minutes to execute"
+Write-Host -ForegroundColor Gray " minutes to execute"
 
 Write-Host -ForegroundColor Yellow "[$($DT)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10

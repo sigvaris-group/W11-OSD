@@ -27,10 +27,10 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 $ScriptName = 'W11_SetupDev.ps1' # Name
 $ScriptDescription = 'This script setup the Operation System' # Description:
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '22.07.2025' # Created on
+$ScriptDate = '18.09.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
-$ScriptDepartment = 'GA & Workplace Team' # Department
+$ScriptDepartment = 'Workplace Team & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 
 # Script Local Variables
