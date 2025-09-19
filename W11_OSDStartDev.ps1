@@ -22,8 +22,8 @@ $UpdateNews = @(
 
 # Script Local Variables
 $Error.Clear()
-$SL = "================================================================================================================================================~"
-$EL = "`n================================================================================================================================================~`n"
+$SL = "================================================================="
+$EL = "`n=================================================================`n"
 $DT = Get-Date -format G
 $LogFilePath = "X:\OSDCloud\Logs"
 $LogFile = $ScriptName -replace ".{3}$", "log"
@@ -35,39 +35,39 @@ Write-Host -ForegroundColor Cyan "$($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "Name: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Name: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptName)"
-Write-Host -ForegroundColor Gray "Description: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Description: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
-Write-Host -ForegroundColor Gray "Environment: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Environment: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptEnv)"
-Write-Host -ForegroundColor Gray "OSVersion: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] OSVersion: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSVersion)"
-Write-Host -ForegroundColor Gray "OSBuild: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] OSBuild: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSBuild)"
-Write-Host -ForegroundColor Gray "OSEdition: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] OSEdition: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSEdition)"
-Write-Host -ForegroundColor Gray "OSLanguage: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] OSLanguage: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSLanguage)"
-Write-Host -ForegroundColor Gray "OSLicense: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] OSLicense: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSLicense)"
-Write-Host -ForegroundColor Gray "Script Version: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script Version: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
-Write-Host -ForegroundColor Gray "Created on: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Created on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDate)"
-Write-Host -ForegroundColor Gray "Department: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Department: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
-Write-Host -ForegroundColor Gray "Author: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Author: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
-Write-Host -ForegroundColor Gray "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Logfile Path: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFilePath)"
-Write-Host -ForegroundColor Gray "Logfile: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Logfile: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFile)"
-Write-Host -ForegroundColor Gray "Manufacturer: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Manufacturer: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($Manufacturer)"
-Write-Host -ForegroundColor Gray "Model: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Model: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($Model)"
-Write-Host -ForegroundColor Gray "Product: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Product: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($Product)"
 Write-Host -ForegroundColor DarkGray $EL
 
@@ -117,25 +117,25 @@ $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OS
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Gray "Computername: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
-Write-Host -ForegroundColor Gray "Location: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Location: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLocation)"
-Write-Host -ForegroundColor Gray "OS Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] OS Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
-Write-Host -ForegroundColor Gray "Display Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Gray "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Language Pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
-Write-Host -ForegroundColor Gray "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Keyboard: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
-Write-Host -ForegroundColor Gray "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] KeyboardLocale: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Gray "GeoID: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] GeoID: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
-Write-Host -ForegroundColor Gray "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] TimeZone: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
-Write-Host -ForegroundColor Gray "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
 
 $SectionEndTime = Get-Date
@@ -391,7 +391,7 @@ if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
 }
 
-Write-Host -ForegroundColor Cyan "Create C:\Windows\Panther\Unattend.xml"
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
