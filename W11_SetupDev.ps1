@@ -48,25 +48,25 @@ Write-Host -ForegroundColor Cyan "$($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "Name: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Name: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptName)"
-Write-Host -ForegroundColor Gray "Description: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Description: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
-Write-Host -ForegroundColor Gray "Version: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Version: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
-Write-Host -ForegroundColor Gray "Created on: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Created on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDate)"
-Write-Host -ForegroundColor Gray "Update on: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Update on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateDate)"
-Write-Host -ForegroundColor Gray "Update reason: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Update reason: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateReason)"
-Write-Host -ForegroundColor Gray "Department: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Department: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
-Write-Host -ForegroundColor Gray "Author: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Author: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
-Write-Host -ForegroundColor Gray "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Logfile Path: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFilePath)"
-Write-Host -ForegroundColor Gray "Logfile: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Logfile: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFile)"
 Write-Host -ForegroundColor DarkGray $EL
 
@@ -93,36 +93,28 @@ $OSDKeyboardLocale = $($json.OSDKeyboardLocale)
 $OSDGeoID = $($json.OSDGeoID)
 $OSDTimeZone = $($json.OSDTimeZone)
 $OSDDomainJoin = $($json.OSDDomainJoin)
-$OSDWindowsUpdate = $($json.OSDWindowsUpdate)
 
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
 Write-Host -ForegroundColor Gray "Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
-Write-Host -ForegroundColor Gray "Location: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Location: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLocation)"
-Write-Host -ForegroundColor Gray "OS Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] OS Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
-Write-Host -ForegroundColor Gray "Display Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Gray "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Language Pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
-Write-Host -ForegroundColor Gray "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Keyboard: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
-Write-Host -ForegroundColor Gray "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] KeyboardLocale: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Gray "GeoID: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] GeoID: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
-Write-Host -ForegroundColor Gray "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] TimeZone: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
-Write-Host -ForegroundColor Gray "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
-Write-Host -ForegroundColor Gray "Windows Updates: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
-
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] Set TimeZone to: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
-tzutil.exe /s "$($OSDTimeZone)" 
 
 if ($OSDComputername -ne $env:COMPUTERNAME) {
     Write-Host -ForegroundColor Gray "[$($DT)] [UI] Set Computername to: " -NoNewline
@@ -184,42 +176,6 @@ Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
-<#
-# ================================================================================================================================================~
-# [SECTION] Wi-Fi
-# ================================================================================================================================================~
-$SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] Wi-Fi"
-Write-Host -ForegroundColor DarkGray $SL
-
-$XmlDirectory = "C:\OSDCloud\WiFi" # Path set by initial script
-Write-Host -ForegroundColor Cyan "[$($DT)] [Wi-Fi] Import Wi-Fi profiles from "
-Write-Host -ForegroundColor Cyan  "$($XmlDirectory)"
-
-try {
-    if (Test-Path $XmlDirectory) {
-        Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"} | ForEach-Object {netsh wlan add profile filename=($XmlDirectory+"\"+$_.name)}
-    }
-    else {
-        Write-Host -ForegroundColor Yellow "[$($DT)] [Wi-Fi] No Wi-Fi profiles exists to import"
-    }   
-}
-catch {
-    Write-Host -ForegroundColor Red "[$($DT)] [Wi-Fi] Import Wi-Fi profiles failed with error: " -NoNewline
-    Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
-}
-
-$SectionEndTime = Get-Date
-$ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Wi-Fi"
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Gray  "minutes to execute."
-Write-Host -ForegroundColor DarkGray $SL
-#>
-
 # ================================================================================================================================================~
 # [SECTION] Network
 # ================================================================================================================================================~
@@ -255,115 +211,6 @@ Write-Host -ForegroundColor Gray  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
-# [SECTION] WindowsUpdate
-# ================================================================================================================================================~
-$SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] WindowsUpdate"
-Write-Host -ForegroundColor DarkGray $SL
-
-If ($OSDWindowsUpdate -eq "Yes" -or $OSDWindowsUpdate -eq "Yes") { 
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Windows Updates enabled: " -NoNewline
-    Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
-
-    # Opt into Microsoft Update
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
-    $ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
-
-    # ServiceManager.Services
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Enable Windows Update for other Microsoft products"
-    $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
-    $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
-
-    # Set query for updates
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Setup query for all available updates"
-    $queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
-
-    # Create update collection 
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
-    $WUUpdates = New-Object -ComObject Microsoft.Update.UpdateColl
-
-    # Search udpates 
-    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Search updates and add to collection"        
-    $queries | ForEach-Object {
-        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Getting $_ updates"      
-        try {
-
-            ((New-Object -ComObject Microsoft.Update.Session).CreateupdateSearcher().Search($_)).Updates | ForEach-Object {
-                if (!$_.EulaAccepted) { $_.AcceptEula() }
-                $featureUpdate = $_.Categories | Where-Object { $_.CategoryID -eq "3689BDC8-B205-4AF4-8D4A-A63924C5E9D5" }
-                
-                if ($featureUpdate) {
-                    Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Skipping feature update: $($_.Title)" 
-                } 
-                elseif ($_.Title -match "Preview") { 
-                    Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Skipping preview update: $($_.Title)" 
-                } 
-                else {
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Add $($_.Title) to collection" 
-                    [void]$WUUpdates.Add($_)
-                }
-            }  
-
-            if ($WUUpdates.Count -eq 0) {
-                Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] No Updates Found" 
-            } 
-            else {
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Updates found: $($WUUpdates.count)" 
-                
-                Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Start to install updates"    
-                foreach ($update in $WUUpdates) {
-                
-                    Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Creating single update collection to download and install"
-                    $singleUpdate = New-Object -ComObject Microsoft.Update.UpdateColl
-                    $singleUpdate.Add($update) | Out-Null
-                
-                    $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
-                    $WUDownloader.Updates = $singleUpdate
-                
-                    $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
-                    $WUInstaller.Updates = $singleUpdate
-                    $WUInstaller.ForceQuiet = $true
-                
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Downloading update: $($update.Title)"
-                    $Download = $WUDownloader.Download()
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Download result: $($Download.ResultCode) ($($Download.HResult))"
-                
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Installing update: $($update.Title)"
-                    $Results = $WUInstaller.Install()
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Install result: $($Results.ResultCode) ($($Results.HResult))"
-
-                    if ($Results.ResultCode -eq 2) {
-                        Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] All updates installed successfully" # result code 2 = success
-                    }
-                    else {
-                        Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] Windows Updates failed"
-                        Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] See result codes at: https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode"
-                    }
-                }
-            } 
-        } catch {
-            # If this script is running during OOBE specialize, error 8024004A will happen:
-            # 8024004A	Windows Update agent operations are not available while OS setup is running.
-            Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] Unable to search for updates: $_" 
-        }
-    }
-} 
-else {    
-    Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] No Updates will be installed"
-}
-
-$SectionEndTime = Get-Date
-$ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] WindowsUpdate"
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor White  "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Gray  "minutes to execute."
-Write-Host -ForegroundColor DarkGray $SL
-
-# ================================================================================================================================================~
 # [SECTION] Branding
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
@@ -372,30 +219,6 @@ Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] Branding"
 Write-Host -ForegroundColor DarkGray $SL
 
 try {
-    # Install OneDrive per machine
-    $dest = "C:\Windows\Temp\OneDriveSetup.exe"
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Copy OneDrive Setup from $($dest)"
-
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Install OneDrive per machine"
-    $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
-    $proc.WaitForExit()
-
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] OneDriveSetup exit code: $($proc.ExitCode)"
-
-    # Install Teams per machine
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set Registry Keys"
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Changing OneDriveSetup value to point to the machine wide EXE"
-    # Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
-    & reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
-    & reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null
-    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name OneDriveSetup -Value """C:\Program Files\Microsoft OneDrive\Onedrive.exe"" /background" | Out-Null
-    
-    $MsixDest = "C:\Windows\Temp\MSTeams-x64.msix"
-    $TeamsDest = "C:\Windows\Temp\teamsbootstrapper.exe"
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Install Teams per machine"
-    Write-Host -ForegroundColor Gray "Install Teams per machine"
-    $proc = Start-Process $TeamsDest -ArgumentList "-p -o $MsixDest" -WindowStyle Hidden -PassThru
-    $proc.WaitForExit()
 
     #===================================================================================================================================================
     #  Hide the widgets
