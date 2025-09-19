@@ -441,7 +441,7 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 # Copy OSDCloud files from USB
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy OSDCloud files from USB" 
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
-#Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force -Verbose
+Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force -Verbose
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Language-AddLanguagePacks.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Language-AddLanguagePacks.ps1" -Destination "C:\Windows\Setup\Scripts\Language-AddLanguagePacks.ps1" -Force
