@@ -1,8 +1,8 @@
 # Check if running in x64bit environment
-Write-Host -ForegroundColor Blue "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
-Write-Host -ForegroundColor Blue "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+Write-Host -ForegroundColor Gray "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Gray "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
-Write-Host -ForegroundColor Blue "Script: " -NoNewline
+Write-Host -ForegroundColor Gray "Script: " -NoNewline
 Write-Host -ForegroundColor Cyan "W11_SetupDev.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
@@ -43,40 +43,40 @@ $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] Script start at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script start at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($StartTime)"
 
 # Script Information
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "Name: " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "Name: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptName)"
-Write-Host -ForegroundColor Blue "Description: " -NoNewline
+Write-Host -ForegroundColor Gray "Description: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
-Write-Host -ForegroundColor Blue "Version: " -NoNewline
+Write-Host -ForegroundColor Gray "Version: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
-Write-Host -ForegroundColor Blue "Created on: " -NoNewline
+Write-Host -ForegroundColor Gray "Created on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDate)"
-Write-Host -ForegroundColor Blue "Update on: " -NoNewline
+Write-Host -ForegroundColor Gray "Update on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateDate)"
-Write-Host -ForegroundColor Blue "Update reason: " -NoNewline
+Write-Host -ForegroundColor Gray "Update reason: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateReason)"
-Write-Host -ForegroundColor Blue "Department: " -NoNewline
+Write-Host -ForegroundColor Gray "Department: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
-Write-Host -ForegroundColor Blue "Author: " -NoNewline
+Write-Host -ForegroundColor Gray "Author: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
-Write-Host -ForegroundColor Blue "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Gray "Logfile Path: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFilePath)"
-Write-Host -ForegroundColor Blue "Logfile: " -NoNewline
+Write-Host -ForegroundColor Gray "Logfile: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFile)"
-Write-Host -ForegroundColor DarkBlue $EL
+Write-Host -ForegroundColor DarkGray $EL
 
 # ================================================================================================================================================~
 # [SECTION] UI
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] UI"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] UI"
+Write-Host -ForegroundColor DarkGray $SL
 
 $jsonpath = "C:\ProgramData\OSDeploy"
 $jsonfile = "UIjson.json"
@@ -95,60 +95,60 @@ $OSDTimeZone = $($json.OSDTimeZone)
 $OSDDomainJoin = $($json.OSDDomainJoin)
 $OSDWindowsUpdate = $($json.OSDWindowsUpdate)
 
-Write-Host -ForegroundColor Blue "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Blue "Computername: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
-Write-Host -ForegroundColor Blue "Location: " -NoNewline
+Write-Host -ForegroundColor Gray "Location: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLocation)"
-Write-Host -ForegroundColor Blue "OS Language: " -NoNewline
+Write-Host -ForegroundColor Gray "OS Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
-Write-Host -ForegroundColor Blue "Display Language: " -NoNewline
+Write-Host -ForegroundColor Gray "Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Blue "Language Pack: " -NoNewline
+Write-Host -ForegroundColor Gray "Language Pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
-Write-Host -ForegroundColor Blue "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Gray "Keyboard: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
-Write-Host -ForegroundColor Blue "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Gray "KeyboardLocale: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Blue "GeoID: " -NoNewline
+Write-Host -ForegroundColor Gray "GeoID: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
-Write-Host -ForegroundColor Blue "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Gray "TimeZone: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
-Write-Host -ForegroundColor Blue "Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Gray "Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
-Write-Host -ForegroundColor Blue "Windows Updates: " -NoNewline
+Write-Host -ForegroundColor Gray "Windows Updates: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
 
-Write-Host -ForegroundColor Blue "[$($DT)] [UI] Set TimeZone to: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Set TimeZone to: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)" 
 
 if ($OSDComputername -ne $env:COMPUTERNAME) {
-    Write-Host -ForegroundColor Blue "[$($DT)] [UI] Set Computername to: " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($DT)] [UI] Set Computername to: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDComputername)"
     Rename-Computer -NewName $OSDComputername
 }
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] UI"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] UI"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] SECTION took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # [SECTION] Forescout
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Forescout"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] Forescout"
+Write-Host -ForegroundColor DarkGray $SL
 
 try {
-    Write-Host -ForegroundColor Blue "[$($DT)] [Forescout] Install Forescout Secure Connector"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Forescout] Install Forescout Secure Connector"
     $MSIArguments = @(
         "/i"
         ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
@@ -159,11 +159,11 @@ try {
     
     $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
     if ($SecCon) {
-        Write-Host -ForegroundColor Blue "[$($DT)] [Forescout] " -NoNewline
+        Write-Host -ForegroundColor Gray "[$($DT)] [Forescout] " -NoNewline
         Write-Host -ForegroundColor Cyan "$($SecCon.Name)" -NoNewline
-        Write-Host -ForegroundColor Blue "Version " -NoNewline
+        Write-Host -ForegroundColor Gray "Version " -NoNewline
         Write-Host -ForegroundColor Cyan "$($SecCon.Version)"  -NoNewline
-        Write-Host -ForegroundColor Blue " successfully installed" 
+        Write-Host -ForegroundColor Gray " successfully installed" 
         Start-Sleep 60
     }
     else {
@@ -177,21 +177,21 @@ catch {
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Forescout"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Forescout"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
 
 <#
 # ================================================================================================================================================~
 # [SECTION] Wi-Fi
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Wi-Fi"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] Wi-Fi"
+Write-Host -ForegroundColor DarkGray $SL
 
 $XmlDirectory = "C:\OSDCloud\WiFi" # Path set by initial script
 Write-Host -ForegroundColor Cyan "[$($DT)] [Wi-Fi] Import Wi-Fi profiles from "
@@ -212,21 +212,21 @@ catch {
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Wi-Fi"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Wi-Fi"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 #>
 
 # ================================================================================================================================================~
 # [SECTION] Network
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Network"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] Network"
+Write-Host -ForegroundColor DarkGray $SL
 
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
@@ -242,50 +242,50 @@ else {
 }
 
 $IPConfig = Get-NetIPConfiguration
-Write-Host -ForegroundColor Blue "[$($DT)] [Network] Get-NetIPConfiguration"
+Write-Host -ForegroundColor Gray "[$($DT)] [Network] Get-NetIPConfiguration"
 Write-Output $IPConfig
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Network"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Network"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor White  "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # [SECTION] WindowsUpdate
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] WindowsUpdate"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] WindowsUpdate"
+Write-Host -ForegroundColor DarkGray $SL
 
 If ($OSDWindowsUpdate -eq "Yes" -or $OSDWindowsUpdate -eq "Yes") { 
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Windows Updates enabled: " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Windows Updates enabled: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDWindowsUpdate)"
 
     # Opt into Microsoft Update
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
     $ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
 
     # ServiceManager.Services
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Enable Windows Update for other Microsoft products"
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Enable Windows Update for other Microsoft products"
     $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
     $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
 
     # Set query for updates
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Setup query for all available updates"
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Setup query for all available updates"
     $queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
 
     # Create update collection 
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
     $WUUpdates = New-Object -ComObject Microsoft.Update.UpdateColl
 
     # Search udpates 
-    Write-Host -ForegroundColor Blue "[$($DT)] [WindowsUpdate] Search updates and add to collection"        
+    Write-Host -ForegroundColor Gray "[$($DT)] [WindowsUpdate] Search updates and add to collection"        
     $queries | ForEach-Object {
         Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Getting $_ updates"      
         try {
@@ -356,35 +356,35 @@ else {
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] WindowsUpdate"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] WindowsUpdate"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor White  "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # [SECTION] Branding
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] Branding"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] Branding"
+Write-Host -ForegroundColor DarkGray $SL
 
 try {
     # Install OneDrive per machine
     $dest = "C:\Windows\Temp\OneDriveSetup.exe"
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Copy OneDrive Setup from $($dest)"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Copy OneDrive Setup from $($dest)"
 
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Install OneDrive per machine"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Install OneDrive per machine"
     $proc = Start-Process $dest -ArgumentList "/allusers" -WindowStyle Hidden -PassThru
     $proc.WaitForExit()
 
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] OneDriveSetup exit code: $($proc.ExitCode)"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] OneDriveSetup exit code: $($proc.ExitCode)"
 
     # Install Teams per machine
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Set Registry Keys"
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Changing OneDriveSetup value to point to the machine wide EXE"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set Registry Keys"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Changing OneDriveSetup value to point to the machine wide EXE"
     # Quotes are so problematic, we'll use the more risky approach and hope garbage collection cleans it up later
     & reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /f /reg:64 2>&1 | Out-Null
     & reg.exe query "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /reg:64 2>&1 | Out-Null
@@ -392,8 +392,8 @@ try {
     
     $MsixDest = "C:\Windows\Temp\MSTeams-x64.msix"
     $TeamsDest = "C:\Windows\Temp\teamsbootstrapper.exe"
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Install Teams per machine"
-    Write-Host -ForegroundColor Blue "Install Teams per machine"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Install Teams per machine"
+    Write-Host -ForegroundColor Gray "Install Teams per machine"
     $proc = Start-Process $TeamsDest -ArgumentList "-p -o $MsixDest" -WindowStyle Hidden -PassThru
     $proc.WaitForExit()
 
@@ -402,7 +402,7 @@ try {
     #  This will fail on Windows 11 24H2 due to UCPD, see https://kolbi.cz/blog/2024/04/03/userchoice-protection-driver-ucpd-sys/
     #  New Work Around tested with 24H2 to disable widgets as a preference
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Hide the widgets"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Hide the widgets"
     $ci = Get-ComputerInfo
     if ($ci.OsBuildNumber -ge 26100) {
         Write-Host -ForegroundColor Yellow "[$($DT)] [Branding] Attempting Widget Hiding workaround (TaskbarDa)"
@@ -421,7 +421,7 @@ try {
     #  Disable Widgets (Grey out Settings Toggle)
     #  GPO settings below will completely disable Widgets, see:https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-newsandinterests#allownewsandinterests
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Disable Widgets (Grey out Settings Toggle)"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable Widgets (Grey out Settings Toggle)"
     if (-not (Test-Path "HKLM:\Software\Policies\Microsoft\Dsh")) {
         New-Item -Path "HKLM:\Software\Policies\Microsoft\Dsh" | Out-Null
     }
@@ -433,44 +433,44 @@ try {
     #   Don't let Edge create a desktop shortcut (roams to OneDrive, creates mess)
     #===================================================================================================================================================
 
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Turning off (old) Edge desktop shortcut"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Turning off (old) Edge desktop shortcut"
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v DisableEdgeDesktopShortcutCreation /t REG_DWORD /d 1 /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "CreateDesktopShortcutDefault" /t REG_DWORD /d 0 /f /reg:64 | Out-Host
 
     #===================================================================================================================================================
     #   Remove Personal Teams
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Remove Personal Teams"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remove Personal Teams"
     Get-AppxPackage -Name MicrosoftTeams -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue 
 
     #===================================================================================================================================================
     #   Disable network location fly-out
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Disable network location fly-out"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable network location fly-out"
     reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 
     #===================================================================================================================================================
     #   Stop Start menu from opening on first logon
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Stop Start menu from opening on first logon"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Stop Start menu from opening on first logon"
     reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v StartShownOnUpgrade /t REG_DWORD /d 1 /f | Out-Host
 
     #===================================================================================================================================================
     #   Hide "Learn more about this picture" from the desktop
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Hide 'Learn more about this picture' from the desktop"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Hide 'Learn more about this picture' from the desktop"
     reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /v "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}" /t REG_DWORD /d 1 /f | Out-Host
 
     #===================================================================================================================================================
     #   Disable Windows Spotlight as per https://github.com/mtniehaus/AutopilotBranding/issues/13#issuecomment-2449224828
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Disable Windows Spotlight"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable Windows Spotlight"
     reg.exe add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v DisableSpotlightCollectionOnDesktop /t REG_DWORD /d 1 /f | Out-Host
 
     #===================================================================================================================================================
     #   Remediate Windows Update policy conflict for Autopatch
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Remediate Windows Update policy conflict for Autopatch"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remediate Windows Update policy conflict for Autopatch"
     # initialize the array
     [PsObject[]]$regkeys = @()
     # populate the array with each object
@@ -497,14 +497,14 @@ try {
     #===================================================================================================================================================
     #   Set registered user and organization
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Set registered user and organization"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set registered user and organization"
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner /t REG_SZ /d "Global IT" /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "SIGVARIS GROUP" /f /reg:64 | Out-Host
 
     #===================================================================================================================================================
     #   Configure OEM branding info
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Configure OEM branding info"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Configure OEM branding info"
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Manufacturer /t REG_SZ /d "SIGVARIS GROUP" /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "Autopilot" /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v SupportURL /t REG_SZ /d "https://sigvarisitcustomercare.saasiteu.com/Account/Login?ProviderName=AAD" /f /reg:64 | Out-Host
@@ -513,7 +513,7 @@ try {
     #===================================================================================================================================================
     #    Disable extra APv2 pages (too late to do anything about the EULA), see https://call4cloud.nl/autopilot-device-preparation-hide-privacy-settings/
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Disable extra APv2 pages (too late to do anything about the EULA)"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable extra APv2 pages (too late to do anything about the EULA)"
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE"
     New-ItemProperty -Path $registryPath -Name "DisablePrivacyExperience" -Value 1 -PropertyType DWord -Force | Out-Null
     New-ItemProperty -Path $registryPath -Name "DisableVoice" -Value 1 -PropertyType DWord -Force | Out-Null
@@ -523,7 +523,7 @@ try {
     #===================================================================================================================================================
     #    Skip FSIA and turn off delayed desktop switch
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Skip FSIA and turn off delayed desktop switch"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Skip FSIA and turn off delayed desktop switch"
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
     New-ItemProperty -Path $registryPath -Name "EnableFirstLogonAnimation" -Value 0 -PropertyType DWord -Force | Out-Null
     New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -PropertyType DWord -Force | Out-Null
@@ -531,7 +531,7 @@ try {
     #===================================================================================================================================================
     #    Enable .NET Framework 3.5 for US, CA
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Enable .NET Framework 3.5 for US, CA"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Enable .NET Framework 3.5 for US, CA"
     $DeviceName = $env:COMPUTERNAME.Substring(0,6)
     Switch ($DeviceName) {
         'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
@@ -543,14 +543,14 @@ try {
     #    Enable Printing-PrintToPDFServices-Features because of KB5058411
     #    https://support.microsoft.com/en-us/topic/may-13-2025-kb5058411-os-build-26100-4061-356568c2-c730-469e-819d-b680d43b1265
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Enable Printing-PrintToPDFServices-Features because of KB5058411"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Enable Printing-PrintToPDFServices-Features because of KB5058411"
     Disable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
     Enable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
 
     #===================================================================================================================================================
     #    Remove OSDCloudRegistration Certificate
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Remove Import-Certificate.ps1 script"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remove Import-Certificate.ps1 script"
     if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
         Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force
     }
@@ -558,18 +558,18 @@ try {
     #===================================================================================================================================================
     #    Remove C:\Windows\Setup\Scripts\ Items
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Remove C:\Windows\Setup\Scripts Items"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remove C:\Windows\Setup\Scripts Items"
     Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
     #===================================================================================================================================================
     #    Copy OSDCloud logs and delete C:\OSDCloud folder
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
     Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Force -Recurse -Verbose -ErrorAction SilentlyContinue
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
     Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
 
-    Write-Host -ForegroundColor Blue "[$($DT)] [Branding] Set Computername to $($OSDComputername)"
+    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set Computername to $($OSDComputername)"
     Rename-Computer -NewName $OSDComputername
 
     # Exit code Soft Reboot
@@ -583,12 +583,12 @@ catch [System.Exception] {
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Branding"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Branding"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # End Script
@@ -596,10 +596,10 @@ Write-Host -ForegroundColor DarkBlue $SL
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] Script end at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script end at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($EndTime)"
-Write-Host -ForegroundColor Blue "[$($DT)] [End] Script took " -NoNewline 
+Write-Host -ForegroundColor Gray "[$($DT)] [End] Script took " -NoNewline 
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
-Write-Host -ForegroundColor Blue " minutes to execute"
+Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null

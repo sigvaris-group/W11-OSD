@@ -1,8 +1,8 @@
 # Check if running in x64bit environment
-Write-Host -ForegroundColor Blue "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
-Write-Host -ForegroundColor Blue "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+Write-Host -ForegroundColor Gray "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Gray "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
-Write-Host -ForegroundColor Blue "Script: " -NoNewline
+Write-Host -ForegroundColor Gray "Script: " -NoNewline
 Write-Host -ForegroundColor Cyan "Language-AddLanguagePacks.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
@@ -43,40 +43,40 @@ $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] Script start at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script start at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($StartTime)"
 
 # Script Information
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "Name: " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "Name: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptName)"
-Write-Host -ForegroundColor Blue "Description: " -NoNewline
+Write-Host -ForegroundColor Gray "Description: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
-Write-Host -ForegroundColor Blue "Version: " -NoNewline
+Write-Host -ForegroundColor Gray "Version: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
-Write-Host -ForegroundColor Blue "Created on: " -NoNewline
+Write-Host -ForegroundColor Gray "Created on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDate)"
-Write-Host -ForegroundColor Blue "Update on: " -NoNewline
+Write-Host -ForegroundColor Gray "Update on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateDate)"
-Write-Host -ForegroundColor Blue "Update reason: " -NoNewline
+Write-Host -ForegroundColor Gray "Update reason: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateReason)"
-Write-Host -ForegroundColor Blue "Department: " -NoNewline
+Write-Host -ForegroundColor Gray "Department: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
-Write-Host -ForegroundColor Blue "Author: " -NoNewline
+Write-Host -ForegroundColor Gray "Author: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
-Write-Host -ForegroundColor Blue "Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Gray "Logfile Path: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFilePath)"
-Write-Host -ForegroundColor Blue "Logfile: " -NoNewline
+Write-Host -ForegroundColor Gray "Logfile: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFile)"
-Write-Host -ForegroundColor DarkBlue $EL
+Write-Host -ForegroundColor DarkGray $EL
 
 # ================================================================================================================================================~
 # [SECTION] UI
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] UI"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] UI"
+Write-Host -ForegroundColor DarkGray $SL
 
 $jsonpath = "C:\ProgramData\OSDeploy"
 $jsonfile = "UIjson.json"
@@ -85,41 +85,41 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($jsonfile) file from $($j
 $json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
 $OSDDisplayLanguage = $($json.OSDDisplayLanguage)
 
-Write-Host -ForegroundColor Blue "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Blue "Display Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] UI"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] UI"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] SECTION took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Blue  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # [SECTION] LanguagePack
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-Start] LanguagePack"
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] LanguagePack"
+Write-Host -ForegroundColor DarkGray $SL
 
-Write-Host -ForegroundColor Blue "Add Language pack: " -NoNewline
+Write-Host -ForegroundColor Gray "Add Language pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 if ($OSDDisplayLanguage -ne 'en-US') { 
-    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\$($OSDDisplayLanguage)    
+    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)    
 }
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkBlue $SL
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] LanguagePack"
-Write-Host -ForegroundColor Blue "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] LanguagePack"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
-Write-Host -ForegroundColor DarkBlue $SL
+Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # End Script
@@ -127,10 +127,10 @@ Write-Host -ForegroundColor DarkBlue $SL
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 
-Write-Host -ForegroundColor Blue "[$($DT)] [Start] Script end at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script end at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($EndTime)"
-Write-Host -ForegroundColor Blue "[$($DT)] [End] Script took " -NoNewline 
+Write-Host -ForegroundColor Gray "[$($DT)] [End] Script took " -NoNewline 
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
-Write-Host -ForegroundColor Blue " minutes to execute"
+Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null

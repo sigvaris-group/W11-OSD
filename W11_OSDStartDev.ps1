@@ -236,6 +236,14 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download and copy WirelessConnect.exe file"
 Invoke-WebRequest "https://github.com/okieselbach/Helpers/raw/master/WirelessConnect/WirelessConnect/bin/Release/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe"
 
+# Copy W11_SetupDev.ps1 local
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download W11_SetupDev.ps1" 
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupDev.ps1' -Encoding ascii -Force
+
+# Copy Language-AddLanguagePacks.ps1 local
+Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download Language-AddLanguagePacks.ps1" 
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Language-AddLanguagePacks.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Language-AddLanguagePacks.ps1' -Encoding ascii -Force
+
 # Create XML file for Microsoft M365 App
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Create XML file for Microsoft M365 App which is used later in the application deployment"
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
@@ -440,15 +448,11 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 
 # Copy OSDCloud files from USB
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy OSDCloud files from USB" 
-Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
-Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force -Verbose
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Language-AddLanguagePacks.ps1" 
-Copy-Item "X:\OSDCloud\Config\Scripts\Language-AddLanguagePacks.ps1" -Destination "C:\Windows\Setup\Scripts\Language-AddLanguagePacks.ps1" -Force
+Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
+Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy Autopilot-RegisterDevice.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Autopilot-RegisterDevice.ps1" -Destination "C:\Windows\Setup\Scripts\Autopilot-RegisterDevice.ps1" -Force
-
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Computer_DomainJoin.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1" -Force
@@ -468,9 +472,6 @@ Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Wind
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy M365 setup.exe" 
 (New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
 Copy-Item -Path "X:\OSDCloud\Config\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Download W11_SetupDev.ps1" 
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupDev.ps1' -Encoding ascii -Force
 
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Setup scripts for OOBE phase" 
 $OOBECMD = @'
