@@ -83,11 +83,26 @@ $jsonfile = "UIjson.json"
 Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($jsonfile) file from $($jsonpath)"
 
 $json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
+$OSDLanguage = $($json.OSDLanguage)
 $OSDDisplayLanguage = $($json.OSDDisplayLanguage)
+$OSDKeyboard = $($json.OSDKeyboard)
+$OSDKeyboardLocale = $($json.OSDKeyboardLocale)
+$OSDGeoID = $($json.OSDGeoID)
+$OSDTimeZone = $json.OSDTimeZone
 
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "OS Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
 Write-Host -ForegroundColor Gray "Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Gray "Keyboard: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
+Write-Host -ForegroundColor Gray "KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Gray "GeoID: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+Write-Host -ForegroundColor Gray "TimeZone: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
@@ -106,11 +121,27 @@ Write-Host -ForegroundColor DarkGray $SL
 Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] LanguagePack"
 Write-Host -ForegroundColor DarkGray $SL
 
+$InstalledLanguages = Get-InstalledLanguage
+$InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
+Write-Host -ForegroundColor Gray "Current installed languages: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
+
 Write-Host -ForegroundColor Gray "Add Language pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 if ($OSDDisplayLanguage -ne 'en-US') { 
     Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)    
 }
+
+Write-Host -ForegroundColor Gray "Add Language Feature packs: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+if ($OSDDisplayLanguage -ne 'en-US') { 
+    Dism /Online /Add-Capability /Source:C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) /LimitAccess
+}   
+
+Write-Host -ForegroundColor Gray "Set TimeZone to " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
+Set-TimeZone -Id $OSDTimeZone
+tzutil.exe /s "$($OSDTimeZone)"  
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
