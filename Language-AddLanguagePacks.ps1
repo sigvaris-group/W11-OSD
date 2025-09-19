@@ -85,6 +85,7 @@ Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($jsonfile) file from $($j
 $json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
 $OSDLanguage = $($json.OSDLanguage)
 $OSDDisplayLanguage = $($json.OSDDisplayLanguage)
+$OSDLanguagePack = $json.OSDLanguagePack
 $OSDKeyboard = $($json.OSDKeyboard)
 $OSDKeyboardLocale = $($json.OSDKeyboardLocale)
 $OSDGeoID = $($json.OSDGeoID)
@@ -95,6 +96,8 @@ Write-Host -ForegroundColor Gray "[$($DT)] [UI] OS Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Language Pack: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Keyboard: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] KeyboardLocale: " -NoNewline
@@ -133,12 +136,9 @@ if ($OSDDisplayLanguage -ne 'en-US') {
 }
 
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language Feature packs: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
 $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
-$files = Get-ChildItem -Path $FeatureFolder -File
-foreach ($file in $files) {
-    Dism /Online /Add-Capability /CapabilityName:$($file.Name) /Source:$($FeatureFolder) /LimitAccess
-}
+Add-WindowsCapability -Online -Name "$OSDLanguagePack" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
 
 # Set the language as the system preferred language
 Set-SystemPreferredUILanguage $OSDLanguage -Verbose
