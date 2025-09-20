@@ -399,7 +399,7 @@ try {
     Exit 3010
 } 
 catch [System.Exception] {
-    Write-Host -ForegroundColor Red "[$($DT)] [Forescout] Branding failed with error: " -NoNewline
+    Write-Host -ForegroundColor Red "[$($DT)] [Branding] Branding failed with error: " -NoNewline
     Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
 }    
 
