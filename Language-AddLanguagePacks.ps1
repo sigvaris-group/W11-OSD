@@ -141,12 +141,12 @@ $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
 Add-WindowsCapability -Online -Name "$OSDLanguagePack" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
 
 # Set the language as the system preferred language
-Set-SystemPreferredUILanguage $OSDLanguage -Verbose
+Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
 
 # Configure new language defaults under current user (system) after which it can be copied to system
-Set-WinUILanguageOverride -Language $OSDDisplayLanguage -Verbose -ErrorAction Stop 
+Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUI language override to " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
@@ -155,7 +155,7 @@ $OldUserLanguageList = Get-WinUserLanguageList
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Old-WinUserLanguageList: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OldUserLanguageList.LanguageTag)"
 
-$NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -Verbose
+$NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
 
@@ -164,7 +164,7 @@ if ($OSDDisplayLanguage -eq 'pl-PL') {
 } 
 else {
     #$NewUserLanguageList += $OldUserLanguageList
-    Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -Verbose
+    Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -ErrorAction SilentlyContinue
 }
 
 $UserLanguageList = Get-WinUserLanguageList
@@ -172,12 +172,12 @@ Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUs
 Write-Host -ForegroundColor Cyan "$($UserLanguageList.LanguageTag)"
 
 # Set Culture, sets the user culture for the current user account. This is for Region format
-Set-Culture -CultureInfo $OSDDisplayLanguage -Verbose
+Set-Culture -CultureInfo $OSDDisplayLanguage -ErrorAction SilentlyContinue
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
 # Set Win Home Location (GeoID), sets the home location setting for the current user. This is for Region location 
-Set-WinHomeLocation -GeoId $OSDGeoID -Verbose
+Set-WinHomeLocation -GeoId $OSDGeoID -ErrorAction SilentlyContinue
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
 
