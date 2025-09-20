@@ -132,6 +132,7 @@ Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 if ($OSDDisplayLanguage -ne 'en-US') { 
+    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDLanguage)
     Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)    
 }
 
