@@ -35,8 +35,8 @@ $ScriptAuthor = 'Andreas Schilling' # Author
 
 # Script Local Variables
 $Error.Clear()
-$SL = "================================================================================================================================================~"
-$EL = "`n================================================================================================================================================~`n"
+$SL = "================================================================="
+$EL = "`n=================================================================`n"
 $DT = Get-Date -format G
 $LogFilePath = "C:\OSDCloud\Logs"
 $LogFile = $ScriptName -replace ".{3}$", "log"
@@ -187,9 +187,9 @@ Write-Host -ForegroundColor DarkGray $SL
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
-if ($AllNetConnectionProfiles) { 
+if ($AllNetConnectionProfiles) { §
     Write-Host -ForegroundColor Green "[$($DT)] [Network] Internet connection succesfull"
-    Write-Output $AllNetConnectionProfiles
+    #Write-Output $AllNetConnectionProfiles
 }
 else {
     Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup."  
@@ -197,9 +197,9 @@ else {
     start-Sleep -Seconds 10
 }
 
-$IPConfig = Get-NetIPConfiguration
-Write-Host -ForegroundColor Gray "[$($DT)] [Network] Get-NetIPConfiguration"
-Write-Output $IPConfig
+#$IPConfig = Get-NetIPConfiguration
+#Write-Host -ForegroundColor Gray "[$($DT)] [Network] Get-NetIPConfiguration"
+#Write-Output $IPConfig
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
@@ -228,7 +228,7 @@ try {
     Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Hide the widgets"
     $ci = Get-ComputerInfo
     if ($ci.OsBuildNumber -ge 26100) {
-        Write-Host -ForegroundColor Yellow "[$($DT)] [Branding] Attempting Widget Hiding workaround (TaskbarDa)"
+        Write-Host -ForegroundColor Yellow "[$($DT)] [Branding] Attempting Widget Hiding workaround (Taskbar)"
         $regExePath = (Get-Command reg.exe).Source
         $tempRegExe = "$($env:TEMP)\reg1.exe"
         Copy-Item -Path $regExePath -Destination $tempRegExe -Force -ErrorAction Stop
@@ -394,15 +394,11 @@ try {
 
     Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set Computername to $($OSDComputername)"
     Rename-Computer -NewName $OSDComputername
-
-    # Exit code Soft Reboot
-    Exit 3010
 } 
 catch [System.Exception] {
     Write-Host -ForegroundColor Red "[$($DT)] [Branding] Branding failed with error: " -NoNewline
     Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
 }    
-
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
