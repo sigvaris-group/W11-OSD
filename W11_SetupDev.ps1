@@ -95,7 +95,7 @@ $OSDTimeZone = $($json.OSDTimeZone)
 $OSDDomainJoin = $($json.OSDDomainJoin)
 
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Gray "Computername: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($DT)] [UI] Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
 Write-Host -ForegroundColor Gray "[$($DT)] [UI] Location: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLocation)"
