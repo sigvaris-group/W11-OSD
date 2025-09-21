@@ -129,11 +129,11 @@ $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Current installed languages: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
 
+if ($OSDDisplayLanguage -ne 'en-US') {
+
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-if ($OSDDisplayLanguage -ne 'en-US') {
-    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
-}
+Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
 
 Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language Feature packs: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
@@ -189,6 +189,11 @@ Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Set TimeZone to " -NoN
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 Set-TimeZone -Id $OSDTimeZone
 tzutil.exe /s "$($OSDTimeZone)"  
+
+}
+else {
+    Write-Host -ForegroundColor Green "[$($DT)] [LanguagePack] en-US is installed" -NoNewline    
+}
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime

@@ -410,20 +410,9 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
-                </RunSynchronousCommand>  
-                <RunSynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <Description>Add Language Packs</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Language-AddLanguagePacks.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                              
+                </RunSynchronousCommand>                                                                            
             </RunSynchronous>
         </component>
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <SystemLocale>$OSDLanguage</SystemLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
-            <UserLocale>$OSDDisplayLanguage</UserLocale>
-		</component>
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -460,24 +449,12 @@ Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy SecureConnectorInstaller.msi" 
 Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
 
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy OneDriveSetup.exe" 
-Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy MSTeams-x64.msix" 
-Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy teamsbootstrapper.exe" 
-Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force
-
-Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Copy M365 setup.exe" 
-(New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
-Copy-Item -Path "X:\OSDCloud\Config\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
-
 Write-Host -ForegroundColor Cyan "[$($DT)] [PostOSD] Setup scripts for OOBE phase" 
 $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Language-AddLanguagePacks.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
 
