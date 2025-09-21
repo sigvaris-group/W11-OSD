@@ -153,7 +153,7 @@ try {
     if ($SecCon) {
         Write-Host -ForegroundColor Gray "[$($DT)] [Forescout] " -NoNewline
         Write-Host -ForegroundColor Cyan "$($SecCon.Name)" -NoNewline
-        Write-Host -ForegroundColor Gray "Version " -NoNewline
+        Write-Host -ForegroundColor Gray " Version " -NoNewline
         Write-Host -ForegroundColor Cyan "$($SecCon.Version)"  -NoNewline
         Write-Host -ForegroundColor Gray " successfully installed" 
         Start-Sleep 60
@@ -172,7 +172,7 @@ $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
 Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Forescout"
 Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
@@ -187,12 +187,12 @@ Write-Host -ForegroundColor DarkGray $SL
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
-if ($AllNetConnectionProfiles) { §
+if ($AllNetConnectionProfiles) { 
     Write-Host -ForegroundColor Green "[$($DT)] [Network] Internet connection succesfull"
     #Write-Output $AllNetConnectionProfiles
 }
 else {
-    Write-Host -ForegroundColor Red "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup."  
+    Write-Host -ForegroundColor Yellow "[$($DT)] [Network] No Internet Connection. Start Wi-Fi setup."  
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
     start-Sleep -Seconds 10
 }
@@ -206,7 +206,7 @@ $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
 Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Network"
 Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
-Write-Host -ForegroundColor White  "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Gray  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
@@ -228,15 +228,15 @@ try {
     Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Hide the widgets"
     $ci = Get-ComputerInfo
     if ($ci.OsBuildNumber -ge 26100) {
-        Write-Host -ForegroundColor Yellow "[$($DT)] [Branding] Attempting Widget Hiding workaround (Taskbar)"
+        Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Attempting Widget Hiding workaround (Taskbar)"
         $regExePath = (Get-Command reg.exe).Source
         $tempRegExe = "$($env:TEMP)\reg1.exe"
         Copy-Item -Path $regExePath -Destination $tempRegExe -Force -ErrorAction Stop
         & $tempRegExe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa /t REG_DWORD /d 0 /f /reg:64 2>&1 | Out-Host
         Remove-Item $tempRegExe -Force -ErrorAction SilentlyContinue
-        Write-Host -ForegroundColor Green "[$($DT)] [Branding] Widget Workaround Completed"
+        Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Widget Workaround Completed"
     } else {
-        Write-Host -ForegroundColor Green "[$($DT)] [Branding] Hiding widgets with registry key"	
+        Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Hiding widgets with registry key"	
         & reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa /t REG_DWORD /d 0 /f /reg:64 2>&1 | Out-Host
     }
 
@@ -244,7 +244,7 @@ try {
     #  Disable Widgets (Grey out Settings Toggle)
     #  GPO settings below will completely disable Widgets, see:https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-newsandinterests#allownewsandinterests
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable Widgets (Grey out Settings Toggle)"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Disable Widgets (Grey out Settings Toggle)"
     if (-not (Test-Path "HKLM:\Software\Policies\Microsoft\Dsh")) {
         New-Item -Path "HKLM:\Software\Policies\Microsoft\Dsh" | Out-Null
     }
@@ -256,44 +256,44 @@ try {
     #   Don't let Edge create a desktop shortcut (roams to OneDrive, creates mess)
     #===================================================================================================================================================
 
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Turning off (old) Edge desktop shortcut"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Turning off (old) Edge desktop shortcut"
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v DisableEdgeDesktopShortcutCreation /t REG_DWORD /d 1 /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "CreateDesktopShortcutDefault" /t REG_DWORD /d 0 /f /reg:64 | Out-Host
 
     #===================================================================================================================================================
     #   Remove Personal Teams
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remove Personal Teams"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Remove Personal Teams"
     Get-AppxPackage -Name MicrosoftTeams -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue 
 
     #===================================================================================================================================================
     #   Disable network location fly-out
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable network location fly-out"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Disable network location fly-out"
     reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f
 
     #===================================================================================================================================================
     #   Stop Start menu from opening on first logon
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Stop Start menu from opening on first logon"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Stop Start menu from opening on first logon"
     reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v StartShownOnUpgrade /t REG_DWORD /d 1 /f | Out-Host
 
     #===================================================================================================================================================
     #   Hide "Learn more about this picture" from the desktop
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Hide 'Learn more about this picture' from the desktop"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Hide 'Learn more about this picture' from the desktop"
     reg.exe add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /v "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}" /t REG_DWORD /d 1 /f | Out-Host
 
     #===================================================================================================================================================
     #   Disable Windows Spotlight as per https://github.com/mtniehaus/AutopilotBranding/issues/13#issuecomment-2449224828
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable Windows Spotlight"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Disable Windows Spotlight"
     reg.exe add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v DisableSpotlightCollectionOnDesktop /t REG_DWORD /d 1 /f | Out-Host
 
     #===================================================================================================================================================
     #   Remediate Windows Update policy conflict for Autopatch
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remediate Windows Update policy conflict for Autopatch"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Remediate Windows Update policy conflict for Autopatch"
     # initialize the array
     [PsObject[]]$regkeys = @()
     # populate the array with each object
@@ -320,14 +320,14 @@ try {
     #===================================================================================================================================================
     #   Set registered user and organization
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set registered user and organization"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Set registered user and organization"
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner /t REG_SZ /d "Global IT" /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "SIGVARIS GROUP" /f /reg:64 | Out-Host
 
     #===================================================================================================================================================
     #   Configure OEM branding info
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Configure OEM branding info"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Configure OEM branding info"
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Manufacturer /t REG_SZ /d "SIGVARIS GROUP" /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "Autopilot" /f /reg:64 | Out-Host
     reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v SupportURL /t REG_SZ /d "https://sigvarisitcustomercare.saasiteu.com/Account/Login?ProviderName=AAD" /f /reg:64 | Out-Host
@@ -336,7 +336,7 @@ try {
     #===================================================================================================================================================
     #    Disable extra APv2 pages (too late to do anything about the EULA), see https://call4cloud.nl/autopilot-device-preparation-hide-privacy-settings/
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Disable extra APv2 pages (too late to do anything about the EULA)"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Disable extra APv2 pages (too late to do anything about the EULA)"
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE"
     New-ItemProperty -Path $registryPath -Name "DisablePrivacyExperience" -Value 1 -PropertyType DWord -Force | Out-Null
     New-ItemProperty -Path $registryPath -Name "DisableVoice" -Value 1 -PropertyType DWord -Force | Out-Null
@@ -346,7 +346,7 @@ try {
     #===================================================================================================================================================
     #    Skip FSIA and turn off delayed desktop switch
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Skip FSIA and turn off delayed desktop switch"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Skip FSIA and turn off delayed desktop switch"
     $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
     New-ItemProperty -Path $registryPath -Name "EnableFirstLogonAnimation" -Value 0 -PropertyType DWord -Force | Out-Null
     New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -PropertyType DWord -Force | Out-Null
@@ -354,7 +354,7 @@ try {
     #===================================================================================================================================================
     #    Enable .NET Framework 3.5 for US, CA
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Enable .NET Framework 3.5 for US, CA"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Enable .NET Framework 3.5 for US, CA"
     $DeviceName = $env:COMPUTERNAME.Substring(0,6)
     Switch ($DeviceName) {
         'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
@@ -366,7 +366,7 @@ try {
     #    Enable Printing-PrintToPDFServices-Features because of KB5058411
     #    https://support.microsoft.com/en-us/topic/may-13-2025-kb5058411-os-build-26100-4061-356568c2-c730-469e-819d-b680d43b1265
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Enable Printing-PrintToPDFServices-Features because of KB5058411"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Enable Printing-PrintToPDFServices-Features because of KB5058411"
     Disable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
     Enable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
 
@@ -374,7 +374,7 @@ try {
     #    Injecting RAID Drivers into WinRE to resolve Remote Wipe issue 
     #    https://patchmypc.com/blog/there-was-a-problem-resetting-your-pc-remote-wipe/
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Injecting RAID Drivers into WinRE to resolve Remote Wipe issue"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Injecting RAID Drivers into WinRE to resolve Remote Wipe issue"
     # Define variables for driver name, mount directory, and driver directory
     $DriverName = "iaStorVD.inf" # Dell Latitude 5XXX (Intel RST)
     $DriverName2 = "iaStorAC.inf" # Intel RST
@@ -412,14 +412,14 @@ try {
     }
     # Throw an error if there are multiple or no drivers found, indicating a need for manual intervention
     Else {
-        Write-Host -ForegroundColor Red "[$($DT)] [Branding] Invalid quantity of drivers detected. Expected value is 1."
+        Write-Host -ForegroundColor Yellow "[$($DT)] [Branding] Invalid quantity of drivers detected. Expected value is 1."
         $StorageDriver
     }
 
     #===================================================================================================================================================
     #    Remove OSDCloudRegistration Certificate
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remove Import-Certificate.ps1 script"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Remove Import-Certificate.ps1 script"
     if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
         Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force
     }
@@ -427,18 +427,18 @@ try {
     #===================================================================================================================================================
     #    Remove C:\Windows\Setup\Scripts\ Items
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Remove C:\Windows\Setup\Scripts Items"
+    Write-Host -ForegroundColor Cyan"[$($DT)] [Branding] Remove C:\Windows\Setup\Scripts Items"
     Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
     #===================================================================================================================================================
     #    Copy OSDCloud logs and delete C:\OSDCloud folder
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
     Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Force -Recurse -Verbose -ErrorAction SilentlyContinue
     Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue
     Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue
 
-    Write-Host -ForegroundColor Gray "[$($DT)] [Branding] Set Computername to $($OSDComputername)"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Set Computername to $($OSDComputername)"
     Rename-Computer -NewName $OSDComputername
 } 
 catch [System.Exception] {
