@@ -417,8 +417,8 @@ $UnattendXml = @"
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <SystemLocale>$OSDLanguage</SystemLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
+            <SystemLocale>$OSDDisplayLanguage</SystemLocale>
+            <UILanguage>$OSDLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>        
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">

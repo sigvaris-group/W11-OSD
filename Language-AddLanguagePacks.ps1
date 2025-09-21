@@ -131,64 +131,66 @@ Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
 
 if ($OSDDisplayLanguage -ne 'en-US') {
 
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language pack: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language pack: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
 
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language Feature packs: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
-$FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
-Add-WindowsCapability -Online -Name "$OSDLanguagePack" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language Feature packs: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+    $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
+    Add-WindowsCapability -Online -Name "$OSDDisplayLanguage" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
 
-# Set the language as the system preferred language
-Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+    <#
+    # Set the language as the system preferred language
+    Set-SystemPreferredUILanguage $OSDDisplayLanguage -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+    #>
+    
+    # Configure new language defaults under current user (system) after which it can be copied to system
+    Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUI language override to " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
-# Configure new language defaults under current user (system) after which it can be copied to system
-Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUI language override to " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+    # Configure new language defaults under current user (system) after which it can be copied to system
+    $OldUserLanguageList = Get-WinUserLanguageList
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Old-WinUserLanguageList: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OldUserLanguageList.LanguageTag)"
 
-# Configure new language defaults under current user (system) after which it can be copied to system
-$OldUserLanguageList = Get-WinUserLanguageList
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Old-WinUserLanguageList: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OldUserLanguageList.LanguageTag)"
+    $NewUserLanguageList = New-WinUserLanguageList -Language $OSDLanguage -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
 
-$NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
-Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
+    if ($OSDLanguage -eq 'pl-PL') {
+        Set-WinUserLanguageList -LanguageList 'pl-PL' -Force
+    } 
+    else {
+        #$NewUserLanguageList += $OldUserLanguageList
+        Set-WinUserLanguageList -LanguageList $OSDLanguage -Force -ErrorAction SilentlyContinue
+    }
 
-if ($OSDDisplayLanguage -eq 'pl-PL') {
-    Set-WinUserLanguageList -LanguageList 'pl-PL' -Force -Verbose
-} 
-else {
-    #$NewUserLanguageList += $OldUserLanguageList
-    Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -ErrorAction SilentlyContinue
-}
+    $UserLanguageList = Get-WinUserLanguageList
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUserLanguageList to " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($UserLanguageList.LanguageTag)"
 
-$UserLanguageList = Get-WinUserLanguageList
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUserLanguageList to " -NoNewline
-Write-Host -ForegroundColor Cyan "$($UserLanguageList.LanguageTag)"
+    # Set Culture, sets the user culture for the current user account. This is for Region format
+    Set-Culture -CultureInfo $OSDDisplayLanguage -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
-# Set Culture, sets the user culture for the current user account. This is for Region format
-Set-Culture -CultureInfo $OSDDisplayLanguage -ErrorAction SilentlyContinue
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+    # Set Win Home Location (GeoID), sets the home location setting for the current user. This is for Region location 
+    Set-WinHomeLocation -GeoId $OSDGeoID -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
 
-# Set Win Home Location (GeoID), sets the home location setting for the current user. This is for Region location 
-Set-WinHomeLocation -GeoId $OSDGeoID -ErrorAction SilentlyContinue
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+    # Copy User International Settings from current user to System, including Welcome screen and new user
+    Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] CCopying user international settings to system." -NoNewline
 
-# Copy User International Settings from current user to System, including Welcome screen and new user
-Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] CCopying user international settings to system." -NoNewline
-
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Set TimeZone to " -NoNewline
-Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
-Set-TimeZone -Id $OSDTimeZone
-tzutil.exe /s "$($OSDTimeZone)"  
+    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Set TimeZone to " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
+    Set-TimeZone -Id $OSDTimeZone
+    tzutil.exe /s "$($OSDTimeZone)"  
 
 }
 else {
