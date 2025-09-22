@@ -132,6 +132,26 @@ Write-Host -ForegroundColor Gray  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
+# [SECTION] PowerCfg 
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] PowerCfg"
+Write-Host -ForegroundColor DarkGray $SL
+
+Write-Host -ForegroundColor Gray "[$($DT)] [PowerCfg] Set PowerCfg to High Performance"
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] PowerCfg"
+Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Cyan  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+# ================================================================================================================================================~
 # [SECTION] Forescout
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
