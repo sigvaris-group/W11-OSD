@@ -375,13 +375,13 @@ try {
     #===================================================================================================================================================
     Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Remove Import-Certificate.ps1 script"
     if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
-        Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force
+        Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force -ErrorAction SilentlyContinue
     }
 
     #===================================================================================================================================================
     #    Remove C:\Windows\Setup\Scripts\ Items
     #===================================================================================================================================================
-    Write-Host -ForegroundColor Cyan"[$($DT)] [Branding] Remove C:\Windows\Setup\Scripts Items"
+    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Remove C:\Windows\Setup\Scripts Items"
     Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
     #===================================================================================================================================================
