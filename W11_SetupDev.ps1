@@ -371,52 +371,6 @@ try {
     Enable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
 
     #===================================================================================================================================================
-    #    Injecting RAID Drivers into WinRE to resolve Remote Wipe issue 
-    #    https://patchmypc.com/blog/there-was-a-problem-resetting-your-pc-remote-wipe/
-    #===================================================================================================================================================
-    Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Injecting RAID Drivers into WinRE to resolve Remote Wipe issue"
-    # Define variables for driver name, mount directory, and driver directory
-    $DriverName = "iaStorVD.inf" # Dell Latitude 5XXX (Intel RST)
-    $DriverName2 = "iaStorAC.inf" # Intel RST
-    $MountDir = "$env:TEMP\WinRE"
-    $DriverDir = "$env:TEMP\WinRE_Driver"
-
-    # Get the latest version of the storage driver
-    $StorageDriver = Get-WindowsDriver -Online -All |
-        Where-Object { $_.Inbox -eq $False -and $_.BootCritical -eq $True -and $_.OriginalFileName -match $DriverName -or $_.OriginalFileName -match $DriverName2 } |
-        Sort-Object Version -Descending | Select-Object -First 1
-    
-    # Ensure there is a single driver of matching criteria before proceeding
-    If ($null -ne $StorageDriver -and $StorageDriver.Count -le 2) {
-        # Create the mount directory if it does not exist
-        If (!(Test-Path -Path $MountDir)) {
-            New-Item -Path $MountDir -ItemType Directory
-        }
-        # Create the export directory for the driver if it does not exist
-        If (!(Test-Path -Path $DriverDir)) {
-            New-Item -Path $DriverDir -ItemType Directory -Force
-        }
-
-        # Export the driver using pnputil
-        pnputil.exe /export-driver $StorageDriver.Driver $DriverDir
-
-        # Mount the Windows RE image, add the driver, and clean up the image
-        ReAgentC.exe /mountre /path $MountDir
-        dism /Image:$MountDir /Add-Driver /Driver:$DriverDir
-        dism /Image:$MountDir /Cleanup-Image /StartComponentCleanup
-        ReAgentc.exe /unmountre /path $MountDir /commit
-
-        # Clean up directories
-        Remove-Item -Path $DriverDir -Recurse
-        Remove-Item -Path $MountDir
-    }
-    # Throw an error if there are multiple or no drivers found, indicating a need for manual intervention
-    Else {
-        Write-Host -ForegroundColor Yellow "[$($DT)] [Branding] Invalid quantity of drivers detected. Expected value is 1."
-        $StorageDriver
-    }
-
-    #===================================================================================================================================================
     #    Remove OSDCloudRegistration Certificate
     #===================================================================================================================================================
     Write-Host -ForegroundColor Cyan "[$($DT)] [Branding] Remove Import-Certificate.ps1 script"
