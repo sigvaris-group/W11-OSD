@@ -38,35 +38,39 @@ $Error.Clear()
 $SL = "================================================================="
 $EL = "`n=================================================================`n"
 $DT = Get-Date -format G
-$LogFilePath = "C:\OSDCloud\Logs"
+$LogFilePath = "C:\ProgramData\OSDeploy"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+}
+
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script start at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Script start at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($StartTime)"
 
 # Script Information
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Name: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Name: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptName)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Description: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Description: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Version: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Version: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Created on: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Created on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDate)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Update on: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Update on: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateDate)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Update reason: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Update reason: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptUpdateReason)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Department: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Department: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Author: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Author: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Logfile Path: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFilePath)"
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Logfile: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Logfile: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($LogFile)"
 Write-Host -ForegroundColor DarkGray $EL
 
@@ -75,12 +79,12 @@ Write-Host -ForegroundColor DarkGray $EL
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] UI"
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [SECTION-Start] UI"
 Write-Host -ForegroundColor DarkGray $SL
 
 $jsonpath = "C:\ProgramData\OSDeploy"
 $jsonfile = "UIjson.json"
-Write-Host -ForegroundColor Cyan "[$($DT)] [UI] Load $($jsonfile) file from $($jsonpath)"
+Write-Host -ForegroundColor Cyan "[$($CurrentTime)] [UI] Load $($jsonfile) file from $($jsonpath)"
 
 $json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
 $OSDLanguage = $($json.OSDLanguage)
@@ -91,27 +95,27 @@ $OSDKeyboardLocale = $($json.OSDKeyboardLocale)
 $OSDGeoID = $($json.OSDGeoID)
 $OSDTimeZone = $json.OSDTimeZone
 
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] Your Settings are:"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] OS Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] OS Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] Display Language: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] Display Language: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] Language Pack: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] Language Pack: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] Keyboard: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] Keyboard: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] KeyboardLocale: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] GeoID: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] GeoID: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
-Write-Host -ForegroundColor Gray "[$($DT)] [UI] TimeZone: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [UI] TimeZone: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] UI"
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [SECTION-End] UI"
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [SECTION-End] SECTION took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Gray  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
@@ -121,21 +125,21 @@ Write-Host -ForegroundColor DarkGray $SL
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-Start] LanguagePack"
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [SECTION-Start] LanguagePack"
 Write-Host -ForegroundColor DarkGray $SL
 
 $InstalledLanguages = Get-InstalledLanguage
 $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
-Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Current installed languages: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Current installed languages: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
 
 if ($OSDDisplayLanguage -ne 'en-US') {
 
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language pack: " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Add Language pack: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
     Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
 
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Add Language Feature packs: " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Add Language Feature packs: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
     $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
     Add-WindowsCapability -Online -Name "$OSDDisplayLanguage" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
@@ -143,22 +147,22 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     <#
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDDisplayLanguage -ErrorAction SilentlyContinue
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
     #>
     
     # Configure new language defaults under current user (system) after which it can be copied to system
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUI language override to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Successfully set WinUI language override to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
     # Configure new language defaults under current user (system) after which it can be copied to system
     $OldUserLanguageList = Get-WinUserLanguageList
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Old-WinUserLanguageList: " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Old-WinUserLanguageList: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OldUserLanguageList.LanguageTag)"
 
     $NewUserLanguageList = New-WinUserLanguageList -Language $OSDLanguage -ErrorAction SilentlyContinue
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
 
     if ($OSDLanguage -eq 'pl-PL') {
@@ -170,38 +174,38 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     }
 
     $UserLanguageList = Get-WinUserLanguageList
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Successfully set WinUserLanguageList to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Successfully set WinUserLanguageList to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($UserLanguageList.LanguageTag)"
 
     # Set Culture, sets the user culture for the current user account. This is for Region format
     Set-Culture -CultureInfo $OSDDisplayLanguage -ErrorAction SilentlyContinue
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Culture successfully set to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
 
     # Set Win Home Location (GeoID), sets the home location setting for the current user. This is for Region location 
     Set-WinHomeLocation -GeoId $OSDGeoID -ErrorAction SilentlyContinue
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Culture successfully set to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Culture successfully set to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
 
     # Copy User International Settings from current user to System, including Welcome screen and new user
     Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] CCopying user international settings to system." -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] CCopying user international settings to system." -NoNewline
 
-    Write-Host -ForegroundColor Gray "[$($DT)] [LanguagePack] Set TimeZone to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$($CurrentTime)] [LanguagePack] Set TimeZone to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
     Set-TimeZone -Id $OSDTimeZone
     tzutil.exe /s "$($OSDTimeZone)"  
 
 }
 else {
-    Write-Host -ForegroundColor Green "[$($DT)] [LanguagePack] en-US is installed" -NoNewline    
+    Write-Host -ForegroundColor Green "[$($CurrentTime)] [LanguagePack] en-US is installed" -NoNewline    
 }
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] LanguagePack"
-Write-Host -ForegroundColor Gray "[$($DT)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [SECTION-End] LanguagePack"
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [SECTION-End] Script took " -NoNewline
 Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
@@ -212,9 +216,9 @@ Write-Host -ForegroundColor DarkGray $SL
 $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 
-Write-Host -ForegroundColor Gray "[$($DT)] [Start] Script end at: " -NoNewline
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [Start] Script end at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($EndTime)"
-Write-Host -ForegroundColor Gray "[$($DT)] [End] Script took " -NoNewline 
+Write-Host -ForegroundColor Gray "[$($CurrentTime)] [End] Script took " -NoNewline 
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
 Write-Host -ForegroundColor Gray " minutes to execute"
 
