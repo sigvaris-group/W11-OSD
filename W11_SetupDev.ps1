@@ -32,6 +32,9 @@ $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Workplace Team & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
+Function CurrentTime () {
+    (Get-Date -Format G)
+}
 
 # Script Local Variables
 $Error.Clear()

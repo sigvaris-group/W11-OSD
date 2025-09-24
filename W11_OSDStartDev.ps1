@@ -19,8 +19,7 @@ $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 $UpdateNews = @(
 "18.09.2025 New script deployed for testing"
 )
-
-Function CurrentTime {
+Function CurrentTime () {
     (Get-Date -Format G)
 }
 
