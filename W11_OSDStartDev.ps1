@@ -28,7 +28,6 @@ Function CurrentTime {
 $Error.Clear()
 $SL = "================================================================="
 $EL = "`n=================================================================`n"
-$DT = Get-Date -format G
 $LogFilePath = "X:\OSDCloud\Logs"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
@@ -492,4 +491,4 @@ Write-Host -ForegroundColor Gray " minutes to execute"
 Write-Host -ForegroundColor Yellow "[$(CurrentTime)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
 Stop-Transcript | Out-Null  
-wpeutil reboot
+wpeutil reboot)
