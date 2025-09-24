@@ -37,7 +37,6 @@ $ScriptAuthor = 'Andreas Schilling' # Author
 $Error.Clear()
 $SL = "================================================================="
 $EL = "`n=================================================================`n"
-$DT = Get-Date -format G
 $LogFilePath = "C:\ProgramData\OSDeploy"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
