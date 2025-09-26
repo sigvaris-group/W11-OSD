@@ -183,7 +183,7 @@ $Global:MyOSDCloud = [ordered]@{
     SyncMSUpCatDriverUSB = [bool]$false
     CheckSHA1 = [bool]$true    
 }
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] MyOSDCloud variables"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [OSDCloud] MyOSDCloud variables"
 Write-Output $Global:MyOSDCloud
 
 # Variables to define the Windows OS / Edition etc to be applied during OSDCloud
@@ -196,7 +196,7 @@ $Params = @{
     ZTI = $true
     Firmware = $true
 }
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Windows OS install parameters"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [OSDCloud] Windows OS install parameters"
 Write-Output $Params
 
 # Launch OSDCloud
