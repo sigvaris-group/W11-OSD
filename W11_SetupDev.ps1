@@ -409,12 +409,12 @@ Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 #    Copy OSDCloud logs and delete C:\OSDCloud folder
 #===================================================================================================================================================
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
-Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Force -Recurse -Verbose -ErrorAction SilentlyContinue
+Copy-Item -Path "C:\OSDCloud\Logs\*" -Destination "C:\ProgramData\OSDeploy" -Force -Recurse -ErrorAction SilentlyContinue
 Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue
 
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Set Computername to $($OSDComputername)"
-Rename-Computer -NewName $OSDComputername
+Rename-Computer -NewName $OSDComputername -ErrorAction SilentlyContinue
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
