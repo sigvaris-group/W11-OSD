@@ -143,12 +143,10 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
     Add-WindowsCapability -Online -Name "$OSDLanguagePack" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
 
-    <#
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDDisplayLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-    #>
     
     # Configure new language defaults under current user (system) after which it can be copied to system
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
@@ -188,7 +186,7 @@ if ($OSDDisplayLanguage -ne 'en-US') {
 
     # Copy User International Settings from current user to System, including Welcome screen and new user
     Copy-UserInternationalSettingsToSystem -WelcomeScreen $True -NewUser $True
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] CCopying user international settings to system." -NoNewline
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Copying user international settings to system." -NoNewline
 
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Set TimeZone to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
