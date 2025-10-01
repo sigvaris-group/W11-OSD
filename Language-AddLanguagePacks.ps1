@@ -220,5 +220,3 @@ Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
 Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null
-
-Exit 3010

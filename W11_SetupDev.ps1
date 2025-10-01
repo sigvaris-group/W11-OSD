@@ -439,4 +439,5 @@ Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null
 
-Exit 3010
+Write-Host -ForegroundColor Yellow "Computer will be rebooted"
+Restart-Computer -Force
