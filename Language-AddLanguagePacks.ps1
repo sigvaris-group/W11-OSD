@@ -221,5 +221,5 @@ Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null
 
-Write-Host -ForegroundColor Yellow "Computer will be rebooted"
+Write-Host -ForegroundColor Gray "Device will be rebooted"
 Restart-Computer -Force
