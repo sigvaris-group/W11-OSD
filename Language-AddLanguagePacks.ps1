@@ -158,7 +158,7 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Old-WinUserLanguageList: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OldUserLanguageList.LanguageTag)"
 
-    $NewUserLanguageList = New-WinUserLanguageList -Language $OSDLanguage -ErrorAction SilentlyContinue
+    $NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
 
@@ -167,7 +167,7 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     } 
     else {
         #$NewUserLanguageList += $OldUserLanguageList
-        Set-WinUserLanguageList -LanguageList $OSDLanguage -Force -ErrorAction SilentlyContinue
+        Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -ErrorAction SilentlyContinue
     }
 
     $UserLanguageList = Get-WinUserLanguageList
@@ -221,5 +221,5 @@ Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null
 
-Write-Host -ForegroundColor Gray "Device will be rebooted"
+Write-Host -ForegroundColor Gray "Reboot the device"
 Restart-Computer -Force
