@@ -487,4 +487,4 @@ Write-Host -ForegroundColor Gray " minutes to execute"
 Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
 Stop-Transcript | Out-Null  
-wpeutil reboot)
+wpeutil reboot
