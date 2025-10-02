@@ -438,6 +438,8 @@ $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Forc
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy OSDCloud files from USB" 
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
 Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
+Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
+Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
 
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Autopilot-RegisterDevice.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Autopilot-RegisterDevice.ps1" -Destination "C:\Windows\Setup\Scripts\Autopilot-RegisterDevice.ps1" -Force
