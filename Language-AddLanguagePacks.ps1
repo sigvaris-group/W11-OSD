@@ -219,4 +219,6 @@ Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script took " -N
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
 Write-Host -ForegroundColor Gray " minutes to execute"
 
+start-Sleep -Seconds 10
+
 Stop-Transcript | Out-Null
