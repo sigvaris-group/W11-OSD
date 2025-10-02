@@ -220,6 +220,3 @@ Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)"
 Write-Host -ForegroundColor Gray " minutes to execute"
 
 Stop-Transcript | Out-Null
-
-Write-Host -ForegroundColor Gray "Reboot the device"
-Restart-Computer -Force
