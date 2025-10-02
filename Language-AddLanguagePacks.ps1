@@ -139,14 +139,14 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
 
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language Feature packs: " -NoNewline
-    Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
+    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
     $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
-    Add-WindowsCapability -Online -Name "$OSDLanguagePack" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
+    Add-WindowsCapability -Online -Name "$OSDDisplayLanguage" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
 
     # Set the language as the system preferred language
-    Set-SystemPreferredUILanguage $OSDDisplayLanguage -ErrorAction SilentlyContinue
+    Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
-    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+    Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
     
     # Configure new language defaults under current user (system) after which it can be copied to system
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
