@@ -487,7 +487,7 @@ $EndTime = Get-Date
 $ExecutionTime = $EndTime - $StartTime
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script ended at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($EndTime)"
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script took " -NoNewline
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] SECTION took " -NoNewline
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)" -NoNewline
 Write-Host -ForegroundColor Gray " minutes to execute"
 

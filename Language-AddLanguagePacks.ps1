@@ -224,7 +224,7 @@ $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] LanguagePack"
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Script took " -NoNewline
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
 Write-Host -ForegroundColor White   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
@@ -237,7 +237,7 @@ $ExecutionTime = $EndTime - $StartTime
 
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Script end at: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($EndTime)"
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script took " -NoNewline 
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] SECTION took " -NoNewline 
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)" -NoNewline
 Write-Host -ForegroundColor Gray " minutes to execute"
 
