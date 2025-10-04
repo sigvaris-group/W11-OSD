@@ -132,21 +132,45 @@ $InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Current installed languages: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
 
+# ================================================================================================================================================~
+# [SECTION] LanguagePack
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] LanguagePack"
+Write-Host -ForegroundColor DarkGray $SL
+
+$InstalledLanguages = Get-InstalledLanguage
+$InstalledLanguages = $InstalledLanguages | ForEach-Object { $_.LanguageID }
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Current installed languages: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($InstalledLanguages)"
+
 if ($OSDDisplayLanguage -ne 'en-US') {
 
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language pack: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-    Dism /Online /Add-Package /PackagePath:C:\OSDCloud\Config\LP\$($OSDDisplayLanguage)
+    Dism /Online /Add-Package /PackagePath:C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) /NoRestart
 
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language Feature packs: " -NoNewline
-    Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
-    $FeatureFolder = "C:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage)"
-    Add-WindowsCapability -Online -Name "$OSDDisplayLanguage" -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] $($OSDDisplayLanguage)"
+    $FeatureFolder = "C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage)"
+    $FeaturePacks = Get-ChildItem $FeatureFolder -File
+    foreach ($Feature in $FeaturePacks) {
+        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Feature: " -NoNewline
+        Write-Host -ForegroundColor Cyan "$($Feature.Name)"
+        Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
+    }
 
+    <#
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+    #>
+
+    # Set system locale to en-US, because we want the default system locale to be English (United States) for compatibility with various applications.
+    # non-Unicode program. Some old or bad applications don’t support Unicode, it might need to change the language to help show the correct characters.
+    Set-WinSystemLocale en-US
     
     # Configure new language defaults under current user (system) after which it can be copied to system
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
@@ -159,16 +183,15 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     Write-Host -ForegroundColor Cyan "$($OldUserLanguageList.LanguageTag)"
 
     $NewUserLanguageList = New-WinUserLanguageList -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
+     if ($OSDLanguage -eq 'pl-PL') {$NewUserLanguageList = 'pl-PL'}
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] New-WinUserLanguageList: " -NoNewline
     Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
+    
+    $NewUserLanguageList += $OldUserLanguageList
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Display Languages: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($NewUserLanguageList.LanguageTag)"
 
-    if ($OSDLanguage -eq 'pl-PL') {
-        Set-WinUserLanguageList -LanguageList 'pl-PL' -Force
-    } 
-    else {
-        #$NewUserLanguageList += $OldUserLanguageList
-        Set-WinUserLanguageList -LanguageList $OSDDisplayLanguage -Force -ErrorAction SilentlyContinue
-    }
+    Set-WinUserLanguageList -LanguageList $NewUserLanguageList -Force -ErrorAction SilentlyContinue
 
     $UserLanguageList = Get-WinUserLanguageList
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set WinUserLanguageList to " -NoNewline
@@ -192,7 +215,6 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
     Set-TimeZone -Id $OSDTimeZone
     tzutil.exe /s "$($OSDTimeZone)"  
-
 }
 else {
     Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [LanguagePack] en-US is installed" -NoNewline    
