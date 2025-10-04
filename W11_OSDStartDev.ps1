@@ -411,10 +411,10 @@ $UnattendXml = @"
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
                 </RunSynchronousCommand>      
                 <RunSynchronousCommand wcm:action="add">
-                    <Order>2</Order>
+                    <Order>3</Order>
                     <Description>Setup Language</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Language-AddLanguagePacks.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                                           
+                </RunSynchronousCommand>                                                                                               
             </RunSynchronous>
         </component>
     </settings>
