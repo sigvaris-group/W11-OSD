@@ -3,7 +3,7 @@ Write-Host -ForegroundColor Gray "Is 64bit PowerShell: $([Environment]::Is64BitP
 Write-Host -ForegroundColor Gray "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
 Write-Host -ForegroundColor Gray "Script: " -NoNewline
-Write-Host -ForegroundColor Cyan "Language-AddLanguagePacks.ps1"
+Write-Host -ForegroundColor Cyan "Install-Language.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
@@ -24,7 +24,7 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Information
-$ScriptName = 'Language-AddLanguagePacks.ps1' # Name
+$ScriptName = 'Install-Language.ps1' # Name
 $ScriptDescription = 'This script add Language packs based on the UI' # Description:
 $ScriptVersion = '1.0' # Version
 $ScriptDate = '18.09.2025' # Created on
@@ -160,6 +160,32 @@ if ($OSDDisplayLanguage -ne 'en-US') {
         Write-Host -ForegroundColor Cyan "$($Feature.Name)"
         Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
     }
+
+    # Check if module "LanguagePackManagement" is installed
+    $module = Get-Module -ListAvailable LanguagePackManagement
+    # If module not installed, install it
+    if (-not $module) {
+        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'LanguagePackManagement' will be installed"
+        Install-Module -Name LanguagePackManagement -Scope AllUsers -Force -ErrorAction Stop
+    }     else {
+        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'LanguagePackManagement' is already installed"
+    }
+    # Check if module "International" is installed
+    $module = Get-Module -ListAvailable International
+    # If module not installed, install it
+    if (-not $module) {
+        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'International' will be installed"
+        Install-Module -Name International -Scope AllUsers -Force -ErrorAction Stop
+    }     else {
+        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'International' is already installed"
+    }
+    Import-Module International
+    Import-Module LanguagePackManagement    
+
+    # Install Language
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Install Language: " -NoNewline
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] $($OSDDisplayLanguage)"
+    Install-Language -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue 
 
     <#
     # Set the language as the system preferred language
