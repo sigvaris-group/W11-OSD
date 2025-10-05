@@ -185,7 +185,8 @@ if ($OSDDisplayLanguage -ne 'en-US') {
     # Install Language
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Install Language: " -NoNewline
     Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] $($OSDDisplayLanguage)"
-    Install-Language -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue 
+    Install-Language -Language $OSDDisplayLanguage -CopyToSettings -ErrorAction SilentlyContinue 
+    start-Sleep -Seconds 10
 
     <#
     # Set the language as the system preferred language
