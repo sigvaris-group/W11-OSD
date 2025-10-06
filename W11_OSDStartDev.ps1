@@ -409,13 +409,20 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                                                  
+                </RunSynchronousCommand>     
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Install Language</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass  C:\Windows\Setup\scripts\Install-Language.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                                                               
             </RunSynchronous>
         </component>
     </settings>
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <SystemLocale>$OSDLanguage</SystemLocale>
+            <UILanguage>$OSDDisplayLanguage</UILanguage>
             <UserLocale>$OSDDisplayLanguage</UserLocale>
         </component>        
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -453,7 +460,7 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Install-Language.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Install-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
 
