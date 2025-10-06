@@ -161,12 +161,10 @@ if ($OSDDisplayLanguage -ne 'en-US') {
         Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
     }
 
-    <#
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
-    #>
 
     # Set system locale to en-US, because we want the default system locale to be English (United States) for compatibility with various applications.
     # non-Unicode program. Some old or bad applications don’t support Unicode, it might need to change the language to help show the correct characters.
