@@ -240,8 +240,8 @@ Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupDev.ps1' -Encoding ascii -Force
 
 # Copy Install-Language.ps1 local
-# Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Install-Language.ps1" 
-# Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-Language.ps1' -Encoding ascii -Force
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Install-Language.ps1" 
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-Language.ps1' -Encoding ascii -Force
 
 # Create XML file for Microsoft M365 App
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create XML file for Microsoft M365 App which is used later in the application deployment"
@@ -413,7 +413,11 @@ $UnattendXml = @"
             </RunSynchronous>
         </component>
     </settings>
-    <settings pass="oobeSystem">  
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>$OSDKeyboardLocale</InputLocale>
+            <UserLocale>$OSDDisplayLanguage</UserLocale>
+        </component>        
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
@@ -449,7 +453,7 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Install-Language.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Install-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
 
