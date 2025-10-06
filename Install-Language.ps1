@@ -161,33 +161,6 @@ if ($OSDDisplayLanguage -ne 'en-US') {
         Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
     }
 
-    # Check if module "LanguagePackManagement" is installed
-    $module = Get-Module -ListAvailable LanguagePackManagement
-    # If module not installed, install it
-    if (-not $module) {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'LanguagePackManagement' will be installed"
-        Install-Module -Name LanguagePackManagement -Scope AllUsers -Force -ErrorAction Stop
-    }     else {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'LanguagePackManagement' is already installed"
-    }
-    # Check if module "International" is installed
-    $module = Get-Module -ListAvailable International
-    # If module not installed, install it
-    if (-not $module) {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'International' will be installed"
-        Install-Module -Name International -Scope AllUsers -Force -ErrorAction Stop
-    }     else {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] The module 'International' is already installed"
-    }
-    Import-Module International
-    Import-Module LanguagePackManagement    
-
-    # Install Language
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Install Language: " -NoNewline
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] $($OSDDisplayLanguage)"
-    Install-Language -Language $OSDDisplayLanguage -CopyToSettings -ErrorAction SilentlyContinue 
-    start-Sleep -Seconds 120
-
     <#
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
