@@ -160,28 +160,19 @@ if ($OSDDisplayLanguage -ne 'en-US') {
         Write-Host -ForegroundColor Cyan "$($Feature.Name)"
         Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
     }
-    If ($OSDDisplayLanguage -ne 'en-US') {
-        Write-Host "    Install OS Language: $($OSDLanguage)"
-        Install-Language -Language $OSDLanguage 
-        Write-Host "    Add Language Features: $($OSDLanguagePack)"
-        Add-WindowsCapability -Online -Name "$OSDLanguagePack" -ErrorAction SilentlyContinue
-    }
-    elseif ($OSDLanguage -ne $OSDDisplayLanguage ) {
-        Write-Host "    Install OS Language: $($OSDDisplayLanguage)"
-        Install-Language -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue 
-        Write-Host "    Add Language Features: $($OSDLanguagePack)"
-        Add-WindowsCapability -Online -Name "$OSDLanguagePack" -ErrorAction SilentlyContinue
-    }    
 
+  
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set system preferred UI language to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
 
+    <#
     # Set system locale to en-US, because we want the default system locale to be English (United States) for compatibility with various applications.
     # non-Unicode program. Some old or bad applications don’t support Unicode, it might need to change the language to help show the correct characters.
-    #Set-WinSystemLocale en-US 
-    
+    Set-WinSystemLocale en-US 
+    #>
+
     # Configure new language defaults under current user (system) after which it can be copied to system
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Successfully set WinUI language override to " -NoNewline
