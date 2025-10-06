@@ -160,6 +160,18 @@ if ($OSDDisplayLanguage -ne 'en-US') {
         Write-Host -ForegroundColor Cyan "$($Feature.Name)"
         Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
     }
+    If ($OSDDisplayLanguage -ne 'en-US') {
+        Write-Host "    Install OS Language: $($OSDLanguage)"
+        Install-Language -Language $OSDLanguage 
+        Write-Host "    Add Language Features: $($OSDLanguagePack)"
+        Add-WindowsCapability -Online -Name "$OSDLanguagePack" -ErrorAction SilentlyContinue
+    }
+    elseif ($OSDLanguage -ne $OSDDisplayLanguage ) {
+        Write-Host "    Install OS Language: $($OSDDisplayLanguage)"
+        Install-Language -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue 
+        Write-Host "    Add Language Features: $($OSDLanguagePack)"
+        Add-WindowsCapability -Online -Name "$OSDLanguagePack" -ErrorAction SilentlyContinue
+    }    
 
     # Set the language as the system preferred language
     Set-SystemPreferredUILanguage $OSDLanguage -ErrorAction SilentlyContinue
