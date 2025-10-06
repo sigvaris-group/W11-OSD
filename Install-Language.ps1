@@ -170,7 +170,7 @@ if ($OSDDisplayLanguage -ne 'en-US') {
 
     # Set system locale to en-US, because we want the default system locale to be English (United States) for compatibility with various applications.
     # non-Unicode program. Some old or bad applications don’t support Unicode, it might need to change the language to help show the correct characters.
-    Set-WinSystemLocale en-US 
+    #Set-WinSystemLocale en-US 
     
     # Configure new language defaults under current user (system) after which it can be copied to system
     Set-WinUILanguageOverride -Language $OSDDisplayLanguage -ErrorAction SilentlyContinue
