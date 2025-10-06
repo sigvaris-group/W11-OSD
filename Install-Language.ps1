@@ -202,7 +202,7 @@ if ($OSDDisplayLanguage -ne 'en-US') {
 
     # Set Win Home Location (GeoID), sets the home location setting for the current user. This is for Region location 
     Set-WinHomeLocation -GeoId $OSDGeoID -ErrorAction SilentlyContinue
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Culture successfully set to " -NoNewline
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Win Home Location (GeoID) successfully set to " -NoNewline
     Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
 
     # Copy User International Settings from current user to System, including Welcome screen and new user
