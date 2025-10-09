@@ -1,4 +1,4 @@
-$DT# Script Information Variables
+# Script Information Variables
 $ScriptName = 'W11_OSDStartDev.ps1' # Name
 $ScriptDescription = 'Windows OS Deployment' # Description
 $ScriptEnv = 'TEST' # Environment: TEST, PRODUCTION, OFFLINE

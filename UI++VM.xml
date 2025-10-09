@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UIpp Title="Windows 11 for VMs" DialogIcons="Yes">
+	<Actions>
+    <!-- This Section determines the build type-->
+    <Action Type="WMIRead" Namespace="root\cimv2" Class="Win32_ComputerSystem" Property="Name" Variable="OSDComputerName" />
+    <Action Type="Input" Name="ClientSetup" Title="Client Setup" ShowBack="True" ShowCancel="True" Size="Tall">
+      <TextInput Prompt="%OSDComputerName%" Hint="Name of this system" RegEx="[^\&quot;/\\\[\]:;\|=,\+\*\?&gt;&lt;]{3,15}" ForceCase="Upper" Variable="OSDComputerName" Question="Name of this system" />
+      <InputInfo></InputInfo>        
+      <InputCheckbox Variable="OSDDomainJoin" Question="Should this system be domain joined?" CheckedValue="Yes" UncheckedValue="No" Default="No"/>
+    </Action>
+    <!-- This Section is an Information for domain joined devices-->
+    <Action Type="Input" Name="AD" Title="Active Directory Domain Join" ShowBack="True" ShowCancel="True" Condition='"%OSDDomainJoin%" = "Yes"'>
+      <InputInfo></InputInfo>   
+      <InputInfo Color="#992233">Delete device first from AD,ConfigMgr,Autopilot,Intune and EntraID!                                                                             </InputInfo>   
+      <InputInfo Color="#992233">There is no need to join the device into our on-premise Active Directory, except for devices which needs a local domain administrator group. (E.g. BARCO, MES).</InputInfo>
+    </Action>
+    <!-- This Section write the variable into WMI-->   
+    <Action Type="WMIWrite" Namespace="root\UIVars" Class="Local_Config" >
+      <Property Name="OSDComputerName" Type="CIM_STRING" Value="%OSDComputerName%" Key="True"/>
+      <Property Name="OSDDomainJoin" Type="CIM_STRING" Value="%OSDDomainJoin%" Key="True"/>
+    </Action>
+  </Actions>
+</UIpp>
