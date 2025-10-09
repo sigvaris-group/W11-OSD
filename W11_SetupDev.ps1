@@ -384,6 +384,26 @@ Switch ($DeviceName) {
 }
 
 #===================================================================================================================================================
+#    Add Language fr-CA pack for CA
+#===================================================================================================================================================
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Add Language fr-CA pack for CA"
+if ($DeviceName -eq 'SICAMO') {
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language pack: " -NoNewline
+    Write-Host -ForegroundColor Cyan "fr-CA"
+    Dism /Online /Add-Package /PackagePath:C:\ProgramData\OSDeploy\LP\fr-ca /NoRestart
+
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language Feature packs: " -NoNewline
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] fr-CA"
+    $FeatureFolder = "C:\ProgramData\OSDeploy\LP\Feature\fr-ca"
+    $FeaturePacks = Get-ChildItem $FeatureFolder -File
+    foreach ($Feature in $FeaturePacks) {
+        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Feature: " -NoNewline
+        Write-Host -ForegroundColor Cyan "$($Feature.Name)"
+        Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
+    }
+}
+
+#===================================================================================================================================================
 #    Enable Printing-PrintToPDFServices-Features because of KB5058411
 #    https://support.microsoft.com/en-us/topic/may-13-2025-kb5058411-os-build-26100-4061-356568c2-c730-469e-819d-b680d43b1265
 #===================================================================================================================================================
