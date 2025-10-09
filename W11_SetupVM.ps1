@@ -352,8 +352,8 @@ Switch ($DeviceName) {
 #===================================================================================================================================================
 #    Add Language fr-CA pack for CA
 #===================================================================================================================================================
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Add Language fr-CA pack for CA"
 if ($DeviceName -eq 'SICAMO') {
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Add Language fr-CA pack for CA"
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language pack: " -NoNewline
     Write-Host -ForegroundColor Cyan "fr-CA"
     Dism /Online /Add-Package /PackagePath:C:\ProgramData\OSDeploy\LP\fr-ca /NoRestart
