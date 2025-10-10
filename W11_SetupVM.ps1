@@ -395,7 +395,7 @@ Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 #    Copy OSDCloud logs and delete C:\OSDCloud folder
 #===================================================================================================================================================
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
-Copy-Item C:\OSDCloud\Logs C:\ProgramData\OSDeploy -Recurse -Force
+Copy-Item C:\OSDCloud\Logs C:\ProgramData\OSDeploy -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue
 
