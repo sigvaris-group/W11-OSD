@@ -339,21 +339,6 @@ $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
-# Copy OSDCloud files from USB
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy OSDCloud files from USB" 
-Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
-Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
-Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
-Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
-
-$DeviceName = $OSDComputername.Substring(0,6)
-if ($DeviceName -eq 'SICAMO') {
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Language fr-ca for CA" 
-    Copy-Item X:\OSDCloud\Config\LP\fr-ca C:\ProgramData\OSDeploy\LP\fr-ca -Recurse -Force
-    Copy-Item X:\OSDCloud\Config\LP\Feature\fr-ca C:\ProgramData\OSDeploy\LP\Feature\fr-ca -Recurse -Force
-}
-
-
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Autopilot-RegisterDevice.ps1" 
 Copy-Item "X:\OSDCloud\Config\Scripts\Autopilot-RegisterDevice.ps1" -Destination "C:\Windows\Setup\Scripts\Autopilot-RegisterDevice.ps1" -Force
 
@@ -401,4 +386,19 @@ Write-Host -ForegroundColor Gray " minutes to execute"
 Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
 Stop-Transcript | Out-Null  
+
+# Copy OSDCloud files from USB
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy OSDCloud files from USB" 
+Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
+Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
+Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
+Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
+
+$DeviceName = $OSDComputername.Substring(0,6)
+if ($DeviceName -eq 'SICAMO') {
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Language fr-ca for CA" 
+    Copy-Item X:\OSDCloud\Config\LP\fr-ca C:\ProgramData\OSDeploy\LP\fr-ca -Recurse -Force
+    Copy-Item X:\OSDCloud\Config\LP\Feature\fr-ca C:\ProgramData\OSDeploy\LP\Feature\fr-ca -Recurse -Force
+}
+
 wpeutil reboot
