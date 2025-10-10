@@ -1,7 +1,7 @@
 # Script Information Variables
 $ScriptName = 'W11_OSDStartVM.ps1' # Name
 $ScriptDescription = 'Windows OS Deployment' # Description
-$ScriptEnv = 'TEST' # Environment: TEST, PRODUCTION, OFFLINE
+$ScriptEnv = 'VM' # Environment: TEST, PRODUCTION, OFFLINE
 $OSVersion = 'Windows 11' # Windows version
 $OSBuild = '24H2' # Windows Release 
 $OSEdition = 'Enterprise' # Windows Release 
@@ -150,9 +150,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -210,41 +210,6 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 # Copy W11_SetupVM.ps1 local
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11_SetupVM.ps1" 
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupVM.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupVM.ps1' -Encoding ascii -Force
-
-# Create XML file for Microsoft M365 App
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create XML file for Microsoft M365 App which is used later in the application deployment"
-If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
-    New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
-}
-$OfficeXml = @"
-<Configuration ID="44ad4a5b-8ca2-4b1d-9120-4ccb79ab01bc">
-  <Info Description="M365 Enterprise without Access" />
-  <Add OfficeClientEdition="64" Channel="MonthlyEnterprise">
-    <Product ID="O365ProPlusRetail">
-      <Language ID="$OSDDisplayLanguage" />
-      <Language ID="MatchOS" />
-      <ExcludeApp ID="Access" />
-      <ExcludeApp ID="Groove" />
-      <ExcludeApp ID="Lync" />
-      <ExcludeApp ID="Bing" />
-    </Product>
-  </Add>
-  <Property Name="SharedComputerLicensing" Value="0" />
-  <Property Name="FORCEAPPSHUTDOWN" Value="TRUE" />
-  <Property Name="DeviceBasedLicensing" Value="0" />
-  <Property Name="SCLCacheOverride" Value="0" />
-  <Property Name="TenantId" Value="ef4411a0-98e1-423e-b88f-17bde7516216" />
-  <Updates Enabled="TRUE" />
-  <AppSettings>
-    <Setup Name="Company" Value="SIGVARIS GROUP" />
-    <User Key="software\microsoft\office\16.0\excel\options" Name="defaultformat" Value="51" Type="REG_SZ" App="excel16" Id="L_SaveExcelfilesas" />
-    <User Key="software\microsoft\office\16.0\powerpoint\options" Name="defaultformat" Value="27" Type="REG_DWORD" App="ppt16" Id="L_SavePowerPointfilesas" />
-    <User Key="software\microsoft\office\16.0\word\options" Name="defaultformat" Value="" Type="REG_SZ" App="word16" Id="L_SaveWordfilesas" />
-  </AppSettings>
-  <Display Level="None" AcceptEULA="TRUE" />
-</Configuration>
-"@ 
-$OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\configuration.xml" -Encoding utf8 -Width 2000 -Force
 
 # OOBEDeploy Configuration
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create OOBEDeploy configuration file for Start-AutopilotOOBE function (removes unwanted apps)"
@@ -381,7 +346,7 @@ Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
 Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
 Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
 
-$DeviceName = $env:COMPUTERNAME.Substring(0,6)
+$DeviceName = $OSDComputername.Substring(0,6)
 if ($DeviceName -eq 'SICAMO') {
     Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Language fr-ca for CA" 
     Copy-Item X:\OSDCloud\Config\LP\fr-ca C:\ProgramData\OSDeploy\LP\fr-ca -Recurse -Force
@@ -404,7 +369,7 @@ $OOBECMD = @'
 
 # Execute OOBE Tasks
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupVM.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass

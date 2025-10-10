@@ -8,7 +8,7 @@ $OSEdition = 'Enterprise' # Windows Release
 $OSLanguage = 'en-us' # Windows default language
 $OSLicense = "Volume" # Windows licenses
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '18.09.2025' # Created on
+$ScriptDate = '09.10.2025' # Created on
 $ScriptDepartment = 'Workplace & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 $Product = (Get-MyComputerProduct)
@@ -18,6 +18,7 @@ $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 # Updates
 $UpdateNews = @(
 "18.09.2025 New script deployed for testing"
+"09.10.2025 fr-CA Language implemented"
 )
 
 # Script Local Variables
@@ -174,9 +175,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -238,10 +239,6 @@ Invoke-WebRequest "https://github.com/okieselbach/Helpers/raw/master/WirelessCon
 # Copy W11_SetupDev.ps1 local
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11_SetupDev.ps1" 
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupDev.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupDev.ps1' -Encoding ascii -Force
-
-# Copy Install-Language.ps1 local
-#Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Install-Language.ps1" 
-#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-Language.ps1' -Encoding ascii -Force
 
 # Create XML file for Microsoft M365 App
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create XML file for Microsoft M365 App which is used later in the application deployment"
@@ -383,7 +380,6 @@ $UIjson = @"
 "@
 $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
 
-
 # Create Windows Unattend XML file
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create Windows Unattend XML file"
 if (-NOT (Test-Path 'C:\Windows\Panther')) {
@@ -435,8 +431,7 @@ Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
 Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
 Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
 
-$DeviceName = $env:COMPUTERNAME.Substring(0,6)
-if ($DeviceName -eq 'SICAMO') {
+if ($OSDLocation -eq 'SICAMO') {
     Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Language fr-ca for CA" 
     Copy-Item X:\OSDCloud\Config\LP\fr-ca C:\ProgramData\OSDeploy\LP\fr-ca -Recurse -Force
     Copy-Item X:\OSDCloud\Config\LP\Feature\fr-ca C:\ProgramData\OSDeploy\LP\Feature\fr-ca -Recurse -Force
@@ -456,7 +451,6 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Install-Language.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupDev.ps1
 
