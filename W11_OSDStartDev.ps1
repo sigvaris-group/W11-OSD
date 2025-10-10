@@ -468,8 +468,6 @@ Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script took " -N
 Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)" -NoNewline
 Write-Host -ForegroundColor Gray " minutes to execute"
 
-Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [End] Restarting in 10 seconds into Windows OS"
-start-Sleep -Seconds 10
 Stop-Transcript | Out-Null  
 
 # Copy OSDCloud files from USB
@@ -485,4 +483,6 @@ if ($OSDLocation -eq 'SICAMO') {
     Copy-Item X:\OSDCloud\Config\LP\Feature\fr-ca C:\ProgramData\OSDeploy\LP\Feature\fr-ca -Recurse -Force
 }
 
+Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [End] Restarting in 10 seconds into Windows OS"
+start-Sleep -Seconds 10
 wpeutil reboot
