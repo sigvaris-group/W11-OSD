@@ -342,7 +342,7 @@ New-ItemProperty -Path $registryPath -Name "DelayedDesktopSwitch" -Value 0 -Prop
 #    Enable .NET Framework 3.5 for US, CA
 #===================================================================================================================================================
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Enable .NET Framework 3.5 for US, CA"
-$DeviceName = $env:COMPUTERNAME.Substring(0,6)
+$DeviceName = $OSDComputername.Substring(0,6)
 Switch ($DeviceName) {
     'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSGA' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
