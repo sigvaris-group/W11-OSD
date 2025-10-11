@@ -392,6 +392,7 @@ if ($DeviceName -eq 'SICAMO') {
     Write-Host -ForegroundColor Cyan "fr-CA"
     Dism /Online /Add-Package /PackagePath:C:\ProgramData\OSDeploy\LP\fr-ca /NoRestart
 
+    <#
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language Feature packs: " -NoNewline
     Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] fr-CA"
     $FeatureFolder = "C:\ProgramData\OSDeploy\LP\Feature\fr-ca"
@@ -401,6 +402,7 @@ if ($DeviceName -eq 'SICAMO') {
         Write-Host -ForegroundColor Cyan "$($Feature.Name)"
         Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
     }
+    #>
 }
 
 #===================================================================================================================================================
