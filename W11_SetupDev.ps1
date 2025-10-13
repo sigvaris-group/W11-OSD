@@ -30,7 +30,7 @@ $ScriptVersion = '1.0' # Version
 $ScriptDate = '13.10.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
-$ScriptDepartment = 'Workplace Team & GA Team' # Department
+$ScriptDepartment = 'Workplace & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 
 # Script Local Variables

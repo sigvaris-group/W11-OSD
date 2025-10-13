@@ -1,37 +1,109 @@
-#=============================================================================================================================
-#
-# Script Name:     W11_OSDStart.ps1
-# Description:     Start Windows 11 OSD Deployment with WiFi Support and join Computer into domain
-# Created:         06/24/2025
-# Version:         5.0
-#
-#=============================================================================================================================
+# Script Information Variables
+$ScriptName = 'W11_OSDStart.ps1' # Name
+$ScriptDescription = 'Windows OS Deployment' # Description
+$ScriptEnv = 'PROD' # Environment: TEST, PRODUCTION, OFFLINE
+$OSVersion = 'Windows 11' # Windows version
+$OSBuild = '24H2' # Windows Release 
+$OSEdition = 'Enterprise' # Windows Release 
+$OSLanguage = 'en-us' # Windows default language
+$OSLicense = "Volume" # Windows licenses
+$ScriptVersion = '1.0' # Version
+$ScriptDate = '13.10.2025' # Created on
+$ScriptDepartment = 'Workplace & GA Team' # Department
+$ScriptAuthor = 'Andreas Schilling' # Author
+$Product = (Get-MyComputerProduct)
+$Model = (Get-MyComputerModel)
+$Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 
-Write-Host -ForegroundColor Green "Starting Windows 11 Deployment with WiFi and Domain Join Support"
+# Updates
 $UpdateNews = @(
-"06/24/2025 New ISOs created"
-"07/07/2025 Scripts adjusted to check internet connection"
-"07/30/2025 Dell 7440 driver packs added to WinPe"
+"13.10.2025 New script deployed for production"
 )
-Write-Host -ForegroundColor Green "UPDATE NEWS!"
-foreach ($UpdateNew in $UpdateNews) {
-    Write-Host "  $($UpdateNew)"
-}
-Start-Sleep -Seconds 10
 
-#=======================================================================
-#   [PostOS] Start U++ (user interface)
-#=======================================================================
-Write-Host -ForegroundColor Green "Start UI Client Setup"
-$location = "X:\OSDCloud\Config\UI"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$location\UI++.xml" -Verbose
-$UI = Start-Process -FilePath "$location\UI++64.exe" -WorkingDirectory $location -Wait
+# Script Local Variables
+$Error.Clear()
+$SL = "================================================================="
+$EL = "`n=================================================================`n"
+$LogFilePath = "X:\OSDCloud\Logs"
+$LogFile = $ScriptName -replace ".{3}$", "log"
+$StartTime = Get-Date
+
+Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Script started at: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($StartTime)"
+
+# Script Information
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Name: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptName)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Description: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Environment: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptEnv)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] OSVersion: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSVersion)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] OSBuild: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSBuild)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] OSEdition: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSEdition)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] OSLanguage: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] OSLicense: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSLicense)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Script Version: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Created on: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDate)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Department: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Author: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($LogFilePath)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Logfile: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($LogFile)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Manufacturer: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($Manufacturer)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Model: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($Model)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Product: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($Product)"
+Write-Host -ForegroundColor DarkGray $EL
+
+# Updates
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Below you find the newest updates of the script"
+foreach ($UpdateNew in $UpdateNews) {
+    Write-Host -ForegroundColor Cyan "$($UpdateNew)"
+}
+Start-Sleep -Seconds 5
+
+# ================================================================================================================================================~
+# [SECTION] UI
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] UI"
+Write-Host -ForegroundColor DarkGray $SL
+
+# UI config folder
+$UILocation = "X:\OSDCloud\Config\UI" 
+$UIXMLFile = "UI++.xml" # change file name if using in production 
+# Download UI++ Setup XML
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Load $($UIXMLFile) config file and store it into folder $($UILocation)"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/UI++.xml" -OutFile "$($UILocation)\$($UIXMLFile)"
+
+# Start UI++ 
+$UIExe = "UI++64.exe"
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Start $($UIExe) from folder $($UILocation)"
+$UI = Start-Process -FilePath "$($UILocation)\$($UIExe)" -ArgumentList "/config:$($UIXMLFile)" -WorkingDirectory $($UILocation) -Wait  
 if ($UI) {
-    Write-Host -ForegroundColor Cyan "Waiting for UI Client Setup to complete"
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Waiting for UI Client Setup to complete"
     if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
         Wait-Process -Id $UI.Id
     } 
 }
+
+# Set UI variables from WMI 
 $OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
 $OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
 $OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
@@ -42,92 +114,136 @@ $OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Confi
 $OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
 $OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
-#$OSDWindowsUpdate = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDWindowsUpdate
-$OSDWindowsUpdate = 'Yes'
 
-Write-Host -ForegroundColor Green "Your Settings are:"
-Write-Host "  Computername: $OSDComputername"
-Write-Host "  Location: $OSDLocation"
-Write-Host "  OS Language: $OSDLanguage"
-Write-Host "  Display Language: $OSDDisplayLanguage"
-Write-Host "  Language Pack: $OSDLanguagePack"
-Write-Host "  Keyboard: $OSDKeyboard"
-Write-Host "  KeyboardLocale: $OSDKeyboardLocale"
-Write-Host "  GeoID: $OSDGeoID"
-Write-Host "  TimeZone: $OSDTimeZone"
-Write-Host "  Active Directory Domain Join: $OSDDomainJoin"
-Write-Host "  Windows Updates: $OSDWindowsUpdate"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Computername: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDComputername)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Location: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLocation)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] OS Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Display Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Language Pack: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Keyboard: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] GeoID: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] TimeZone: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
 
-#================================================
-#   [PreOS] Update Module
-#================================================
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] UI"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+# ================================================================================================================================================~
+# [SECTION] OSDCloud
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] OSDCloud"
+Write-Host -ForegroundColor DarkGray $SL
+
 if ((Get-MyComputerModel) -match 'Virtual') {
-    Write-Host -ForegroundColor Green "Setting Display Resolution to 1600x"
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Setting Display Resolution to 1600x for Virtual Machines"
     Set-DisRes 1600
 }
 
-Write-Host -ForegroundColor Green "Updating OSD PowerShell Module"
-Set-ExecutionPolicy -ExecutionPolicy ByPass 
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Install OSD PowerShell Module"
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 Install-Module OSD -SkipPublisherCheck -Force
 
-Write-Host  -ForegroundColor Green "Importing OSD PowerShell Module"
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Importing OSD PowerShell Module"
 Import-Module OSD -Force   
 
-#=======================================================================
-#   [OS] Params and Start-OSDCloud
-#=======================================================================
-#Set OSDCloud Vars
+# [OSD] Params and Start-OSDCloud
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Set OSDCloud variables and parameters"
+
+# Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
     SyncMSUpCatDriverUSB = [bool]$false
     CheckSHA1 = [bool]$true    
 }
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] MyOSDCloud variables"
+Write-Output $Global:MyOSDCloud
 
-#Variables to define the Windows OS / Edition etc to be applied during OSDCloud
+# Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Params = @{
-    OSVersion = "Windows 11"
-    OSBuild = "24H2"
-    OSEdition = "Enterprise"
-    OSLanguage = "en-us"
-    OSLicense = "Volume"
+    OSVersion = "$($OSVersion)"
+    OSBuild = "$($OSBuild)"
+    OSEdition = "$($OSEdition)"
+    OSLanguage = "$($OSLanguage)"
+    OSLicense = "$($OSLicense)"
     ZTI = $true
-    Firmware = $false
+    Firmware = $true
 }
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Windows OS install parameters"
+Write-Output $Params
 
-#Launch OSDCloud
-Write-Host -ForegroundColor Green "Starting OSDCloud"
+# Launch OSDCloud
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] Starting OSDCloud"
 
 Start-OSDCloud @Params
 
-write-host -ForegroundColor Green "OSDCloud Process Complete, Running Custom Actions From Script Before Reboot"
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [OSDCloud] OSDCloud Process Complete."
 
-#================================================
-#  [PostOS] Do some custom stuff
-#================================================
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] OSDCloud"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+# ================================================================================================================================================~
+# [SECTION] PostOSD
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] PostOSD"
+Write-Host -ForegroundColor DarkGray $SL
+
 # Copy CMTrace.exe local
-Write-Host -ForegroundColor Green "Downloading and copy cmtrace file"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" -OutFile "C:\Windows\System32\CMTrace.exe" -Verbose
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download and copy CMTrace.exe file"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/CMTrace.exe" -OutFile "C:\Windows\System32\CMTrace.exe"
 
 # Copy sigvaris.bmp local
-Write-Host -ForegroundColor Green "Downloading and copy sigvaris.bmp file"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/sigvaris.bmp" -OutFile "C:\Windows\sigvaris.bmp" -Verbose
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download and copy sigvaris.bmp file"
+Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/sigvaris.bmp" -OutFile "C:\Windows\sigvaris.bmp"
 
 # Copy WirelessConnect.exe local
-Write-Host -ForegroundColor Green "Downloading and copy WirelessConnect.exe file"
-Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe" -Verbose
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download and copy WirelessConnect.exe file"
+Invoke-WebRequest "https://github.com/okieselbach/Helpers/raw/master/WirelessConnect/WirelessConnect/bin/Release/WirelessConnect.exe" -OutFile "C:\Windows\WirelessConnect.exe"
 
+# Copy W11_Setup.ps1 local
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11_Setup.ps1" 
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_Setup.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_Setup.ps1' -Encoding ascii -Force
+
+# Create XML file for Microsoft M365 App
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create XML file for Microsoft M365 App which is used later in the application deployment"
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
     New-Item "C:\ProgramData\OSDeploy\M365" -ItemType Directory -Force | Out-Null
 }
-Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\M365\configuration.xml"
 $OfficeXml = @"
 <Configuration ID="44ad4a5b-8ca2-4b1d-9120-4ccb79ab01bc">
   <Info Description="M365 Enterprise without Access" />
@@ -158,11 +274,11 @@ $OfficeXml = @"
 "@ 
 $OfficeXml | Out-File -FilePath "C:\ProgramData\OSDeploy\M365\configuration.xml" -Encoding utf8 -Width 2000 -Force
 
-
-#================================================
-#  [PostOS] OOBEDeploy Configuration
-#================================================
-Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json"
+# OOBEDeploy Configuration
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create OOBEDeploy configuration file for Start-AutopilotOOBE function (removes unwanted apps)"
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+}
 $OOBEDeployJson = @'
 {
     "AddNetFX3":  {
@@ -237,24 +353,16 @@ $OOBEDeployJson = @'
                     "Microsoft.YourPhone",
                     "Microsoft.ZuneMusic",
                     "Microsoft.ZuneVideo"
-                   ],
-    "UpdateDrivers":  {
-                          "IsPresent":  true
-                      },
-    "UpdateWindows":  {
-                          "IsPresent":  true
-                      }
+                   ]
 }
 '@
+$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+
+# Create UIJson file
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create UIJson file (used by several scripts)"
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
-$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
-
-#================================================
-#  [PostOS] Create UIJson file
-#================================================
-Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\UIjson.json"
 $UIjson = @"
 {
     "OSDComputername" : "$OSDComputername",
@@ -266,16 +374,18 @@ $UIjson = @"
     "OSDKeyboardLocale" : "$OSDKeyboardLocale",
     "OSDGeoID" : "$OSDGeoID",
     "OSDTimeZone" : "$OSDTimeZone",
-    "OSDDomainJoin" : "$OSDDomainJoin",
-    "OSDWindowsUpdate" : "$OSDWindowsUpdate"
+    "OSDDomainJoin" : "$OSDDomainJoin"
 }
 "@
 $UIjson | Out-File -FilePath "C:\ProgramData\OSDeploy\UIjson.json" -Encoding ascii -Force
 
-#================================================
-#  [PostOS] Create Unattend XML file
-#================================================
-Write-Host -ForegroundColor Green "Create C:\Windows\Panther\Unattend.xml file"
+# Create Windows Unattend XML file
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create Windows Unattend XML file"
+if (-NOT (Test-Path 'C:\Windows\Panther')) {
+    New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
+}
+
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
@@ -293,18 +403,12 @@ $UnattendXml = @"
                 <RunSynchronousCommand wcm:action="add">
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
-                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\W11_Autopilot.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                               
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                                                                  
             </RunSynchronous>
         </component>
     </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-            <InputLocale>$OSDKeyboardLocale</InputLocale>
-            <SystemLocale>$OSDLanguage</SystemLocale>
-            <UILanguage>$OSDDisplayLanguage</UILanguage>
-            <UserLocale>$OSDDisplayLanguage</UserLocale>
-        </component>        
+    <settings pass="oobeSystem">   
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <OOBE>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
@@ -314,78 +418,27 @@ $UnattendXml = @"
         </component>
     </settings>
 </unattend>
-"@ 
-
-if (-NOT (Test-Path 'C:\Windows\Panther')) {
-    New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
-}
-
+"@  
 $Panther = 'C:\Windows\Panther'
-$UnattendPath = "$Panther\Unattend.xml"
+$UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
 
-Write-Host -ForegroundColor Green "Export Wi-Fi profile"
-If (!(Test-Path "C:\ProgramData\OSDeploy\WiFi")) {
-    New-Item "C:\ProgramData\OSDeploy\WiFi" -ItemType Directory -Force | Out-Null
-}
-netsh wlan export profile key=clear folder=C:\ProgramData\OSDeploy\WiFi
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Autopilot-RegisterDevice.ps1" 
+Copy-Item "X:\OSDCloud\Config\Scripts\Autopilot-RegisterDevice.ps1" -Destination "C:\Windows\Setup\Scripts\Autopilot-RegisterDevice.ps1" -Force
 
-Write-Host -ForegroundColor Green "Change Wi-Fi connectionMode to Auto"
-$XmlDirectory = "C:\ProgramData\OSDeploy\WiFi"
-$profiles = Get-ChildItem $XmlDirectory | Where-Object {$_.extension -eq ".xml"}
-foreach ($wfprofile in $profiles) {
-    [xml]$wifiProfile = Get-Content -path $wfprofile.fullname
-    $wifiProfile.WLANProfile.connectionMode = "Auto"
-    $wifiProfile.Save("$($wfprofile.fullname)")
-}
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Computer_DomainJoin.ps1" 
+Copy-Item "X:\OSDCloud\Config\Scripts\Computer_DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1" -Force
 
-Write-Host -ForegroundColor Green "Copying script files"
-Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Scripts\W11_Autopilot.ps1" -Destination "C:\Windows\Setup\Scripts\W11_Autopilot.ps1" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Scripts\Computer-DomainJoin.ps1" -Destination "C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\OneDrive\OneDriveSetup.exe" -Destination "C:\Windows\Temp\OneDriveSetup.exe" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Teams\MSTeams-x64.msix" -Destination "C:\Windows\Temp\MSTeams-x64.msix" -Force -Verbose
-Copy-Item "X:\OSDCloud\Config\Teams\teamsbootstrapper.exe" -Destination "C:\Windows\Temp\teamsbootstrapper.exe" -Force -Verbose
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy SecureConnectorInstaller.msi" 
+Copy-Item "X:\OSDCloud\Config\Tools\SecureConnectorInstaller.msi" -Destination "C:\Windows\Temp\SecureConnectorInstaller.msi" -Force
 
-# M365 Office
-(New-Item -ItemType "directory" -Path "$($env:SystemRoot)\Temp" -Name OfficeSetup -Force).FullName
-Copy-Item -Path "X:\OSDCloud\Config\M365\setup.exe" -Destination "$($env:SystemRoot)\Temp\OfficeSetup\setup.exe" -Force
-
-# Set Computername
-Write-Host -ForegroundColor Green "Set Computername $($OSDComputername)"
-Rename-Computer -NewName $OSDComputername
-
-#================================================
-#  [PostOS] OOBE CMD Command Line
-#================================================
-Write-Host -ForegroundColor Green "Downloading and creating scripts for OOBE phase"
-Write-Host -ForegroundColor Green "Download AutopilotBranding.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/AutopilotBranding.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\AutopilotBranding.ps1' -Encoding ascii -Force
-#Write-Host -ForegroundColor Green "Download Import-WiFiProfiles.ps1"
-#Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Import-WiFiProfiles.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Import-WiFiProfiles.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Set-Language.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Set-Language.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Set-Language.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Update-Windows.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Install-PreApps.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
-Write-Host -ForegroundColor Green "Download Check-DomainConnection.ps1"
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Check-DomainConnection.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Check-DomainConnection.ps1' -Encoding ascii -Force
-
-Write-Host -ForegroundColor Green "Downloading and creating script for OOBE phase"
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Setup scripts for OOBE phase" 
 $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Import-WiFiProfiles.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Install-PreApps.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\scripts\Set-Language.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Check-DomainConnection.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer-DomainJoin.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\AutopilotBranding.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_Setup.ps1
 
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass
@@ -394,9 +447,35 @@ exit
 '@
 $OOBECMD | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
 
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] PostOSD"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Section took " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+$EndTime = Get-Date
+$ExecutionTime = $EndTime - $StartTime
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script ended at: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($EndTime)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script took " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)" -NoNewline
+Write-Host -ForegroundColor Gray " minutes to execute"
+
+Stop-Transcript | Out-Null  
+
+# Copy OSDCloud files from USB
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy OSDCloud files from USB" 
+Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
+Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
+Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
+Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
+
 #=======================================================================
 #   Restart-Computer
 #=======================================================================
-Write-Host  -ForegroundColor Green "Restarting in 10 seconds!"
+Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [End] Restarting in 10 seconds into Windows OS"
 start-Sleep -Seconds 10
 wpeutil reboot

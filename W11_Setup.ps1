@@ -3,7 +3,7 @@ Write-Host -ForegroundColor Gray "Is 64bit PowerShell: $([Environment]::Is64BitP
 Write-Host -ForegroundColor Gray "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
 Write-Host -ForegroundColor Gray "Script: " -NoNewline
-Write-Host -ForegroundColor Cyan "W11_SetupVM.ps1"
+Write-Host -ForegroundColor Cyan "W11_Setup.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
@@ -24,10 +24,10 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Information
-$ScriptName = 'W11_SetupVM.ps1' # Name
+$ScriptName = 'W11_Setup.ps1' # Name
 $ScriptDescription = 'This script setup the Operation System' # Description:
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '09.10.2025' # Created on
+$ScriptDate = '13.10.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Workplace & GA Team' # Department
@@ -212,7 +212,17 @@ $AllNetConnectionProfiles = Get-NetConnectionProfile
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
 if ($AllNetConnectionProfiles) { 
     Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [Network] Internet connection succesfull"
+    #Write-Output $AllNetConnectionProfiles
 }
+else {
+    Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [Network] No Internet Connection. Start Wi-Fi setup."  
+    Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
+    start-Sleep -Seconds 10
+}
+
+#$IPConfig = Get-NetIPConfiguration
+#Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Network] Get-NetIPConfiguration"
+#Write-Output $IPConfig
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
