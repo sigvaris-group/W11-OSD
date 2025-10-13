@@ -87,11 +87,35 @@ Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Load $($jsonfile)
 
 $json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
 $OSDComputername = $($json.OSDComputername)
+$OSDLocation = $($json.OSDLocation)
+$OSDLanguage = $($json.OSDLanguage)
+$OSDDisplayLanguage = $($json.OSDDisplayLanguage)
+$OSDLanguagePack = $($json.OSDLanguagePack)
+$OSDKeyboard = $($json.OSDKeyboard)
+$OSDKeyboardLocale = $($json.OSDKeyboardLocale)
+$OSDGeoID = $($json.OSDGeoID)
+$OSDTimeZone = $($json.OSDTimeZone)
 $OSDDomainJoin = $($json.OSDDomainJoin)
 
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Your Settings are:"
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Location: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLocation)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] OS Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Display Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Language Pack: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Keyboard: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] GeoID: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] TimeZone: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
 
@@ -347,28 +371,6 @@ Switch ($DeviceName) {
     'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSGA' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSMI' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
-}
-
-#===================================================================================================================================================
-#    Add Language fr-CA pack for CA
-#===================================================================================================================================================
-if ($DeviceName -eq 'SICAMO') {
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Add Language fr-CA pack for CA"
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language pack: " -NoNewline
-    Write-Host -ForegroundColor Cyan "fr-CA"
-    Dism /Online /Add-Package /PackagePath:C:\ProgramData\OSDeploy\LP\fr-ca /NoRestart
-
-    <#
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language Feature packs: " -NoNewline
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] fr-CA"
-    $FeatureFolder = "C:\ProgramData\OSDeploy\LP\Feature\fr-ca"
-    $FeaturePacks = Get-ChildItem $FeatureFolder -File
-    foreach ($Feature in $FeaturePacks) {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Feature: " -NoNewline
-        Write-Host -ForegroundColor Cyan "$($Feature.Name)"
-        Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
-    }
-    #>
 }
 
 #===================================================================================================================================================

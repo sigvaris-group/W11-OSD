@@ -27,7 +27,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 $ScriptName = 'W11_SetupDev.ps1' # Name
 $ScriptDescription = 'This script setup the Operation System' # Description:
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '18.09.2025' # Created on
+$ScriptDate = '13.10.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Workplace Team & GA Team' # Department
@@ -381,28 +381,6 @@ Switch ($DeviceName) {
     'SICAMO' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSGA' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
     'SIUSMI' {Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -NoRestart;break}
-}
-
-#===================================================================================================================================================
-#    Add Language fr-CA pack for CA
-#===================================================================================================================================================
-if ($DeviceName -eq 'SICAMO') {   
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Add Language fr-CA pack for CA"
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language pack: " -NoNewline
-    Write-Host -ForegroundColor Cyan "fr-CA"
-    Dism /Online /Add-Package /PackagePath:C:\ProgramData\OSDeploy\LP\fr-ca /NoRestart
-
-    <#
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Language Feature packs: " -NoNewline
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [LanguagePack] fr-CA"
-    $FeatureFolder = "C:\ProgramData\OSDeploy\LP\Feature\fr-ca"
-    $FeaturePacks = Get-ChildItem $FeatureFolder -File
-    foreach ($Feature in $FeaturePacks) {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [LanguagePack] Add Feature: " -NoNewline
-        Write-Host -ForegroundColor Cyan "$($Feature.Name)"
-        Add-WindowsCapability -Online -Name $($Feature.Name) -Source "$FeatureFolder" -LimitAccess -ErrorAction SilentlyContinue
-    }
-    #>
 }
 
 #===================================================================================================================================================

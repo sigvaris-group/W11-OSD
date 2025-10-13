@@ -105,11 +105,35 @@ if ($UI) {
 
 # Set UI variables from WMI 
 $OSDComputername = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDComputername
+$OSDLocation = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLocation
+$OSDLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguage
+$OSDDisplayLanguage = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDisplayLanguage
+$OSDLanguagePack = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDLanguagePack
+$OSDKeyboard = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboard
+$OSDKeyboardLocale = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDKeyboardLocale
+$OSDGeoID = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDGeoID
+$OSDTimeZone = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDTimeZone
 $OSDDomainJoin = (Get-WmiObject -Namespace "root\UIVars" -Class "Local_Config").OSDDomainJoin
 
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Your Settings are:"
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Computername: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDComputername)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Location: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLocation)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] OS Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Display Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Language Pack: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Keyboard: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] GeoID: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] TimeZone: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Active Directory Domain Join: " -NoNewline
 Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
 
@@ -333,6 +357,15 @@ $UnattendXml = @"
             </RunSynchronous>
         </component>
     </settings>
+    <settings pass="oobeSystem">   
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <OOBE>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideEULAPage>true</HideEULAPage>
+                <ProtectYourPC>3</ProtectYourPC>
+            </OOBE>
+        </component>
+    </settings>    
 </unattend>
 "@  
 $Panther = 'C:\Windows\Panther'
@@ -388,13 +421,6 @@ Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
 Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
 Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
 Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
-
-$DeviceName = $OSDComputername.Substring(0,6)
-if ($DeviceName -eq 'SICAMO') {
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy Language fr-ca for CA" 
-    Copy-Item X:\OSDCloud\Config\LP\fr-ca C:\ProgramData\OSDeploy\LP\fr-ca -Recurse -Force
-    Copy-Item X:\OSDCloud\Config\LP\Feature\fr-ca C:\ProgramData\OSDeploy\LP\Feature\fr-ca -Recurse -Force
-}
 
 #=======================================================================
 #   Restart-Computer

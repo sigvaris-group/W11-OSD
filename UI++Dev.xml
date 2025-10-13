@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<UIpp Title="Windows 11" DialogIcons="Yes">
+<UIpp Title="Windows 11 TEST" DialogIcons="Yes">
 	<Actions>
     <!-- This Section determines the build type-->
     <Action Type="WMIRead" Namespace="root\cimv2" Class="Win32_ComputerSystem" Property="Name" Variable="OSDComputerName" />
