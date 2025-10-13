@@ -17,7 +17,7 @@ $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 
 # Updates
 $UpdateNews = @(
-"09.10.2025 New script deployed for VMs"
+"13.10.2025 New script deployed for VMs"
 )
 
 # Script Local Variables
