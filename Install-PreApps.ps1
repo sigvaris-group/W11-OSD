@@ -180,6 +180,27 @@ Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
+# [SECTION] Network
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] Network"
+Write-Host -ForegroundColor DarkGray $SL
+
+$IPConfig = Get-NetIPConfiguration
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Network] Get-NetIPConfiguration"
+Write-Output $IPConfig
+
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Network"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+# ================================================================================================================================================~
 # End Script
 # ================================================================================================================================================~
 $EndTime = Get-Date
