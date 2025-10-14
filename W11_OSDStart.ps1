@@ -239,6 +239,10 @@ Invoke-WebRequest "https://github.com/okieselbach/Helpers/raw/master/WirelessCon
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11_Setup.ps1" 
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_Setup.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_Setup.ps1' -Encoding ascii -Force
 
+# Copy Install-PreApps.ps1 local
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Install-PreApps.ps1" 
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
+
 # Create XML file for Microsoft M365 App
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create XML file for Microsoft M365 App which is used later in the application deployment"
 If (!(Test-Path "C:\ProgramData\OSDeploy\M365")) {
@@ -404,7 +408,12 @@ $UnattendXml = @"
                     <Order>2</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                                                                  
+                </RunSynchronousCommand>    
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>Install Pre-Applications</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Install-PreApps.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                                                                                
             </RunSynchronous>
         </component>
     </settings>

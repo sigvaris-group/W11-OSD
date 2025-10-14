@@ -154,6 +154,7 @@ Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
+<#
 # ================================================================================================================================================~
 # [SECTION] Forescout
 # ================================================================================================================================================~
@@ -198,6 +199,7 @@ Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION 
 Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
+#>
 
 # ================================================================================================================================================~
 # [SECTION] Network

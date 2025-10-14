@@ -235,6 +235,10 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11_SetupVM.ps1" 
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_SetupVM.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_SetupVM.ps1' -Encoding ascii -Force
 
+# Copy Install-PreApps.ps1 local
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Install-PreApps.ps1" 
+Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
+
 # OOBEDeploy Configuration
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create OOBEDeploy configuration file for Start-AutopilotOOBE function (removes unwanted apps)"
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
@@ -327,6 +331,14 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 $UIjson = @"
 {
     "OSDComputername" : "$OSDComputername",
+    "OSDLanguage" : "$OSDLanguage",
+    "OSDDisplayLanguage" : "$OSDDisplayLanguage",
+    "OSDLanguagePack" : "$OSDLanguagePack",    
+    "OSDLocation" : "$OSDLocation",
+    "OSDKeyboard" : "$OSDKeyboard",
+    "OSDKeyboardLocale" : "$OSDKeyboardLocale",
+    "OSDGeoID" : "$OSDGeoID",
+    "OSDTimeZone" : "$OSDTimeZone",
     "OSDDomainJoin" : "$OSDDomainJoin"
 }
 "@
@@ -353,7 +365,12 @@ $UnattendXml = @"
                     <Order>1</Order>
                     <Description>Start Autopilot Import and Assignment Process</Description>
                     <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Autopilot-RegisterDevice.ps1 -Wait</Path>
-                </RunSynchronousCommand>                                                                                                                  
+                </RunSynchronousCommand>   
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Install Pre-Applications</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Install-PreApps.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                                                                                  
             </RunSynchronous>
         </component>
     </settings>
