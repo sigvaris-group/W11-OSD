@@ -170,10 +170,6 @@ catch {
     Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
 }
 
-ipconfig /all
-ipconfig /renew
-ipconfig /all
-
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
