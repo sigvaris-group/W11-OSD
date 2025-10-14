@@ -415,9 +415,6 @@ Copy-Item C:\OSDCloud\Logs C:\ProgramData\OSDeploy -Recurse -Force -ErrorAction 
 Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue
 
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Set Computername to $($OSDComputername)"
-Rename-Computer -NewName $OSDComputername -ErrorAction SilentlyContinue
-
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
