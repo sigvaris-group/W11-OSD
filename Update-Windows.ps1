@@ -1,9 +1,9 @@
 # Check if running in x64bit environment
-Write-Host -ForegroundColor Green "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
-Write-Host -ForegroundColor Green "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
+Write-Host -ForegroundColor Gray "Is 64bit PowerShell: $([Environment]::Is64BitProcess)"
+Write-Host -ForegroundColor Gray "Is 64bit OS: $([Environment]::Is64BitOperatingSystem)"
 
-Write-Host -ForegroundColor Green "Install Windows Updates: " -NoNewline
-Write-Host -ForegroundColor Yellow "Update-Windows.ps1"
+Write-Host -ForegroundColor Gray "Script: " -NoNewline
+Write-Host -ForegroundColor Cyan "Update-Windows.ps1"
 
 if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
     $TranscriptPath = [IO.Path]::Combine($env:ProgramData, "Scripts", "LanguageSetup", "InstallLog (x86).txt")
@@ -23,180 +23,283 @@ if ($env:PROCESSOR_ARCHITEW6432 -eq "AMD64") {
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
+# Script Information
+$ScriptName = 'Update-Windows.ps1' # Name
+$ScriptDescription = 'This script uses the Windows Update COM objects to install the latest updates for Windows' # Description: https://github.com/mtniehaus/UpdateOS/blob/main/UpdateOS/UpdateOS.ps1
+$ScriptVersion = '1.0' # Version
+$ScriptDate = '14.10.2025' # Created on
+$ScriptUpdateDate = '' # Update on
+$ScriptUpdateReason = '' # Update reason
+$ScriptDepartment = 'Workplace & GA Team' # Department
+$ScriptAuthor = 'Andreas Schilling' # Author
+
 # Script Local Variables
-$DT = Get-Date -format G
+$Error.Clear()
+$SL = "================================================================="
+$EL = "`n=================================================================`n"
 $LogFilePath = "C:\ProgramData\OSDeploy"
-$LogFile = "Update-Windows.log"
+$LogFile = $ScriptName -replace ".{3}$", "log"
+$StartTime = Get-Date
 
-If (!(Test-Path $LogFilePath)) { New-Item $LogFilePath -ItemType Directory -Force | Out-Null }
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+}
+
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Script start at: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($StartTime)"
 
-# Set Update Success Variable
-$UpdateSuccess = $false
+# Script Information
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Name: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptName)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Description: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDescription)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Version: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptVersion)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Created on: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDate)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Update on: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptUpdateDate)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Update reason: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptUpdateReason)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Department: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptDepartment)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Author: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ScriptAuthor)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Logfile Path: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($LogFilePath)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Logfile: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($LogFile)"
+Write-Host -ForegroundColor DarkGray $EL
+
+# ================================================================================================================================================~
+# [SECTION] UI
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] UI"
+Write-Host -ForegroundColor DarkGray $SL
+
+$jsonpath = "C:\ProgramData\OSDeploy"
+$jsonfile = "UIjson.json"
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Load $($jsonfile) file from $($jsonpath)"
+
+$json = Get-Content -Path (Join-Path $jsonpath $jsonfile) -Raw | ConvertFrom-Json
+$OSDComputername = $($json.OSDComputername)
+$OSDLocation = $($json.OSDLocation)
+$OSDLanguage = $($json.OSDLanguage)
+$OSDDisplayLanguage = $($json.OSDDisplayLanguage)
+$OSDLanguagePack = $($json.OSDLanguagePack)
+$OSDKeyboard = $($json.OSDKeyboard)
+$OSDKeyboardLocale = $($json.OSDKeyboardLocale)
+$OSDGeoID = $($json.OSDGeoID)
+$OSDTimeZone = $($json.OSDTimeZone)
+$OSDDomainJoin = $($json.OSDDomainJoin)
+
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Your Settings are:"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Computername: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDComputername)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Location: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLocation)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] OS Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Display Language: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDisplayLanguage)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Language Pack: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDLanguagePack)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Keyboard: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboard)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] KeyboardLocale: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDKeyboardLocale)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] GeoID: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDGeoID)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] TimeZone: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDTimeZone)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Active Directory Domain Join: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($OSDDomainJoin)"
+
+if ($OSDComputername -ne $env:COMPUTERNAME) {
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [UI] Set Computername to: " -NoNewline
+    Write-Host -ForegroundColor Cyan "$($OSDComputername)"
+    Rename-Computer -NewName $OSDComputername
+}
+
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] UI"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+# ================================================================================================================================================~
+# [SECTION] PowerCfg 
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] PowerCfg"
+Write-Host -ForegroundColor DarkGray $SL
+
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [PowerCfg] Set PowerCfg to High Performance"
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] PowerCfg"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Cyan  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
+
+# ================================================================================================================================================~
+# [SECTION] Network
+# ================================================================================================================================================~
+$SectionStartTime = Get-Date
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] Network"
+Write-Host -ForegroundColor DarkGray $SL
 
 # Check Internet Connection
 $AllNetConnectionProfiles = Get-NetConnectionProfile
-Write-Output $AllNetConnectionProfiles
 $AllNetConnectionProfiles | Where-Object {$_.IPv4Connectivity -eq 'Internet' -or $_.IPv6Connectivity -eq 'Internet'}
 if ($AllNetConnectionProfiles) { 
-    Write-Host -ForegroundColor Green "Internet connection succesfull"
+    Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [Network] Internet connection succesfull"
+    #Write-Output $AllNetConnectionProfiles
 }
 else {
-    Write-Host -ForegroundColor Yellow "No Internet Connection. Start Wi-Fi setup."  
+    Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [Network] No Internet Connection. Start Wi-Fi setup."  
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
     start-Sleep -Seconds 10
 }
 
-# Opt into Microsoft Update
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
-$ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
+#$IPConfig = Get-NetIPConfiguration
+#Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Network] Get-NetIPConfiguration"
+#Write-Output $IPConfig
 
-# ServiceManager.Services
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Enable Windows Update for other Microsoft products"
-$ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
-$ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Network"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
-# Install all available updates
-$WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
-$WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
+# ================================================================================================================================================~
+# [SECTION] WindowsUpdate
+# ================================================================================================================================================~
+If ($OSDDomainJoin -eq "Yes") { 
+    $SectionStartTime = Get-Date
+    Write-Host -ForegroundColor DarkGray $SL
+    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start][WindowsUpdate"
+    Write-Host -ForegroundColor DarkGray $SL
 
-# Set query for updates
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Setup query for all available updates"
-$queries = @("IsInstalled=0 and Type='Software'")
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Windows updates must be installed before before domain join"
 
-# Create update collection 
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Creating empty collection of all updates to download"
-$WUUpdates = New-Object -ComObject Microsoft.Update.UpdateColl
+    # Opt into Microsoft Update
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] https://learn.microsoft.com/en-us/windows/win32/wua_sdk/opt-in-to-microsoft-update"
+    $ServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
+    #$ServiceManager.Services
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Enable Windows Update for other Microsoft products"
+    $ServiceID = "7971f918-a847-4430-9279-4a52d1efe18d"
+    $ServiceManager.AddService2($ServiceId, 7, "") | Out-Null
+    #$ServiceManager.Services
 
-# Search udpates 
-Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Search updates and add to collection"        
-$queries | ForEach-Object {
-    Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Getting $_ updates"      
-    try {
-
-        ((New-Object -ComObject Microsoft.Update.Session).CreateupdateSearcher().Search($_)).Updates | ForEach-Object {
-            if (!$_.EulaAccepted) { $_.AcceptEula() }
-            $featureUpdate = $_.Categories | Where-Object { $_.CategoryID -eq "3689BDC8-B205-4AF4-8D4A-A63924C5E9D5" }
-            
-            if ($featureUpdate) {
-                Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Skipping feature update: $($_.Title)" 
-            } 
-            elseif ($_.Title -match "Preview") { 
-                Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Skipping preview update: $($_.Title)" 
-            } 
-            else {
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Add $($_.Title) to collection" 
-                [void]$WUUpdates.Add($_)
-            }
-        }  
-
-        if ($WUUpdates.Count -eq 0) {
-            Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] No Updates Found" 
-            $UpdateSuccess = $false
-        } 
-        else {
-            Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Updates found: $($WUUpdates.count)" 
-            
-            Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Start to install updates"    
-            foreach ($update in $WUUpdates) {
-            
-                Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Creating single update collection to download and install"
-                $singleUpdate = New-Object -ComObject Microsoft.Update.UpdateColl
-                $singleUpdate.Add($update) | Out-Null
-            
-                $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
-                $WUDownloader.Updates = $singleUpdate
-            
-                $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
-                $WUInstaller.Updates = $singleUpdate
-                $WUInstaller.ForceQuiet = $true
-            
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Downloading update: $($update.Title)"
-                $Download = $WUDownloader.Download()
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Download result: $($Download.ResultCode) ($($Download.HResult))"
-            
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Installing update: $($update.Title)"
-                $Results = $WUInstaller.Install()
-                Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Install result: $($Results.ResultCode) ($($Results.HResult))"
-
-                if ($Results.ResultCode -eq 2) {
-                    Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] All updates installed successfully" # result code 2 = success   
-                    $UpdateSuccess = $true             
+    # Set query for updates
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Setup query for all available updates and drivers"
+    $queries = @("IsInstalled=0 and Type='Software'", "IsInstalled=0 and Type='Driver'")
+    
+    # Create update collection 
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Creating empty collection of all updates to download"
+    $WUUpdates = New-Object -ComObject Microsoft.Update.UpdateColl
+    
+    # Search udpates 
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Search updates and add to collection"        
+    $queries | ForEach-Object {
+        Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Getting $_ updates"      
+        try {
+            ((New-Object -ComObject Microsoft.Update.Session).CreateupdateSearcher().Search($_)).Updates | ForEach-Object {
+                if (!$_.EulaAccepted) { $_.AcceptEula() }
+                $featureUpdate = $_.Categories | Where-Object { $_.CategoryID -eq "3689BDC8-B205-4AF4-8D4A-A63924C5E9D5" }
+                if ($featureUpdate) {
+                    Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [WindowsUpdate] Skipping feature update: $($_.Title)" 
+                } elseif ($_.Title -match "Preview") { 
+                    Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [WindowsUpdate] Skipping preview update: $($_.Title)" 
+                } else {
+                    Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Add $($_.Title) to collection" 
+                    [void]$WUUpdates.Add($_)
                 }
-                else {
-                    Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Windows Updates failed"
-                    Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] See result codes at: https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode"
-                    $UpdateSuccess = $false
-                }
+
+            
             }
-        } 
-
-        # Uninstall blocking language Update
-        # Microsoft Community notes that after installing KB5050009, 
-        # users might experience situations where the new display language 
-        # isn't fully applied, leaving some elements of the UI, 
-        # such as the Settings side panel or desktop icon labels, 
-        # in English or a different language. This is particularly noticeable 
-        # if additional languages were previously installed
-        #Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] Uninstall KB5050009 because of the display language issue"
-        #wusa /uninstall /kb:5050009 /quiet /norestart 
-
-    } catch {
-        # If this script is running during OOBE specialize, error 8024004A will happen:
-        # 8024004A	Windows Update agent operations are not available while OS setup is running.
-        Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] Unable to search for updates: $_" 
-        $UpdateSuccess = $false
+        } catch {
+            # If this script is running during OOBE specialize, error 8024004A will happen:
+            # 8024004A	Windows Update agent operations are not available while OS setup is running.
+            Write-Host -ForegroundColor Red "[$(Get-Date -Format G)] [WindowsUpdate] Unable to search for updates: $_" 
+            Stop-Transcript | Out-Null
+            Exit 1
+        }
     }
-}
 
-if ($UpdateSuccess -eq $false) {
+    if ($WUUpdates.Count -eq 0) {
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [WindowsUpdate] No Updates Found" 
+        Stop-Transcript | Out-Null
+        Exit 0
+    } else {
+        Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Updates found: $($WUUpdates.count)" 
+        
+        Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Start to install updates"    
+        foreach ($update in $WUUpdates) {
+        
+            Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Creating single update collection to download and install"
+            $singleUpdate = New-Object -ComObject Microsoft.Update.UpdateColl
+            $singleUpdate.Add($update) | Out-Null
+        
+            $WUDownloader = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateDownloader()
+            $WUDownloader.Updates = $singleUpdate
+        
+            $WUInstaller = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateInstaller()
+            $WUInstaller.Updates = $singleUpdate
+            $WUInstaller.ForceQuiet = $true
+        
+            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Downloading update: $($update.Title)"
+            $Download = $WUDownloader.Download()
+            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Download result: $($Download.ResultCode) ($($Download.HResult))"
+        
+            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Installing update: $($update.Title)"
+            $Results = $WUInstaller.Install()
+            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Install result: $($Results.ResultCode) ($($Results.HResult))"
 
-    # Use PS Windows Update Module
-    Write-Host ""
-    Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] PowerShell Windows Update Module will be used"
-
-    try {
-
-        # Install latest NuGet package provider
-        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Install latest NuGet package provider"
-        Install-PackageProvider -Name "NuGet" -Force -ErrorAction SilentlyContinue -Verbose:$true
-
-        # Ensure default PSGallery repository is registered
-        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Ensure default PSGallery repository is registered"
-        Register-PSRepository -Default -ErrorAction SilentlyContinue
-
-        # Attempt to get the installed PowerShellGet module
-        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Attempt to get the installed PowerShellGet module"
-        $PowerShellGetInstalledModule = Get-InstalledModule -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
-        if ($PowerShellGetInstalledModule) {
-            # Attempt to locate the latest available version of the PowerShellGet module from repository
-            Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Attempt to locate the latest available version of the PowerShellGet module from repository"
-            $PowerShellGetLatestModule = Find-Module -Name "PowerShellGet" -ErrorAction SilentlyContinue -Verbose:$true
-            if ($PowerShellGetLatestModule) {
-                if ($PowerShellGetInstalledModule.Version -lt $PowerShellGetLatestModule.Version) {
-                    Update-Module -Name "PowerShellGet" -Scope "AllUsers" -Force -ErrorAction SilentlyContinue -Confirm:$false -Verbose:$true
-                }
-            }
+            # result code 2 = success, see https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode
         }
-        else {
-            # PowerShellGet module was not found, attempt to install from repository
-            Write-Host -ForegroundColor Yellow "[$($DT)] [WindowsUpdate] PowerShellGet module was not found, attempt to install from repository"
-            Install-Module -Name "PackageManagement" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
-            Install-Module -Name "PowerShellGet" -Force -Scope AllUsers -AllowClobber -ErrorAction SilentlyContinue -Verbose:$true
-        }
+    }
+} 
 
-        Write-Host -ForegroundColor Cyan "[$($DT)] [WindowsUpdate] Install Module PSWindowsUpdate"    
-        Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -AllowClobber
-        Import-Module PSWindowsUpdate -Scope Global
+$SectionEndTime = Get-Date
+$ExecutionTime = $SectionEndTime - $SectionStartTime
+Write-Host -ForegroundColor DarkGray $SL
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] WindowsUpdate"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
+Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
+Write-Host -ForegroundColor Gray  "minutes to execute."
+Write-Host -ForegroundColor DarkGray $SL
 
-        Write-Host -ForegroundColor Green "[$($DT)] [WindowsUpdate] Install Windows Updates" 
-        Install-WindowsUpdate -AcceptAll -IgnoreReboot
-    } 
-    catch [System.Exception] {
-        Write-Host -ForegroundColor Red "[$($DT)] [WindowsUpdate] Windows Updates failed with error: $($_.Exception.Message)"
-    }    
+# ================================================================================================================================================~
+# End Script
+# ================================================================================================================================================~
+$EndTime = Get-Date
+$ExecutionTime = $EndTime - $StartTime
 
-}
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Start] Script end at: " -NoNewline
+Write-Host -ForegroundColor Cyan "$($EndTime)"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [End] Script took " -NoNewline 
+Write-Host -ForegroundColor Cyan "$($ExecutionTime.Minutes)" -NoNewline 
+Write-Host -ForegroundColor Gray " minutes to execute"
+
+start-Sleep -Seconds 10
 
 Stop-Transcript | Out-Null
