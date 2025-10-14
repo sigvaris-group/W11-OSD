@@ -170,6 +170,11 @@ catch {
     Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
 }
 
+nslookup siemdc02.sigvaris-group.com
+ping siemdc02.sigvaris-group.com
+tracert siemdc02.sigvaris-group.com
+
+
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
