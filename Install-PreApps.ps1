@@ -187,10 +187,6 @@ Write-Host -ForegroundColor DarkGray $SL
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] Network"
 Write-Host -ForegroundColor DarkGray $SL
 
-$IPConfig = Get-NetIPConfiguration
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Network] Get-NetIPConfiguration"
-Write-Output $IPConfig
-
 # Check if domain join set to Yes
 if ($OSDDomainJoin -eq 'Yes') {
     $CheckDC = 'siemdc02.sigvaris-group.com'
