@@ -197,7 +197,7 @@ If ($OSDDomainJoin -eq "Yes") {
     Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start][WindowsUpdate"
     Write-Host -ForegroundColor DarkGray $SL
 
-    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Windows updates must be installed before before domain join"
+    Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [WindowsUpdate] Windows updates must be installed before before domain join"
 
     # Opt into Microsoft Update
     Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Opt computer in to the Microsoft Update service and then register that service with Automatic Updates"
@@ -230,7 +230,7 @@ If ($OSDDomainJoin -eq "Yes") {
                 } elseif ($_.Title -match "Preview") { 
                     Write-Host -ForegroundColor Yellow "[$(Get-Date -Format G)] [WindowsUpdate] Skipping preview update: $($_.Title)" 
                 } else {
-                    Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Add $($_.Title) to collection" 
+                    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Add $($_.Title) to collection" 
                     [void]$WUUpdates.Add($_)
                 }
 
@@ -250,7 +250,7 @@ If ($OSDDomainJoin -eq "Yes") {
         Stop-Transcript | Out-Null
         Exit 0
     } else {
-        Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Updates found: $($WUUpdates.count)" 
+        Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Updates found: $($WUUpdates.count)" 
         
         Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Start to install updates"    
         foreach ($update in $WUUpdates) {
@@ -266,13 +266,13 @@ If ($OSDDomainJoin -eq "Yes") {
             $WUInstaller.Updates = $singleUpdate
             $WUInstaller.ForceQuiet = $true
         
-            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Downloading update: $($update.Title)"
+            Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Downloading update: $($update.Title)"
             $Download = $WUDownloader.Download()
-            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Download result: $($Download.ResultCode) ($($Download.HResult))"
+            Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Download result: $($Download.ResultCode) ($($Download.HResult))"
         
-            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Installing update: $($update.Title)"
+            Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Installing update: $($update.Title)"
             $Results = $WUInstaller.Install()
-            Write-Host -ForegroundColor Green "[$(Get-Date -Format G)] [WindowsUpdate] Install result: $($Results.ResultCode) ($($Results.HResult))"
+            Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [WindowsUpdate] Install result: $($Results.ResultCode) ($($Results.HResult))"
 
             # result code 2 = success, see https://learn.microsoft.com/en-us/windows/win32/api/wuapi/ne-wuapi-operationresultcode
         }
