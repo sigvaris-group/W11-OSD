@@ -180,44 +180,6 @@ Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
-# [SECTION] Network
-# ================================================================================================================================================~
-$SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] Network"
-Write-Host -ForegroundColor DarkGray $SL
-
-# Check if domain join set to Yes
-if ($OSDDomainJoin -eq 'Yes') {
-    $CheckDC = 'siemdc02.sigvaris-group.com'
-    Write-Host -ForegroundColor Blue "[$($DT)] [Network] Check if Domain Controller " -NoNewline
-    Write-Host -ForegroundColor Cyan "$($CheckDC)"
-    Write-Host -ForegroundColor Blue " available"
-    Write-Host -ForegroundColor Blue "[$($DT)] [Network] Start PowerShell test: " -NoNewline
-    Write-Host -ForegroundColor Cyan 'Test-NetConnection siemdc02.sigvaris-group.com -Port 135'
-
-    $ping = Test-NetConnection $CheckDC -Port 135
-    Write-Output $ping
-
-    if ($ping.TcpTestSucceeded -eq $false) {
-        Write-Host -ForegroundColor Red "[$($DT)] [Network] Domain Controller $($CheckDC) is not reachable."  
-        Write-Host -ForegroundColor Red "[$($DT)] [Network] Make sure that the device is wired connected and can connect to domain controller $($CheckDC)"  
-    }
-    else {
-        Write-Host -ForegroundColor Green "[$($DT)] [Network] Connection to domain controller $($CheckDC) is succesfull"
-    }
-}
-
-$SectionEndTime = Get-Date
-$ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Network"
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
-Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Gray  "minutes to execute."
-Write-Host -ForegroundColor DarkGray $SL
-
-# ================================================================================================================================================~
 # End Script
 # ================================================================================================================================================~
 $EndTime = Get-Date
