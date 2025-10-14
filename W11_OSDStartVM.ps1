@@ -8,7 +8,7 @@ $OSEdition = 'Enterprise' # Windows Release
 $OSLanguage = 'en-us' # Windows default language
 $OSLicense = "Volume" # Windows licenses
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '09.10.2025' # Created on
+$ScriptDate = '14.10.2025' # Created on
 $ScriptDepartment = 'Workplace & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 $Product = (Get-MyComputerProduct)
@@ -404,7 +404,6 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupVM.ps1
 
