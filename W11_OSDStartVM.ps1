@@ -437,8 +437,11 @@ Stop-Transcript | Out-Null
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Copy OSDCloud files from USB" 
 Copy-Item X:\OSDCloud\Config C:\OSDCloud\Config -Recurse -Force
 Copy-Item X:\OSDCloud\Logs C:\OSDCloud\Logs -Recurse -Force
-Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
-Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
+
+if ($OSDDisplayLanguage -ne 'en-US') {
+    Copy-Item X:\OSDCloud\Config\LP\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\$($OSDDisplayLanguage) -Recurse -Force
+    Copy-Item X:\OSDCloud\Config\LP\Feature\$($OSDDisplayLanguage) C:\ProgramData\OSDeploy\LP\Feature\$($OSDDisplayLanguage) -Recurse -Force
+}
 
 #=======================================================================
 #   Restart-Computer
