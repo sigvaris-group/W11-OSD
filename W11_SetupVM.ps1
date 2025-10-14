@@ -395,7 +395,7 @@ if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
 #    Remove C:\Windows\Setup\Scripts\ Items
 #===================================================================================================================================================
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Remove C:\Windows\Setup\Scripts Items"
-Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
+#Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
 #===================================================================================================================================================
 #    Copy OSDCloud logs and delete C:\OSDCloud folder

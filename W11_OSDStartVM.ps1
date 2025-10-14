@@ -175,9 +175,9 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$false
-    WindowsUpdate = [bool]$true
-    WindowsUpdateDrivers = [bool]$true
-    WindowsDefenderUpdate = [bool]$true
+    WindowsUpdate = [bool]$false
+    WindowsUpdateDrivers = [bool]$false
+    WindowsDefenderUpdate = [bool]$false
     SetTimeZone = [bool]$false
     ClearDiskConfirm = [bool]$false
     ShutdownSetupComplete = [bool]$false
@@ -411,9 +411,9 @@ $OOBECMD = @'
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
+#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupVM.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 
 exit 
 '@
