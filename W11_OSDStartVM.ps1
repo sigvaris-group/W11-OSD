@@ -404,6 +404,7 @@ $OOBECMD = @'
 @echo off
 
 # Execute OOBE Tasks
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupVM.ps1
 
