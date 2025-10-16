@@ -154,52 +154,25 @@ Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
 
-<#
 # ================================================================================================================================================~
-# [SECTION] Forescout
+# [SECTION] PowerCfg 
 # ================================================================================================================================================~
 $SectionStartTime = Get-Date
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] Forescout"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] PowerCfg"
 Write-Host -ForegroundColor DarkGray $SL
 
-try {
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Forescout] Install Forescout Secure Connector"
-    $MSIArguments = @(
-        "/i"
-        ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
-        "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
-    )
-    Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments
-    Start-Sleep -Seconds 30
-    
-    $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
-    if ($SecCon) {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Forescout] " -NoNewline
-        Write-Host -ForegroundColor Cyan "$($SecCon.Name)" -NoNewline
-        Write-Host -ForegroundColor Gray " Version " -NoNewline
-        Write-Host -ForegroundColor Cyan "$($SecCon.Version)"  -NoNewline
-        Write-Host -ForegroundColor Gray " successfully installed" 
-        Start-Sleep 60
-    }
-    else {
-        Write-Host -ForegroundColor Red "[$(Get-Date -Format G)] [Forescout] Secure Connector is not installed"
-    }
-} 
-catch {
-    Write-Host -ForegroundColor Red "[$(Get-Date -Format G)] [Forescout] Install Forescout Secure Connector failed with error: " -NoNewline
-    Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
-}
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [PowerCfg] Set PowerCfg to High Performance"
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
 Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Forescout"
+Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] PowerCfg"
 Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
 Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
-#>
 
 # ================================================================================================================================================~
 # [SECTION] Network
@@ -221,10 +194,6 @@ else {
     Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait
     start-Sleep -Seconds 10
 }
-
-#$IPConfig = Get-NetIPConfiguration
-#Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Network] Get-NetIPConfiguration"
-#Write-Output $IPConfig
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
@@ -392,37 +361,6 @@ Switch ($DeviceName) {
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Enable Printing-PrintToPDFServices-Features because of KB5058411"
 Disable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
 Enable-WindowsOptionalFeature -Online -FeatureName Printing-PrintToPDFServices-Features -NoRestart -ErrorAction SilentlyContinue
-
-#===================================================================================================================================================
-#    Remove OSDCloudRegistration Certificate
-#===================================================================================================================================================
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Remove Import-Certificate.ps1 script"
-if (Test-Path -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1) {
-    Remove-Item -Path $env:SystemDrive\OSDCloud\Scripts\Import-Certificate.ps1 -Force -ErrorAction SilentlyContinue
-}
-
-#===================================================================================================================================================
-#    Remove C:\Windows\Setup\Scripts\ Items
-#===================================================================================================================================================
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Remove C:\Windows\Setup\Scripts Items"
-Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
-
-#===================================================================================================================================================
-#    Copy OSDCloud logs and delete C:\OSDCloud folder
-#===================================================================================================================================================
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [Branding] Copy OSDCloud logs and delete C:\OSDCloud folder"
-Copy-Item C:\OSDCloud\Logs C:\ProgramData\OSDeploy -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue
-
-$SectionEndTime = Get-Date
-$ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Branding"
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
-Write-Host -ForegroundColor Cyan  "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Gray  "minutes to execute."
-Write-Host -ForegroundColor DarkGray $SL
 
 # ================================================================================================================================================~
 # End Script

@@ -27,7 +27,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 $ScriptName = 'W11_SetupVM.ps1' # Name
 $ScriptDescription = 'This script setup the Operation System' # Description:
 $ScriptVersion = '1.0' # Version
-$ScriptDate = '09.10.2025' # Created on
+$ScriptDate = '14.10.2025' # Created on
 $ScriptUpdateDate = '' # Update on
 $ScriptUpdateReason = '' # Update reason
 $ScriptDepartment = 'Workplace & GA Team' # Department
@@ -153,53 +153,6 @@ Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION 
 Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
 Write-Host -ForegroundColor Cyan  "minutes to execute."
 Write-Host -ForegroundColor DarkGray $SL
-
-<#
-# ================================================================================================================================================~
-# [SECTION] Forescout
-# ================================================================================================================================================~
-$SectionStartTime = Get-Date
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-Start] Forescout"
-Write-Host -ForegroundColor DarkGray $SL
-
-try {
-    Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Forescout] Install Forescout Secure Connector"
-    $MSIArguments = @(
-        "/i"
-        ('"{0}"' -f 'C:\Windows\Temp\SecureConnectorInstaller.msi')
-        "MODE=AAAAAAAAAAAAAAAAAAAAAAoWAw8nE2tvKW7g1P8yKnqq6ZfnbnboiWRweKc1A4Tdz0m6pV4kBAAB1Sl1Nw-- /qn"
-    )
-    Start-Process -Wait "msiexec.exe" -ArgumentList $MSIArguments
-    Start-Sleep -Seconds 30
-    
-    $SecCon = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*SecureConnector*"} 
-    if ($SecCon) {
-        Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [Forescout] " -NoNewline
-        Write-Host -ForegroundColor Cyan "$($SecCon.Name)" -NoNewline
-        Write-Host -ForegroundColor Gray " Version " -NoNewline
-        Write-Host -ForegroundColor Cyan "$($SecCon.Version)"  -NoNewline
-        Write-Host -ForegroundColor Gray " successfully installed" 
-        Start-Sleep 60
-    }
-    else {
-        Write-Host -ForegroundColor Red "[$(Get-Date -Format G)] [Forescout] Secure Connector is not installed"
-    }
-} 
-catch {
-    Write-Host -ForegroundColor Red "[$(Get-Date -Format G)] [Forescout] Install Forescout Secure Connector failed with error: " -NoNewline
-    Write-Host -ForegroundColor Yellow "$($_.Exception.Message)"
-}
-
-$SectionEndTime = Get-Date
-$ExecutionTime = $SectionEndTime - $SectionStartTime
-Write-Host -ForegroundColor DarkGray $SL
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] Forescout"
-Write-Host -ForegroundColor Gray "[$(Get-Date -Format G)] [SECTION-End] SECTION took " -NoNewline
-Write-Host -ForegroundColor Cyan   "$($ExecutionTime.Minutes) " -NoNewline
-Write-Host -ForegroundColor Cyan  "minutes to execute."
-Write-Host -ForegroundColor DarkGray $SL
-#>
 
 # ================================================================================================================================================~
 # [SECTION] Network

@@ -240,10 +240,6 @@ Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Install-PreApps.ps1" 
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Install-PreApps.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Install-PreApps.ps1' -Encoding ascii -Force
 
-# Copy Update-Windows.ps1 local
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download Update-Windows.ps1" 
-Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/Update-Windows.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\Update-Windows.ps1' -Encoding ascii -Force
-
 # Copy W11_CleanUP.ps1 local
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Download W11_CleanUP.ps1" 
 Invoke-RestMethod "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main/W11_CleanUP.ps1" | Out-File -FilePath 'C:\Windows\Setup\scripts\W11_CleanUP.ps1' -Encoding ascii -Force
@@ -415,7 +411,6 @@ $OOBECMD = @'
 # Below a PS session for debug and testing in system context, # when not needed 
 #start /wait powershell.exe -NoL -ExecutionPolicy Bypass
 
-#start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Update-Windows.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_SetupVM.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\Computer_DomainJoin.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\W11_CleanUP.ps1
