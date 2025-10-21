@@ -25,11 +25,11 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
 
 # Script Information
 $ScriptName = 'W11_CleanUP.ps1' # Name
-$ScriptDescription = 'This script setup the Operation System' # Description:
+$ScriptDescription = 'Execute OSDCloud Cleanup Script' # Description:
 $ScriptVersion = '1.0' # Version
 $ScriptDate = '14.10.2025' # Created on
-$ScriptUpdateDate = '' # Update on
-$ScriptUpdateReason = '' # Update reason
+$ScriptUpdateDate = '21.10.2025' # Update on
+$ScriptUpdateReason = 'Change logfile path' # Update reason
 $ScriptDepartment = 'Workplace & GA Team' # Department
 $ScriptAuthor = 'Andreas Schilling' # Author
 
@@ -37,12 +37,12 @@ $ScriptAuthor = 'Andreas Schilling' # Author
 $Error.Clear()
 $SL = "================================================================="
 $EL = "`n=================================================================`n"
-$LogFilePath = "C:\ProgramData\OSDeploy"
+$LogFilePath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+If (!(Test-Path "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD")) {
+    New-Item "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD" -ItemType Directory -Force | Out-Null
 }
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
@@ -96,12 +96,19 @@ Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] CleanUp] Remove C:\Win
 Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 
 #===================================================================================================================================================
-#    Copy OSDCloud logs and delete C:\OSDCloud folder
+#    Copy OSDCloud logs and cleanup directories
 #===================================================================================================================================================
-Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [CleanUp] Copy OSDCloud logs and delete C:\OSDCloud folder"
-Copy-Item C:\OSDCloud\Logs C:\ProgramData\OSDeploy -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item C:\OSDCloud -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item C:\ProgramData\OSDeploy\WiFi -Recurse -Force -ErrorAction SilentlyContinue
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [CleanUp] Copy OSDCloud logs and cleanup directories"
+If (Test-Path -Path 'C:\OSDCloud\Logs') {
+    Move-Item 'C:\OSDCloud\Logs\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force
+}
+Move-Item 'C:\ProgramData\OSDeploy\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force
+
+If (Test-Path -Path 'C:\OSDCloud') { Remove-Item -Path 'C:\OSDCloud' -Recurse -Force  -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\Drivers') { Remove-Item 'C:\Drivers' -Recurse -Force  -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\Intel') { Remove-Item 'C:\Intel' -Recurse -Force  -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\ProgramData\OSDeploy') { Remove-Item 'C:\ProgramData\OSDeploy' -Recurse -Force  -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi') { Remove-Item 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi' -Recurse -Force  -ErrorAction SilentlyContinue}
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
