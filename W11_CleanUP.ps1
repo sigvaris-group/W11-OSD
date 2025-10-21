@@ -108,7 +108,7 @@ If (Test-Path -Path 'C:\OSDCloud') { Remove-Item -Path 'C:\OSDCloud' -Recurse -F
 If (Test-Path -Path 'C:\Drivers') { Remove-Item 'C:\Drivers' -Recurse -Force -ErrorAction SilentlyContinue}
 If (Test-Path -Path 'C:\Intel') { Remove-Item 'C:\Intel' -Recurse -Force -ErrorAction SilentlyContinue}
 #If (Test-Path -Path 'C:\ProgramData\OSDeploy') { Remove-Item 'C:\ProgramData\OSDeploy' -Recurse -Force -ErrorAction SilentlyContinue}
-If (Test-Path -Path 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi') { Remove-Item 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi' -Recurse -Force -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\ProgramData\OSDeploy\WiFi') { Remove-Item 'C:\ProgramData\OSDeploy\WiFi' -Recurse -Force -ErrorAction SilentlyContinue}
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
