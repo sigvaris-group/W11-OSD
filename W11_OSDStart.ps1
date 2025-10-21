@@ -19,6 +19,7 @@ $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 $UpdateNews = @(
 "13.10.2025 New script deployed for production"
 "14.10.2025 New script to install Forescout before OOBE"
+"21.10.2025 New ISO generated"
 )
 
 # Script Local Variables
