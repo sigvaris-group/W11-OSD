@@ -37,12 +37,12 @@ $ScriptAuthor = 'Andreas Schilling' # Author
 $Error.Clear()
 $SL = "================================================================="
 $EL = "`n=================================================================`n"
-$LogFilePath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD"
+$LogFilePath = "C:\ProgramData\OSDeploy"
 $LogFile = $ScriptName -replace ".{3}$", "log"
 $StartTime = Get-Date
 
-If (!(Test-Path "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD")) {
-    New-Item "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD" -ItemType Directory -Force | Out-Null
+If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
 
 Start-Transcript -Path (Join-Path $LogFilePath $LogFile) -ErrorAction Ignore
