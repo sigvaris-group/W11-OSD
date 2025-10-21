@@ -100,15 +100,15 @@ Remove-Item C:\Windows\Setup\Scripts\*.* -Exclude *.TAG -Force | Out-Null
 #===================================================================================================================================================
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [CleanUp] Copy OSDCloud logs and cleanup directories"
 If (Test-Path -Path 'C:\OSDCloud\Logs') {
-    Move-Item 'C:\OSDCloud\Logs\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force
+    Move-Item 'C:\OSDCloud\Logs\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force -ErrorAction SilentlyContinue
 }
-Move-Item 'C:\ProgramData\OSDeploy\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force
+Move-Item 'C:\ProgramData\OSDeploy\*.*' -Destination 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD' -Force -ErrorAction SilentlyContinue
 
-If (Test-Path -Path 'C:\OSDCloud') { Remove-Item -Path 'C:\OSDCloud' -Recurse -Force  -ErrorAction SilentlyContinue}
-If (Test-Path -Path 'C:\Drivers') { Remove-Item 'C:\Drivers' -Recurse -Force  -ErrorAction SilentlyContinue}
-If (Test-Path -Path 'C:\Intel') { Remove-Item 'C:\Intel' -Recurse -Force  -ErrorAction SilentlyContinue}
-If (Test-Path -Path 'C:\ProgramData\OSDeploy') { Remove-Item 'C:\ProgramData\OSDeploy' -Recurse -Force  -ErrorAction SilentlyContinue}
-If (Test-Path -Path 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi') { Remove-Item 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi' -Recurse -Force  -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\OSDCloud') { Remove-Item -Path 'C:\OSDCloud' -Recurse -Force -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\Drivers') { Remove-Item 'C:\Drivers' -Recurse -Force -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\Intel') { Remove-Item 'C:\Intel' -Recurse -Force -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\ProgramData\OSDeploy') { Remove-Item 'C:\ProgramData\OSDeploy' -Recurse -Force -ErrorAction SilentlyContinue}
+If (Test-Path -Path 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi') { Remove-Item 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\WiFi' -Recurse -Force -ErrorAction SilentlyContinue}
 
 $SectionEndTime = Get-Date
 $ExecutionTime = $SectionEndTime - $SectionStartTime
