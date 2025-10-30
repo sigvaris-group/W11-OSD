@@ -96,11 +96,19 @@ Invoke-WebRequest "https://github.com/sigvaris-group/W11-OSD/raw/refs/heads/main
 # Start UI++ 
 $UIExe = "UI++64.exe"
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Start $($UIExe) from folder $($UILocation)"
-$UI = Start-Process -FilePath "$($UILocation)\$($UIExe)" -ArgumentList "/config:$($UIXMLFile)" -WorkingDirectory $($UILocation) -Wait  
-if ($UI) {
+$UI = Start-Process -FilePath "$($UILocation)\$($UIExe)" -ArgumentList "/config:$($UIXMLFile)" -WorkingDirectory $($UILocation) -Wait 
+if ($UI) { 
     Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [UI] Waiting for UI Client Setup to complete"
     if (Get-Process -Id $UI.Id -ErrorAction Ignore) {
         Wait-Process -Id $UI.Id
+    } 
+}
+
+$sfcVerifyOutput = Start-Process -Wait "$Env:windir\System32\sfc" -ArgumentList "/verifyonly" -WindowStyle Hidden 
+if ($sfcVerifyOutput) {
+    Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [SCF] Waiting for scf /verifyonlyto complete"
+    if (Get-Process -Id $sfcVerifyOutput.Id -ErrorAction Ignore) {
+        Wait-Process -Id $sfcVerifyOutput.Id
     } 
 }
 
