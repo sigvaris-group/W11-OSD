@@ -395,6 +395,8 @@ if (-NOT (Test-Path 'C:\Windows\Panther')) {
     New-Item -Path 'C:\Windows\Panther' -ItemType Directory -Force -ErrorAction Stop | Out-Null
 }
 
+If ($OSDDomainJoin -ne 'Yes') {
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Register device in Autopilot and Entra only"
 Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create C:\Windows\Panther\Unattend.xml"
 $UnattendXml = @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -440,6 +442,50 @@ $UnattendXml = @"
     </settings>  
 </unattend>
 "@  
+}
+else {
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Register device as hybrid join only"
+Write-Host -ForegroundColor Cyan "[$(Get-Date -Format G)] [PostOSD] Create C:\Windows\Panther\Unattend.xml"
+$UnattendXml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <ComputerName>$OSDComputername</ComputerName>
+        </component>
+        <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <RunSynchronous>  
+                <RunSynchronousCommand wcm:action="add">               
+                    <Order>1</Order>
+                    <Description>Connect to WiFi</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass Start-Process -FilePath C:\Windows\WirelessConnect.exe -Wait</Path>
+                </RunSynchronousCommand>                                                                                 
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Install Pre-Applications</Description>
+                    <Path>PowerShell -ExecutionPolicy Bypass C:\Windows\Setup\scripts\Install-PreApps.ps1 -Wait</Path>
+                </RunSynchronousCommand>                                                                                                                                
+            </RunSynchronous>
+        </component>
+    </settings>
+    <settings pass="oobeSystem"> 
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <InputLocale>en-US</InputLocale>
+            <SystemLocale>en-US</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UserLocale>en-US</UserLocale>
+        </component>     
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <OOBE>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideEULAPage>true</HideEULAPage>
+                <ProtectYourPC>3</ProtectYourPC>
+            </OOBE>
+        </component>
+    </settings>  
+</unattend>
+"@  
+}    
 $Panther = 'C:\Windows\Panther'
 $UnattendPath = "$($Panther)\Unattend.xml"
 $UnattendXml | Out-File -FilePath $UnattendPath -Encoding utf8 -Width 2000 -Force
