@@ -1,0 +1,764 @@
+<HTA:APPLICATION ID="OsdCloudConfigForm" APPLICATIONNAME="Windows 11 Deployment Configuration"
+    SCROLL="no" SINGLEINSTANCE="yes" CAPTION="yes" SYSMENU="yes" MAXIMIZEBUTTON="no" MINIMIZEBUTTON="yes" />
+<html>
+<head>
+<title>Windows 11 Deployment Configuration</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0a2647;
+    color: #0a2647;
+    margin: 0;
+    padding: 0;
+  }
+  .shell { background: #f4f7fa; min-height: 100%; padding: 24px 32px; }
+  .brand { color: #0a2647; font-size: 20px; font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .brand span { color: #27aae1; }
+  .panel { display: none; background: #ffffff; border-radius: 8px; padding: 22px 26px; box-shadow: 0 2px 8px rgba(10,38,71,0.15); }
+  .panel.active { display: block; }
+  h2 { margin-top: 0; font-size: 17px; color: #0a2647; }
+  .field { margin-bottom: 14px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #0a2647; }
+  input[type=text], select { width: 100%; padding: 7px 8px; border: 1px solid #c7d2e0; border-radius: 4px; font-size: 13px; }
+  .radio-row { display: flex; gap: 18px; flex-wrap: wrap; }
+  .radio-row label { font-weight: normal; display: flex; align-items: center; gap: 6px; }
+  .btn-row { margin-top: 20px; display: flex; justify-content: space-between; }
+  button { background: #27aae1; color: #ffffff; border: none; border-radius: 4px; padding: 9px 18px; font-size: 13px; cursor: pointer; }
+  button:disabled { background: #a9c3d6; cursor: not-allowed; }
+  button.secondary { background: #e4ecf3; color: #0a2647; }
+  .status { font-size: 12px; margin-top: 10px; color: #4a5c73; }
+  .status.error { color: #c0392b; }
+  .qr-wrap { text-align: center; margin: 14px 0; }
+  .code-box { font-size: 22px; letter-spacing: 3px; text-align: center; font-weight: 700; color: #0a2647; margin: 8px 0; }
+  .finding { padding: 8px 10px; border-radius: 4px; margin-bottom: 6px; font-size: 13px; }
+  .finding.found { background: #fdecea; color: #c0392b; }
+  .finding.clear { background: #eafaf1; color: #1e8449; }
+  .userlist { border: 1px solid #c7d2e0; border-radius: 4px; max-height: 110px; overflow-y: auto; margin-top: 4px; }
+  .userlist div { padding: 5px 8px; font-size: 12px; cursor: pointer; }
+  .userlist div:hover { background: #e4ecf3; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand">__LOGO_IMG_TAG__ Windows 11 <span>Deployment Configuration</span></div>
+
+  <div id="panel-jointype" class="panel active">
+    <h2>1. Join type</h2>
+    <div class="field radio-row" id="jointype-options"></div>
+    <div class="btn-row"><span></span><button onclick="goCategory()">Next</button></div>
+  </div>
+
+  <div id="panel-category" class="panel">
+    <h2>2. Device category</h2>
+    <div class="field radio-row" id="category-options"></div>
+    <div class="field" id="profile-field" style="display:none;">
+      <label>Profile</label>
+      <select id="profile-select"></select>
+      <div class="status" id="profile-note" style="display:none;"></div>
+    </div>
+    <div class="btn-row">
+      <button class="secondary" onclick="showPanel('panel-jointype')">Back</button>
+      <button onclick="goAfterCategory()">Next</button>
+    </div>
+  </div>
+
+  <div id="panel-private-confirm" class="panel">
+    <h2>3. Confirm: Private device</h2>
+    <div class="finding found">
+      Continuing will permanently remove this device's existing records from
+      <b>Autopilot</b>, <b>Intune</b>, <b>Entra ID</b>, and <b>on-prem AD</b> before imaging -
+      with no technician sign-in and no further confirmation afterward. This cannot be undone.
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label><input type="checkbox" id="private-confirm-checkbox" onclick="document.getElementById('private-confirm-btn').disabled = !this.checked;" /> I understand this device will be removed from all four systems above</label>
+    </div>
+    <div class="btn-row">
+      <button class="secondary" onclick="showPanel('panel-category')">Back</button>
+      <button id="private-confirm-btn" onclick="goDeviceFields()" disabled>Confirm &amp; continue</button>
+    </div>
+  </div>
+
+  <div id="panel-license-warning" class="panel">
+    <h2>3. OEM license warning</h2>
+    <div class="finding found">
+      This device's embedded OEM Windows license is <b id="license-description"></b>, below Pro.
+      A device below Pro cannot be stepped up to Windows Enterprise by an E3/E5 subscription
+      license - this device should be replaced rather than deployed into the corporate fleet.
+    </div>
+    <div class="btn-row">
+      <button class="secondary" onclick="showPanel('panel-category')">Back</button>
+      <button onclick="showPanel('panel-signin')">Continue anyway</button>
+    </div>
+  </div>
+
+  <div id="panel-signin" class="panel">
+    <h2>3. Technician sign-in</h2>
+    <p class="status">Sign in with your Entra ID account to continue.</p>
+    <div class="btn-row">
+      <button class="secondary" onclick="showPanel('panel-category')">Back</button>
+      <button id="signin-btn" onclick="beginDeviceCodeSignIn()">Sign in</button>
+    </div>
+    <div id="signin-detail" style="display:none;">
+      <div class="qr-wrap"><img id="qr-img" width="180" height="180" /></div>
+      <div class="code-box" id="user-code"></div>
+      <p class="status">Scan the QR code, or browse to <b id="verification-url"></b> on your phone or another device, and sign in with your Entra ID account. The code above is shown for reference only - the link already has it built in.</p>
+      <p class="status" id="signin-status">Waiting for sign-in...</p>
+    </div>
+  </div>
+
+  <div id="panel-apps" class="panel">
+    <h2>4. Applications</h2>
+    <div class="field">
+      <label>Add an Intune Windows app</label>
+      <input type="text" id="app-search" placeholder="Search by app name" onkeyup="searchApps(this.value)" />
+      <div class="userlist" id="app-results"></div>
+    </div>
+    <div class="field">
+      <label>Selected (installed via Intune once the device is enrolled)</label>
+      <div id="app-selected-list"></div>
+    </div>
+    <div class="btn-row">
+      <button class="secondary" onclick="showPanel('panel-signin')">Back</button>
+      <button onclick="goDeviceFields()">Next</button>
+    </div>
+  </div>
+
+  <div id="panel-device" class="panel">
+    <h2>5. Device details</h2>
+    <div class="field" id="hostname-field"><label>Hostname</label><input type="text" id="hostname" maxlength="15" /></div>
+    <div class="status" id="private-hostname-note" style="display:none;">Private devices get an auto-generated hostname (based on the serial number) - no company naming convention applies to an unmanaged device.</div>
+    <div class="field"><label>Windows version</label>
+      <select id="windowsVersion">
+        <option value="22H2">Windows 11 22H2</option>
+        <option value="23H2">Windows 11 23H2</option>
+        <option value="24H2">Windows 11 24H2</option>
+        <option value="25H2">Windows 11 25H2</option>
+        <option value="26H2">Windows 11 26H2</option>
+      </select>
+      <div class="status" id="windowsVersion-note" style="display:none;"></div>
+    </div>
+    <div class="field"><label>Windows edition</label>
+      <select id="windowsEdition">
+        <option value="Enterprise">Enterprise</option>
+        <option value="Pro">Pro</option>
+      </select>
+    </div>
+    <div class="field"><label>Language</label><select id="language"></select></div>
+    <div class="field" id="company-field"><label>Company</label><select id="company"></select></div>
+    <div class="field" id="timezone-field">
+      <label>Time zone</label>
+      <select id="timezone"></select>
+      <div class="status">Defaults to the selected company's site - pick a different one if this device will run somewhere else.</div>
+    </div>
+    <div class="field" id="user-field">
+      <label>Primary user (optional)</label>
+      <input type="text" id="user-search" placeholder="Type a name or email, then pick a match" onkeyup="searchUsers(this.value)" />
+      <div class="userlist" id="user-results"></div>
+      <div class="status" id="user-selected"></div>
+    </div>
+    <div class="btn-row">
+      <button class="secondary" onclick="backFromDevice()">Back</button>
+      <button onclick="goDuplicateCheck()">Next</button>
+    </div>
+  </div>
+
+  <div id="panel-duplicate" class="panel">
+    <h2>6. Existing-record check</h2>
+    <div id="duplicate-status" class="status">Checking Autopilot, Entra ID, Intune, and on-prem AD...</div>
+    <div id="duplicate-findings"></div>
+    <div class="field" id="remediation-field" style="display:none;">
+      <label>This hostname already has records. What should happen?</label>
+      <div class="radio-row">
+        <label><input type="radio" name="remediation" value="Remove" onclick="state.remediationChoice='Remove'" /> Remove existing records, then deploy</label>
+        <label><input type="radio" name="remediation" value="Overwrite" onclick="state.remediationChoice='Overwrite'" /> Overwrite (let re-registration replace them)</label>
+      </div>
+    </div>
+    <div class="btn-row"><span></span><button id="finish-btn" onclick="finish()" disabled>Continue</button></div>
+  </div>
+
+</div>
+
+<script language="JScript">
+var cfg = null;
+var state = {
+  joinType: null, category: null, profileId: null,
+  hostname: '', windowsVersion: '25H2', windowsEdition: 'Enterprise',
+  languageCode: '', companyId: '', timeZoneId: '', primaryUserUpn: '',
+  bearerToken: null, deploymentCode: null, remediationChoice: 'None',
+  selectedApps: []
+};
+
+// Pre-selected for every Production deployment, but the technician can deselect any of
+// them in panel-apps - these are just the common baseline, not a requirement.
+var DEFAULT_APP_SEARCH_TERMS = ['Office 365', 'BGInfo', 'TeamViewer Host'];
+
+var CATEGORY_LABELS = {
+  Production: 'Production', Kiosk: 'Kiosk', Vm: 'Virtual Machine', Teams: 'TEAMS', Private: 'Private'
+};
+var ALLOWED_CATEGORIES = {
+  EntraId: ['Production', 'Kiosk', 'Vm', 'Teams', 'Private'],
+  Hybrid: ['Production', 'Vm']
+};
+
+function loadConfig() {
+  var fso = new ActiveXObject('Scripting.FileSystemObject');
+  var file = fso.OpenTextFile('__INPUT_PATH__', 1);
+  var text = file.ReadAll();
+  file.Close();
+  cfg = JSON.parse(text);
+  applyPrestagedOsDefaults();
+}
+
+// Pre-selects Windows version/edition from what was chosen in the IT Portal's "Build Windows
+// OS" tab when this media was built (cfg.osBuild/osEdition) - the technician can still pick
+// something else per-device below; this only changes the starting default. Falls back to the
+// existing hardcoded defaults (25H2/Enterprise) if the build didn't supply a value, or supplied
+// one this HTA doesn't have as an option.
+function applyPrestagedOsDefaults() {
+  var versionSelect = document.getElementById('windowsVersion');
+  var editionSelect = document.getElementById('windowsEdition');
+  var versionNote = document.getElementById('windowsVersion-note');
+
+  if (cfg.osBuild && optionExists(versionSelect, cfg.osBuild)) {
+    versionSelect.value = cfg.osBuild;
+  } else {
+    versionSelect.value = '25H2';
+  }
+  if (cfg.osEdition && optionExists(editionSelect, cfg.osEdition)) {
+    editionSelect.value = cfg.osEdition;
+  } else {
+    editionSelect.value = 'Enterprise';
+  }
+
+  if (cfg.osBuild || cfg.osEdition) {
+    versionNote.innerText = 'Defaulted from this media\'s build - change either field if this device needs something else.';
+    versionNote.style.display = 'block';
+  }
+}
+
+function optionExists(selectEl, value) {
+  for (var i = 0; i < selectEl.options.length; i++) {
+    if (selectEl.options[i].value === value) { return true; }
+  }
+  return false;
+}
+
+function apiCall(method, path, bearer, bodyObj) {
+  var http = new ActiveXObject('Msxml2.XMLHTTP');
+  http.open(method, cfg.apiBaseUrl + path, false);
+  http.setRequestHeader('Content-Type', 'application/json');
+  if (bearer) {
+    http.setRequestHeader('Authorization', 'Bearer ' + bearer);
+  } else {
+    http.setRequestHeader('x-api-key', cfg.apiKey);
+  }
+  if (bodyObj) {
+    http.send(JSON.stringify(bodyObj));
+  } else {
+    http.send();
+  }
+  if (http.status < 200 || http.status >= 300) {
+    throw new Error('API call ' + method + ' ' + path + ' failed: ' + http.status + ' ' + http.responseText);
+  }
+  if (!http.responseText) { return null; }
+  return JSON.parse(http.responseText);
+}
+
+function showPanel(id) {
+  var panels = document.getElementsByClassName('panel');
+  for (var i = 0; i < panels.length; i++) { panels[i].className = 'panel'; }
+  document.getElementById(id).className = 'panel active';
+}
+
+function renderJoinTypeOptions() {
+  var html = '';
+  html += '<label><input type="radio" name="jointype" value="EntraId" onclick="state.joinType=\'EntraId\'" checked /> EntraID</label>';
+  html += '<label><input type="radio" name="jointype" value="Hybrid" onclick="state.joinType=\'Hybrid\'" /> Hybrid</label>';
+  document.getElementById('jointype-options').innerHTML = html;
+  state.joinType = 'EntraId';
+}
+
+function goCategory() {
+  renderCategoryOptions();
+  showPanel('panel-category');
+}
+
+function renderCategoryOptions() {
+  var categories = ALLOWED_CATEGORIES[state.joinType];
+  var html = '';
+  for (var i = 0; i < categories.length; i++) {
+    var cat = categories[i];
+    var checked = (i === 0) ? ' checked' : '';
+    html += '<label><input type="radio" name="category" value="' + cat + '" onclick="onCategoryChange(\'' + cat + '\')"' + checked + ' /> ' + CATEGORY_LABELS[cat] + '</label>';
+  }
+  document.getElementById('category-options').innerHTML = html;
+  state.category = categories[0];
+  onCategoryChange(categories[0]);
+}
+
+function onCategoryChange(cat) {
+  state.category = cat;
+  state.profileId = null;
+  var profileField = document.getElementById('profile-field');
+  if (cat === 'Kiosk' || cat === 'Teams') {
+    profileField.style.display = 'block';
+    loadProfiles(cat);
+  } else {
+    profileField.style.display = 'none';
+  }
+}
+
+var loadedProfiles = [];
+
+function loadProfiles(cat) {
+  var path = (cat === 'Kiosk') ? '/api/kiosk-profiles' : '/api/teams-profiles';
+  loadedProfiles = apiCall('GET', path, null, null);
+  var select = document.getElementById('profile-select');
+  var html = '';
+  for (var i = 0; i < loadedProfiles.length; i++) {
+    html += '<option value="' + loadedProfiles[i].id + '">' + loadedProfiles[i].displayName + '</option>';
+  }
+  select.innerHTML = html;
+  if (loadedProfiles.length > 0) { state.profileId = loadedProfiles[0].id; }
+  updateProfileNote();
+  select.onchange = function () { state.profileId = select.value; updateProfileNote(); };
+}
+
+// Flags a profile (e.g. "Teams Rooms (focus room)") that only makes sense on touchscreen
+// hardware - the technician knows the physical device, so this is a note, not a hard block.
+function updateProfileNote() {
+  var noteEl = document.getElementById('profile-note');
+  var profile = null;
+  for (var i = 0; i < loadedProfiles.length; i++) {
+    if (loadedProfiles[i].id === state.profileId) { profile = loadedProfiles[i]; break; }
+  }
+  if (profile && profile.requiresTouchscreen) {
+    noteEl.innerText = 'This profile is for touchscreen devices only.';
+    noteEl.style.display = 'block';
+  } else {
+    noteEl.style.display = 'none';
+  }
+}
+
+// Checks the device's OEM BIOS-embedded Windows license (the OA3 key baked into firmware at
+// manufacture time) - added 2026-11-06 at the user's explicit request, since a device whose OEM
+// license is below Pro can never be stepped up to Windows Enterprise by an E3/E5 subscription
+// license, so it should be replaced rather than deployed into the corporate fleet. Skipped for
+// Virtual Machine (no meaningful OEM BIOS license - VMs are licensed through the host/hypervisor,
+// not their own firmware) and Private (personally-owned, not subject to corporate Enterprise
+// licensing policy) categories.
+function goAfterCategory() {
+  if (state.category === 'Private') {
+    goDeviceFields();
+    return;
+  }
+  if (state.category !== 'Vm') {
+    var oemLicenseDescription = getOemLicenseDescription();
+    if (oemLicenseDescription && !/pro|enterprise|education/i.test(oemLicenseDescription)) {
+      document.getElementById('license-description').innerText = oemLicenseDescription;
+      showPanel('panel-license-warning');
+      return;
+    }
+  }
+  showPanel('panel-signin');
+}
+
+// Empty/unreadable (e.g. no OA3 key embedded, or the WMI class isn't available at all) is
+// deliberately NOT treated as a failure here - only an explicit sub-Pro match triggers the
+// warning, so a device this simply can't be read for never blocks the technician.
+function getOemLicenseDescription() {
+  try {
+    var locator = GetObject('winmgmts:\\\\.\\root\\cimv2');
+    var items = locator.ExecQuery('SELECT OA3xOriginalProductKeyDescription FROM SoftwareLicensingService');
+    var e = new Enumerator(items);
+    for (; !e.atEnd(); e.moveNext()) {
+      return e.item().OA3xOriginalProductKeyDescription || '';
+    }
+  } catch (ex) { /* ignore - treat as unreadable, not a failure */ }
+  return '';
+}
+
+// Pairing-code sign-in (replaces the old device-code flow 2026-11-03 - this tenant's
+// Conditional Access blocks device-code token issuance specifically, per
+// NEW-CA004-Global-AttackSurfaceReduction-AllResources-AnyPlatform-Block-DeviceCodeAuthenticationFlows).
+// itsp-osdcloud-api mints a pairing code and a server-side PKCE pair; the technician completes a
+// normal browser redirect sign-in (authorization_code + PKCE, a different authenticationFlows
+// classification the policy doesn't target) on their own device, and this form just polls until
+// the API reports it done. The resulting state.bearerToken is the same kind of Graph-scoped
+// access token the old flow produced - nothing downstream of sign-in changes.
+function beginDeviceCodeSignIn() {
+  document.getElementById('signin-btn').disabled = true;
+  try {
+    var start = apiCall('POST', '/api/device-auth/start', null, null);
+
+    document.getElementById('signin-detail').style.display = 'block';
+    document.getElementById('user-code').innerText = start.pairingCode;
+    document.getElementById('verification-url').innerText = start.verificationUri;
+    document.getElementById('qr-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(start.verificationUri);
+
+    pollForSignIn(start.pairingCode, Math.max(5, start.interval || 5), start.expiresIn || 900);
+  } catch (ex) {
+    document.getElementById('signin-btn').disabled = false;
+    setStatus('signin-status', 'Sign-in failed: ' + ex.message, true);
+  }
+}
+
+function pollForSignIn(pairingCode, intervalSeconds, expiresInSeconds) {
+  var deadline = new Date().getTime() + (expiresInSeconds * 1000);
+
+  function tick() {
+    if (new Date().getTime() > deadline) {
+      setStatus('signin-status', 'Sign-in timed out. Please try again.', true);
+      document.getElementById('signin-btn').disabled = false;
+      return;
+    }
+
+    var result;
+    try {
+      result = apiCall('GET', '/api/device-auth/status?code=' + encodeURIComponent(pairingCode), null, null);
+    } catch (ex) {
+      // Transient network hiccup - keep polling rather than failing the whole sign-in on one blip.
+      window.setTimeout(tick, intervalSeconds * 1000);
+      return;
+    }
+
+    if (result.status === 'Completed') {
+      state.bearerToken = result.accessToken;
+      setStatus('signin-status', 'Signed in as ' + (result.displayName || 'technician') + '.', false);
+      afterSignIn();
+      return;
+    }
+
+    if (result.status === 'Failed' || result.status === 'Expired') {
+      setStatus('signin-status', 'Sign-in failed: ' + (result.error || result.status), true);
+      document.getElementById('signin-btn').disabled = false;
+      return;
+    }
+
+    window.setTimeout(tick, intervalSeconds * 1000);
+  }
+
+  window.setTimeout(tick, intervalSeconds * 1000);
+}
+
+function setStatus(id, text, isError) {
+  var el = document.getElementById(id);
+  el.innerText = text;
+  el.className = isError ? 'status error' : 'status';
+}
+
+function mapAppIds(apps) {
+  var ids = [];
+  for (var i = 0; i < apps.length; i++) { ids.push(apps[i].id); }
+  return ids;
+}
+
+function afterSignIn() {
+  if (state.category === 'Production') {
+    showPanel('panel-apps');
+    initializeDefaultApps();
+  } else {
+    goDeviceFields();
+  }
+}
+
+var appSearchTimer = null;
+
+function searchApps(query) {
+  if (appSearchTimer) { window.clearTimeout(appSearchTimer); }
+  var resultsEl = document.getElementById('app-results');
+  if (!query || query.length < 2) { resultsEl.innerHTML = ''; return; }
+  appSearchTimer = window.setTimeout(function () { runAppSearch(query); }, 250);
+}
+
+function runAppSearch(query) {
+  var resultsEl = document.getElementById('app-results');
+  try {
+    var apps = apiCall('GET', '/api/intune-apps/search?q=' + encodeURIComponent(query), state.bearerToken, null);
+    var html = '';
+    if (apps.length === 0) {
+      html = '<div style="cursor:default;color:#4a5c73;">No matches found</div>';
+    }
+    for (var i = 0; i < apps.length; i++) {
+      html += '<div onclick="addSelectedApp(\'' + apps[i].id + '\',\'' + apps[i].displayName.replace(/'/g, "\\'") + '\')">' + apps[i].displayName + '</div>';
+    }
+    resultsEl.innerHTML = html;
+  } catch (ex) { /* ignore transient search errors */ }
+}
+
+function addSelectedApp(id, displayName) {
+  for (var i = 0; i < state.selectedApps.length; i++) {
+    if (state.selectedApps[i].id === id) { return; }
+  }
+  state.selectedApps.push({ id: id, displayName: displayName });
+  document.getElementById('app-search').value = '';
+  document.getElementById('app-results').innerHTML = '';
+  renderSelectedApps();
+}
+
+function removeSelectedApp(id) {
+  for (var i = 0; i < state.selectedApps.length; i++) {
+    if (state.selectedApps[i].id === id) { state.selectedApps.splice(i, 1); break; }
+  }
+  renderSelectedApps();
+}
+
+function renderSelectedApps() {
+  var listEl = document.getElementById('app-selected-list');
+  if (state.selectedApps.length === 0) {
+    listEl.innerHTML = '<div class="status">Nothing selected.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < state.selectedApps.length; i++) {
+    var app = state.selectedApps[i];
+    html += '<div class="finding clear">' + app.displayName + ' <button class="secondary" style="float:right;padding:2px 8px;" onclick="removeSelectedApp(\'' + app.id + '\')">Remove</button></div>';
+  }
+  listEl.innerHTML = html;
+}
+
+// Office 365, BGInfo, and TeamViewer Host are selected by default for every Production
+// device - a best-effort, name-based lookup since there's no stable catalog ID to pin to;
+// if a search finds no match (e.g. the app isn't published under that exact name in this
+// tenant) it's silently skipped rather than blocking the technician.
+function initializeDefaultApps() {
+  state.selectedApps = [];
+  for (var i = 0; i < DEFAULT_APP_SEARCH_TERMS.length; i++) {
+    try {
+      var matches = apiCall('GET', '/api/intune-apps/search?q=' + encodeURIComponent(DEFAULT_APP_SEARCH_TERMS[i]), state.bearerToken, null);
+      if (matches.length > 0) {
+        state.selectedApps.push({ id: matches[0].id, displayName: matches[0].displayName });
+      }
+    } catch (ex) { /* ignore - leave this default unselected */ }
+  }
+  renderSelectedApps();
+}
+
+var loadedCompanies = [];
+var loadedLocations = [];
+
+function goDeviceFields() {
+  var isPrivate = (state.category === 'Private');
+  document.getElementById('company-field').style.display = isPrivate ? 'none' : 'block';
+  document.getElementById('timezone-field').style.display = isPrivate ? 'none' : 'block';
+  document.getElementById('user-field').style.display = isPrivate ? 'none' : 'block';
+  document.getElementById('hostname-field').style.display = isPrivate ? 'none' : 'block';
+  document.getElementById('private-hostname-note').style.display = isPrivate ? 'block' : 'none';
+  if (isPrivate) {
+    // No company naming convention applies to a Private device - a short random suffix on
+    // a fixed prefix is enough to make it unique without a technician typing anything.
+    state.hostname = 'PRV' + Math.random().toString(36).substring(2, 10).toUpperCase();
+  }
+
+  var languages = apiCall('GET', '/api/languages', state.bearerToken, null);
+  var langSelect = document.getElementById('language');
+  var langHtml = '';
+  for (var i = 0; i < languages.length; i++) {
+    var sel = languages[i].isDefault ? ' selected' : '';
+    langHtml += '<option value="' + languages[i].code + '"' + sel + '>' + languages[i].displayName + '</option>';
+    if (languages[i].isDefault) { state.languageCode = languages[i].code; }
+  }
+  langSelect.innerHTML = langHtml;
+  langSelect.onchange = function () { state.languageCode = langSelect.value; };
+
+  if (!isPrivate) {
+    loadedCompanies = apiCall('GET', '/api/companies', state.bearerToken, null);
+    loadedLocations = apiCall('GET', '/api/locations', state.bearerToken, null);
+
+    var timezones = apiCall('GET', '/api/timezones', state.bearerToken, null);
+    var tzSelect = document.getElementById('timezone');
+    var tzHtml = '';
+    for (var k = 0; k < timezones.length; k++) {
+      tzHtml += '<option value="' + timezones[k].id + '">' + timezones[k].displayName + '</option>';
+    }
+    tzSelect.innerHTML = tzHtml;
+    tzSelect.onchange = function () { state.timeZoneId = tzSelect.value; };
+
+    var companySelect = document.getElementById('company');
+    var companyHtml = '';
+    for (var j = 0; j < loadedCompanies.length; j++) {
+      companyHtml += '<option value="' + loadedCompanies[j].id + '">' + loadedCompanies[j].legalName + ' (' + loadedCompanies[j].country + ')</option>';
+    }
+    companySelect.innerHTML = companyHtml;
+    companySelect.onchange = function () { state.companyId = companySelect.value; applyDefaultTimeZone(state.companyId); };
+
+    if (loadedCompanies.length > 0) {
+      state.companyId = loadedCompanies[0].id;
+      applyDefaultTimeZone(state.companyId);
+    }
+  }
+
+  showPanel('panel-device');
+}
+
+// Pre-fills the time zone dropdown from the chosen company's site
+// (api/Data/location-lookup-sites.json), without preventing the technician from picking a
+// different one from the full Microsoft time zone list already in that dropdown.
+function applyDefaultTimeZone(companyId) {
+  var company = null;
+  for (var i = 0; i < loadedCompanies.length; i++) {
+    if (loadedCompanies[i].id === companyId) { company = loadedCompanies[i]; break; }
+  }
+  if (!company) { return; }
+
+  var site = null;
+  for (var j = 0; j < loadedLocations.length; j++) {
+    if (loadedLocations[j].siteCode === company.siteCode) { site = loadedLocations[j]; break; }
+  }
+  if (!site) { return; }
+
+  var tzSelect = document.getElementById('timezone');
+  tzSelect.value = site.windowsTimeZoneId;
+  state.timeZoneId = tzSelect.value;
+}
+
+function backFromDevice() {
+  if (state.category === 'Private') {
+    showPanel('panel-category');
+  } else {
+    showPanel('panel-signin');
+  }
+}
+
+var userSearchTimer = null;
+
+// Search is debounced (250ms after the last keystroke) rather than firing on every
+// keyup - a technician typing a full name would otherwise trigger one Graph-backed
+// search per character.
+function searchUsers(query) {
+  if (userSearchTimer) { window.clearTimeout(userSearchTimer); }
+  var resultsEl = document.getElementById('user-results');
+  if (!query || query.length < 2) { resultsEl.innerHTML = ''; return; }
+
+  userSearchTimer = window.setTimeout(function () { runUserSearch(query); }, 250);
+}
+
+function runUserSearch(query) {
+  var resultsEl = document.getElementById('user-results');
+  try {
+    var users = apiCall('GET', '/api/users/search?q=' + encodeURIComponent(query), state.bearerToken, null);
+    var html = '';
+    if (users.length === 0) {
+      html = '<div style="cursor:default;color:#4a5c73;">No matches found</div>';
+    }
+    for (var i = 0; i < users.length; i++) {
+      html += '<div onclick="selectUser(\'' + users[i].upn + '\',\'' + users[i].displayName.replace(/'/g, "\\'") + '\')">' + users[i].displayName + ' (' + users[i].upn + ')</div>';
+    }
+    resultsEl.innerHTML = html;
+  } catch (ex) { /* ignore transient search errors */ }
+}
+
+function selectUser(upn, displayName) {
+  state.primaryUserUpn = upn;
+  document.getElementById('user-search').value = displayName;
+  document.getElementById('user-selected').innerText = 'Selected: ' + displayName + ' (' + upn + ') - clear the search box to leave this empty';
+  document.getElementById('user-results').innerHTML = '';
+}
+
+function goDuplicateCheck() {
+  if (state.category !== 'Private') {
+    state.hostname = document.getElementById('hostname').value;
+  }
+  state.windowsVersion = document.getElementById('windowsVersion').value;
+  state.windowsEdition = document.getElementById('windowsEdition').value;
+
+  if (!state.hostname) {
+    alert('Hostname is required.');
+    return;
+  }
+
+  showPanel('panel-duplicate');
+  document.getElementById('finish-btn').disabled = true;
+  document.getElementById('remediation-field').style.display = 'none';
+  document.getElementById('duplicate-findings').innerHTML = '';
+  setStatus('duplicate-status', 'Creating deployment record...', false);
+
+  try {
+    var createRequest = {
+      hostname: state.hostname,
+      windowsVersion: state.windowsVersion,
+      windowsEdition: state.windowsEdition,
+      languageCode: state.languageCode,
+      companyId: (state.category === 'Private') ? null : state.companyId,
+      timeZoneId: (state.category === 'Private') ? null : state.timeZoneId,
+      joinType: state.joinType,
+      deviceCategory: state.category,
+      selectedProfileId: state.profileId,
+      primaryUserUpn: (state.category === 'Private') ? null : (state.primaryUserUpn || null),
+      selectedAppIds: (state.category === 'Production') ? mapAppIds(state.selectedApps) : null,
+      remediationChoice: 'None'
+    };
+    var deployment = apiCall('POST', '/api/deployments', state.bearerToken, createRequest);
+    state.deploymentCode = deployment.code;
+
+    if (state.category === 'Private') {
+      setStatus('duplicate-status', 'Private device - removing any existing records automatically...', false);
+      apiCall('POST', '/api/deployments/' + state.deploymentCode + '/remove-existing-records', state.bearerToken, null);
+      setStatus('duplicate-status', 'Existing records cleared. Ready to continue.', false);
+      document.getElementById('finish-btn').disabled = false;
+      return;
+    }
+
+    setStatus('duplicate-status', 'Checking Autopilot, Entra ID, Intune, and on-prem AD...', false);
+    var result = apiCall('POST', '/api/deployments/' + state.deploymentCode + '/duplicate-check', state.bearerToken, null);
+    renderFindings(result);
+
+    if (result.autopilot.found || result.entraId.found || result.intune.found || result.onPremAd.found) {
+      setStatus('duplicate-status', 'Existing records found. Choose how to proceed.', false);
+      document.getElementById('remediation-field').style.display = 'block';
+      document.getElementById('finish-btn').disabled = true;
+      var radios = document.getElementsByName('remediation');
+      for (var r = 0; r < radios.length; r++) {
+        radios[r].onclick = (function (val) { return function () { state.remediationChoice = val; document.getElementById('finish-btn').disabled = false; }; })(radios[r].value);
+      }
+    } else {
+      setStatus('duplicate-status', 'No existing records found.', false);
+      document.getElementById('finish-btn').disabled = false;
+    }
+  } catch (ex) {
+    setStatus('duplicate-status', 'Check failed: ' + ex.message, true);
+  }
+}
+
+function renderFindings(result) {
+  var systems = [
+    { key: 'autopilot', label: 'Autopilot' },
+    { key: 'entraId', label: 'Entra ID' },
+    { key: 'intune', label: 'Intune' },
+    { key: 'onPremAd', label: 'On-prem AD (via hybrid device sync)' }
+  ];
+  var html = '';
+  for (var i = 0; i < systems.length; i++) {
+    var finding = result[systems[i].key];
+    var cls = finding.found ? 'finding found' : 'finding clear';
+    var text = finding.found ? (systems[i].label + ': existing record found - ' + (finding.detail || '')) : (systems[i].label + ': no existing record');
+    html += '<div class="' + cls + '">' + text + '</div>';
+  }
+  document.getElementById('duplicate-findings').innerHTML = html;
+}
+
+function finish() {
+  try {
+    if (state.remediationChoice === 'Remove') {
+      apiCall('POST', '/api/deployments/' + state.deploymentCode + '/remove-existing-records', state.bearerToken, null);
+    }
+    if (state.remediationChoice !== 'None') {
+      apiCall('POST', '/api/deployments/' + state.deploymentCode + '/status', state.bearerToken, { status: 'Provisioning' });
+    }
+
+    var fso = new ActiveXObject('Scripting.FileSystemObject');
+    var file = fso.CreateTextFile(cfg.outputPath, true);
+    file.Write(JSON.stringify(state));
+    file.Close();
+    window.close();
+  } catch (ex) {
+    alert('Could not save configuration: ' + ex.message);
+  }
+}
+
+loadConfig();
+renderJoinTypeOptions();
+</script>
+</body>
+</html>
